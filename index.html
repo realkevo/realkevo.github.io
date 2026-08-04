@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Toptechdevelops — Independent Software Developer</title>
+
+    <meta name="description"
+          content="Toptechdevelops builds practical mobile applications and offline AI-powered tools.">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b0f14;
+            color: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 24px 8%;
+            border-bottom: 1px solid #1d2630;
+        }
+
+        .nav {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: #4f9cff;
+        }
+
+        nav a {
+            color: #aeb8c4;
+            text-decoration: none;
+            margin-left: 24px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .hero {
+            max-width: 1100px;
+            margin: auto;
+            padding: 100px 8% 80px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border: 1px solid #26384d;
+            border-radius: 30px;
+            color: #7eb5ff;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: clamp(42px, 7vw, 72px);
+            line-height: 1.05;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+            color: #aeb8c4;
+            font-size: 18px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 32px;
+            padding: 13px 22px;
+            background: #4f9cff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .button:hover {
+            background: #3789ef;
+        }
+
+        section {
+            max-width: 1100px;
+            margin: auto;
+            padding: 70px 8%;
+        }
+
+        .section-title {
+            font-size: 30px;
+            margin-bottom: 35px;
+        }
+
+        .app-card {
+            border: 1px solid #202b36;
+            background: #111820;
+            border-radius: 16px;
+            padding: 35px;
+        }
+
+        .app-card h3 {
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+
+        .app-card p {
+            color: #aeb8c4;
+            max-width: 700px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            padding: 22px;
+            background: #0c1219;
+            border: 1px solid #202b36;
+            border-radius: 12px;
+        }
+
+        .feature h4 {
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            font-size: 14px;
+        }
+
+        .contact {
+            text-align: center;
+        }
+
+        .contact p {
+            color: #aeb8c4;
+        }
+
+        footer {
+            border-top: 1px solid #1d2630;
+            text-align: center;
+            padding: 30px 8%;
+            color: #7f8b98;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            nav a {
+                margin-left: 12px;
+                font-size: 13px;
+            }
+
+            .hero {
+                padding-top: 70px;
+            }
+
+            .app-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="nav">
+        <div class="logo">Toptech<span>develops</span></div>
+
+        <nav>
+            <a href="#app">App</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="badge">Independent Software Developer</div>
+
+        <h1>Building useful technology.</h1>
+
+        <p>
+            Toptechdevelops creates practical mobile applications
+            and AI-powered tools designed to solve real-world problems.
+        </p>
+
+        <a class="button"
+           href="#app">
+            Explore our app
+        </a>
+    </section>
+
+
+    <section id="app">
+
+        <h2 class="section-title">Featured App</h2>
+
+        <div class="app-card">
+
+            <h3>Eye Offline AI Image Scanner</h3>
+
+            <p>
+                Eye is an offline AI-powered image scanning application
+                designed to help users search, match and extract information
+                from images directly on their Android devices.
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    <h4>Offline AI</h4>
+                    <p>
+                        AI-powered image analysis designed to work
+                        without requiring a constant internet connection.
+                    </p>
+                </div>
+
+                <div class="feature">
+                    <h4>Image Matching</h4>
+                    <p>
+                        Search large image collections and identify
+                        visually similar images.
+                    </p>
+                </div>
+
+                <div class="feature">
+                    <h4>OCR</h4>
+                    <p>
+                        Extract text from images using on-device
+                        optical character recognition.
+                    </p>
+                </div>
+
+            </div>
+
+            <a class="button"
+               href="https://play.google.com/store/apps/details?id=com.toptech.eye"
+               target="_blank">
+                View on Google Play
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <section id="contact" class="contact">
+
+        <h2 class="section-title">Contact</h2>
+
+        <p>
+            For questions, feedback or business inquiries,
+            contact Toptechdevelops.
+        </p>
+
+        <a class="button"
+           href="mailto:toptechdevelops@gmail.com">
+            Contact us
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+    © 2026 Toptechdevelops. All rights reserved.
+</footer>
+
+</body>
+</html>
