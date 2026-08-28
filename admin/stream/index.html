@@ -1,11 +1,714 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Stream Analytics</title>
+
+```
+<!-- Makes the dashboard work properly on phones and desktops -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Stream Analytics Dashboard</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f7fa;
+        color: #1f2937;
+    }
+
+    header {
+        background: #111827;
+        color: white;
+        padding: 22px;
+    }
+
+    header h1 {
+        margin: 0 0 6px;
+        font-size: 26px;
+    }
+
+    header p {
+        margin: 0;
+        color: #9ca3af;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: auto;
+        padding: 24px;
+    }
+
+    .status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .online {
+        color: #059669;
+        font-weight: bold;
+    }
+
+    .offline {
+        color: #dc2626;
+        font-weight: bold;
+    }
+
+    button {
+        border: none;
+        background: #111827;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 7px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .card-title {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 10px;
+    }
+
+    .card-value {
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    .section {
+        background: white;
+        border-radius: 12px;
+        padding: 22px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .section h2 {
+        margin-top: 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 14px;
+    }
+
+    th {
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .loading {
+        color: #6b7280;
+        padding: 20px 0;
+    }
+
+    .error {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .last-updated {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+        .container {
+            padding: 14px;
+        }
+
+        .card-value {
+            font-size: 25px;
+        }
+
+        .section {
+            overflow-x: auto;
+        }
+
+        table {
+            min-width: 800px;
+        }
+    }
+</style>
+```
+
 </head>
+
 <body>
-    <h1>Stream Analytics Dashboard</h1>
-    <p>Dashboard is online.</p>
+
+<header>
+    <h1>Stream Analytics</h1>
+    <p>Stream application performance dashboard</p>
+</header>
+
+<div class="container">
+
+```
+<div class="status">
+    <div>
+        Worker status:
+        <span id="workerStatus" class="offline">Checking...</span>
+    </div>
+
+    <div>
+        <span class="last-updated" id="lastUpdated">
+            Not loaded yet
+        </span>
+
+        <button onclick="loadDashboard()">
+            Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Errors from the Worker are displayed here -->
+<div id="errorBox" class="error"></div>
+
+<!-- Main analytics cards -->
+<div class="cards">
+
+    <div class="card">
+        <div class="card-title">Total Installations</div>
+        <div class="card-value" id="totalInstallations">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Active Users</div>
+        <div class="card-value" id="activeUsers">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Lost Users</div>
+        <div class="card-value" id="lostUsers">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Total Opens</div>
+        <div class="card-value" id="totalOpens">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Rewarded Ads</div>
+        <div class="card-value" id="rewardedAds">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Watch Minutes Awarded</div>
+        <div class="card-value" id="watchMinutesAwarded">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Watch Minutes Used</div>
+        <div class="card-value" id="watchMinutesUsed">—</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Total Shares</div>
+        <div class="card-value" id="totalShares">—</div>
+    </div>
+
+</div>
+
+<!-- Additional totals -->
+<div class="section">
+
+    <h2>Engagement</h2>
+
+    <table>
+        <tbody>
+
+            <tr>
+                <td>Average opens per installation</td>
+                <td id="averageOpens">—</td>
+            </tr>
+
+            <tr>
+                <td>Average rewarded ads per installation</td>
+                <td id="averageAds">—</td>
+            </tr>
+
+            <tr>
+                <td>Average watch minutes awarded per installation</td>
+                <td id="averageMinutes">—</td>
+            </tr>
+
+            <tr>
+                <td>Average shares per installation</td>
+                <td id="averageShares">—</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Daily statistics -->
+<div class="section">
+
+    <h2>Daily Activity</h2>
+
+    <div id="dailyLoading" class="loading">
+        Loading daily analytics...
+    </div>
+
+    <table id="dailyTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>New Installations</th>
+                <th>Opens</th>
+                <th>Rewarded Ads</th>
+                <th>Watch Minutes</th>
+                <th>Shares</th>
+            </tr>
+        </thead>
+
+        <tbody id="dailyTableBody"></tbody>
+    </table>
+
+</div>
+
+<!-- Installation/user list -->
+<div class="section">
+
+    <h2>Installations</h2>
+
+    <div id="usersLoading" class="loading">
+        Loading installations...
+    </div>
+
+    <table id="usersTable" style="display:none;">
+
+        <thead>
+            <tr>
+                <th>Installation ID</th>
+                <th>Install Time</th>
+                <th>Last Open</th>
+                <th>Opens</th>
+                <th>Rewarded Ads</th>
+                <th>Minutes Awarded</th>
+                <th>Minutes Used</th>
+                <th>Shares</th>
+                <th>Version</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="usersTableBody"></tbody>
+
+    </table>
+
+</div>
+```
+
+</div>
+
+<script>
+
+    /*
+     * Your Cloudflare Worker.
+     *
+     * This is the ONLY backend URL the dashboard needs.
+     */
+    const WORKER_URL =
+        "https://stream-analytics-worker.kelvinthuranira591.workers.dev";
+
+
+    /*
+     * Main function.
+     *
+     * It loads all analytics from the Worker and puts
+     * the values into the dashboard.
+     */
+    async function loadDashboard() {
+
+        const errorBox = document.getElementById("errorBox");
+
+        errorBox.style.display = "none";
+
+        try {
+
+            /*
+             * Ask the Worker for the complete dashboard data.
+             */
+            const response = await fetch(
+                WORKER_URL + "/api/admin/stats"
+            );
+
+            /*
+             * If the Worker returns an HTTP error,
+             * stop and show the problem.
+             */
+            if (!response.ok) {
+                throw new Error(
+                    "Worker returned HTTP " + response.status
+                );
+            }
+
+            const data = await response.json();
+
+            /*
+             * The Worker should return:
+             *
+             * {
+             *   success: true,
+             *   totals: {...},
+             *   daily: [...],
+             *   installations: [...]
+             * }
+             */
+
+            if (!data.success) {
+                throw new Error(
+                    data.message || "Worker returned an error"
+                );
+            }
+
+
+            /*
+             * Worker is responding.
+             */
+            document.getElementById("workerStatus").textContent =
+                "ONLINE";
+
+            document.getElementById("workerStatus").className =
+                "online";
+
+
+            /*
+             * Populate the main analytics cards.
+             */
+            const totals = data.totals || {};
+
+            setValue(
+                "totalInstallations",
+                totals.total_installations
+            );
+
+            setValue(
+                "activeUsers",
+                totals.active_users
+            );
+
+            setValue(
+                "lostUsers",
+                totals.lost_users
+            );
+
+            setValue(
+                "totalOpens",
+                totals.total_opens
+            );
+
+            setValue(
+                "rewardedAds",
+                totals.rewarded_ads_completed
+            );
+
+            setValue(
+                "watchMinutesAwarded",
+                totals.watch_minutes_awarded
+            );
+
+            setValue(
+                "watchMinutesUsed",
+                totals.watch_minutes_used
+            );
+
+            setValue(
+                "totalShares",
+                totals.total_shares
+            );
+
+
+            /*
+             * Calculate averages.
+             */
+            const installations =
+                Number(totals.total_installations || 0);
+
+            if (installations > 0) {
+
+                setValue(
+                    "averageOpens",
+                    formatNumber(
+                        Number(totals.total_opens || 0) /
+                        installations
+                    )
+                );
+
+                setValue(
+                    "averageAds",
+                    formatNumber(
+                        Number(totals.rewarded_ads_completed || 0) /
+                        installations
+                    )
+                );
+
+                setValue(
+                    "averageMinutes",
+                    formatNumber(
+                        Number(totals.watch_minutes_awarded || 0) /
+                        installations
+                    )
+                );
+
+                setValue(
+                    "averageShares",
+                    formatNumber(
+                        Number(totals.total_shares || 0) /
+                        installations
+                    )
+                );
+
+            } else {
+
+                setValue("averageOpens", "0");
+                setValue("averageAds", "0");
+                setValue("averageMinutes", "0");
+                setValue("averageShares", "0");
+
+            }
+
+
+            /*
+             * Build daily activity table.
+             */
+            renderDailyData(data.daily || []);
+
+
+            /*
+             * Build installation table.
+             */
+            renderInstallations(data.installations || []);
+
+
+            /*
+             * Show the time of the successful refresh.
+             */
+            document.getElementById("lastUpdated").textContent =
+                "Updated " + new Date().toLocaleString();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            document.getElementById("workerStatus").textContent =
+                "OFFLINE";
+
+            document.getElementById("workerStatus").className =
+                "offline";
+
+            errorBox.textContent =
+                "Unable to load analytics: " + error.message;
+
+            errorBox.style.display = "block";
+        }
+    }
+
+
+    /*
+     * Safely put a value into an element.
+     */
+    function setValue(id, value) {
+
+        document.getElementById(id).textContent =
+            value === null || value === undefined
+                ? "0"
+                : value;
+    }
+
+
+    /*
+     * Format large numbers and decimal averages.
+     */
+    function formatNumber(value) {
+
+        if (!Number.isFinite(value)) {
+            return "0";
+        }
+
+        return value.toFixed(2);
+    }
+
+
+    /*
+     * Render daily analytics.
+     */
+    function renderDailyData(rows) {
+
+        const loading =
+            document.getElementById("dailyLoading");
+
+        const table =
+            document.getElementById("dailyTable");
+
+        const body =
+            document.getElementById("dailyTableBody");
+
+        loading.style.display = "none";
+        table.style.display = "table";
+
+        body.innerHTML = "";
+
+
+        if (rows.length === 0) {
+
+            body.innerHTML =
+                "<tr><td colspan='6'>No daily data yet.</td></tr>";
+
+            return;
+        }
+
+
+        rows.forEach(row => {
+
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>${escapeHtml(row.date)}</td>
+                <td>${escapeHtml(row.installations)}</td>
+                <td>${escapeHtml(row.opens)}</td>
+                <td>${escapeHtml(row.rewarded_ads)}</td>
+                <td>${escapeHtml(row.watch_minutes)}</td>
+                <td>${escapeHtml(row.shares)}</td>
+            `;
+
+            body.appendChild(tr);
+
+        });
+    }
+
+
+    /*
+     * Render individual installations.
+     */
+    function renderInstallations(rows) {
+
+        const loading =
+            document.getElementById("usersLoading");
+
+        const table =
+            document.getElementById("usersTable");
+
+        const body =
+            document.getElementById("usersTableBody");
+
+        loading.style.display = "none";
+        table.style.display = "table";
+
+        body.innerHTML = "";
+
+
+        if (rows.length === 0) {
+
+            body.innerHTML =
+                "<tr><td colspan='10'>No installations yet.</td></tr>";
+
+            return;
+        }
+
+
+        rows.forEach(row => {
+
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>${escapeHtml(row.installation_id)}</td>
+                <td>${escapeHtml(row.install_time)}</td>
+                <td>${escapeHtml(row.last_open)}</td>
+                <td>${escapeHtml(row.open_count)}</td>
+                <td>${escapeHtml(row.rewarded_ads_completed)}</td>
+                <td>${escapeHtml(row.watch_minutes_awarded)}</td>
+                <td>${escapeHtml(row.watch_minutes_used)}</td>
+                <td>${escapeHtml(row.share_count)}</td>
+                <td>${escapeHtml(row.app_version || "-")}</td>
+                <td>${escapeHtml(row.status)}</td>
+            `;
+
+            body.appendChild(tr);
+
+        });
+    }
+
+
+    /*
+     * Basic HTML escaping.
+     *
+     * This prevents database values from being interpreted
+     * as HTML/JavaScript by the dashboard.
+     */
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    /*
+     * Automatically load the dashboard when the page opens.
+     */
+    loadDashboard();
+
+
+    /*
+     * Automatically refresh every 60 seconds.
+     *
+     * This means you can leave the dashboard open
+     * and watch the numbers update.
+     */
+    setInterval(loadDashboard, 60000);
+
+</script>
+
 </body>
 </html>
