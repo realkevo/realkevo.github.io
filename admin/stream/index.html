@@ -1,712 +1,1246 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<!-- Makes the dashboard work properly on phones and desktops -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stream Analytics Dashboard</title>
 
-<title>Stream Analytics Dashboard</title>
-
-<style>
+  <style>
     * {
-        box-sizing: border-box;
+      box-sizing: border-box;
     }
 
     body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f5f7fa;
-        color: #1f2937;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
     }
 
     header {
-        background: #111827;
-        color: white;
-        padding: 22px;
+      background: #111827;
+      color: white;
+      padding: 22px;
     }
 
     header h1 {
-        margin: 0 0 6px;
-        font-size: 26px;
+      margin: 0;
+      font-size: 26px;
     }
 
     header p {
-        margin: 0;
-        color: #9ca3af;
+      margin: 6px 0 0;
+      color: #9ca3af;
     }
 
     .container {
-        max-width: 1400px;
-        margin: auto;
-        padding: 24px;
+      max-width: 1400px;
+      margin: auto;
+      padding: 25px;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 15px 18px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .status {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-        gap: 10px;
+      font-weight: bold;
     }
 
     .online {
-        color: #059669;
-        font-weight: bold;
+      color: #16a34a;
     }
 
     .offline {
-        color: #dc2626;
-        font-weight: bold;
+      color: #dc2626;
     }
 
     button {
-        border: none;
-        background: #111827;
-        color: white;
-        padding: 10px 16px;
-        border-radius: 7px;
-        cursor: pointer;
+      border: none;
+      background: #111827;
+      color: white;
+      padding: 10px 17px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     button:hover {
-        opacity: 0.9;
+      opacity: 0.85;
     }
 
     .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-        gap: 16px;
-        margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+      margin-bottom: 25px;
     }
 
     .card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .card-title {
-        font-size: 13px;
-        color: #6b7280;
-        margin-bottom: 10px;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 10px;
     }
 
     .card-value {
-        font-size: 30px;
-        font-weight: bold;
+      font-size: 30px;
+      font-weight: bold;
     }
 
     .section {
-        background: white;
-        border-radius: 12px;
-        padding: 22px;
-        margin-bottom: 24px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .section h2 {
-        margin-top: 0;
+      margin-top: 0;
+    }
+
+    .engagement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .engagement-item {
+      background: #f9fafb;
+      padding: 18px;
+      border-radius: 10px;
+    }
+
+    .engagement-item span {
+      display: block;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .engagement-item strong {
+      font-size: 24px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
     }
 
     table {
-        width: 100%;
-        border-collapse: collapse;
-        overflow-x: auto;
+      width: 100%;
+      border-collapse: collapse;
     }
 
     th,
     td {
-        text-align: left;
-        padding: 12px;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 14px;
+      padding: 13px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
     }
 
     th {
-        color: #6b7280;
-        font-weight: 600;
+      background: #f9fafb;
     }
 
     .loading {
-        color: #6b7280;
-        padding: 20px 0;
+      color: #6b7280;
     }
 
     .error {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        display: none;
+      color: #dc2626;
+      font-weight: bold;
     }
 
     .last-updated {
-        color: #6b7280;
-        font-size: 13px;
+      color: #6b7280;
+      font-size: 13px;
+      margin-top: 8px;
     }
 
-    @media (max-width: 700px) {
-        .container {
-            padding: 14px;
-        }
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
 
-        .card-value {
-            font-size: 25px;
-        }
-
-        .section {
-            overflow-x: auto;
-        }
-
-        table {
-            min-width: 800px;
-        }
+      header {
+        padding: 18px;
+      }
     }
-</style>
-```
-
+  </style>
 </head>
 
 <body>
 
 <header>
-    <h1>Stream Analytics</h1>
-    <p>Stream application performance dashboard</p>
+  <h1>Stream Analytics</h1>
+  <p>Stream application performance dashboard</p>
 </header>
 
 <div class="container">
 
-```
-<div class="status">
-    <div>
-        Worker status:
-        <span id="workerStatus" class="offline">Checking...</span>
-    </div>
+  <!-- WORKER STATUS -->
+
+  <div class="status-bar">
 
     <div>
-        <span class="last-updated" id="lastUpdated">
-            Not loaded yet
-        </span>
+      Worker status:
+      <span id="workerStatus" class="offline">
+        CHECKING...
+      </span>
 
-        <button onclick="loadDashboard()">
-            Refresh
-        </button>
+      <div id="lastUpdated" class="last-updated">
+        Loading...
+      </div>
     </div>
-</div>
 
-<!-- Errors from the Worker are displayed here -->
-<div id="errorBox" class="error"></div>
+    <button onclick="loadDashboard()">
+      Refresh
+    </button>
 
-<!-- Main analytics cards -->
-<div class="cards">
+  </div>
+
+
+  <!-- MAIN STATISTICS -->
+
+  <div class="cards">
 
     <div class="card">
-        <div class="card-title">Total Installations</div>
-        <div class="card-value" id="totalInstallations">—</div>
+      <div class="card-title">
+        Total Installations
+      </div>
+
+      <div
+        class="card-value"
+        id="totalInstallations">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Active Users</div>
-        <div class="card-value" id="activeUsers">—</div>
+      <div class="card-title">
+        Active Users Today
+      </div>
+
+      <div
+        class="card-value"
+        id="activeToday">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Lost Users</div>
-        <div class="card-value" id="lostUsers">—</div>
+      <div class="card-title">
+        Active Users (7 Days)
+      </div>
+
+      <div
+        class="card-value"
+        id="active7Days">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Total Opens</div>
-        <div class="card-value" id="totalOpens">—</div>
+      <div class="card-title">
+        Lost Users (7 Days)
+      </div>
+
+      <div
+        class="card-value"
+        id="lostUsers">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Rewarded Ads</div>
-        <div class="card-value" id="rewardedAds">—</div>
+      <div class="card-title">
+        Total Opens
+      </div>
+
+      <div
+        class="card-value"
+        id="totalOpens">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Watch Minutes Awarded</div>
-        <div class="card-value" id="watchMinutesAwarded">—</div>
+      <div class="card-title">
+        Rewarded Ads
+      </div>
+
+      <div
+        class="card-value"
+        id="rewardedAds">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Watch Minutes Used</div>
-        <div class="card-value" id="watchMinutesUsed">—</div>
+      <div class="card-title">
+        Watch Minutes Awarded
+      </div>
+
+      <div
+        class="card-value"
+        id="minutesAwarded">
+        —
+      </div>
     </div>
+
 
     <div class="card">
-        <div class="card-title">Total Shares</div>
-        <div class="card-value" id="totalShares">—</div>
+      <div class="card-title">
+        Watch Minutes Used
+      </div>
+
+      <div
+        class="card-value"
+        id="minutesUsed">
+        —
+      </div>
     </div>
 
-</div>
 
-<!-- Additional totals -->
-<div class="section">
+    <div class="card">
+      <div class="card-title">
+        Total Shares
+      </div>
+
+      <div
+        class="card-value"
+        id="totalShares">
+        —
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-title">
+        New Installations Today
+      </div>
+
+      <div
+        class="card-value"
+        id="newInstallationsToday">
+        —
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ENGAGEMENT -->
+
+  <div class="section">
 
     <h2>Engagement</h2>
 
-    <table>
-        <tbody>
+    <div class="engagement-grid">
 
-            <tr>
-                <td>Average opens per installation</td>
-                <td id="averageOpens">—</td>
-            </tr>
+      <div class="engagement-item">
+        <span>
+          Average opens per installation
+        </span>
 
-            <tr>
-                <td>Average rewarded ads per installation</td>
-                <td id="averageAds">—</td>
-            </tr>
+        <strong id="avgOpens">
+          —
+        </strong>
+      </div>
 
-            <tr>
-                <td>Average watch minutes awarded per installation</td>
-                <td id="averageMinutes">—</td>
-            </tr>
 
-            <tr>
-                <td>Average shares per installation</td>
-                <td id="averageShares">—</td>
-            </tr>
+      <div class="engagement-item">
+        <span>
+          Average rewarded ads per installation
+        </span>
 
-        </tbody>
-    </table>
+        <strong id="avgAds">
+          —
+        </strong>
+      </div>
 
-</div>
 
-<!-- Daily statistics -->
-<div class="section">
+      <div class="engagement-item">
+        <span>
+          Average watch minutes awarded
+        </span>
 
-    <h2>Daily Activity</h2>
+        <strong id="avgMinutes">
+          —
+        </strong>
+      </div>
 
-    <div id="dailyLoading" class="loading">
-        Loading daily analytics...
+
+      <div class="engagement-item">
+        <span>
+          Average shares per installation
+        </span>
+
+        <strong id="avgShares">
+          —
+        </strong>
+      </div>
+
     </div>
 
-    <table id="dailyTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>New Installations</th>
-                <th>Opens</th>
-                <th>Rewarded Ads</th>
-                <th>Watch Minutes</th>
-                <th>Shares</th>
-            </tr>
-        </thead>
+  </div>
 
-        <tbody id="dailyTableBody"></tbody>
-    </table>
 
-</div>
+  <!-- DAILY ACTIVITY -->
 
-<!-- Installation/user list -->
-<div class="section">
+  <div class="section">
+
+    <h2>Daily Activity — Last 30 Days</h2>
+
+    <div
+      id="dailyActivity"
+      class="loading">
+
+      Loading daily analytics...
+
+    </div>
+
+  </div>
+
+
+  <!-- INSTALLATIONS -->
+
+  <div class="section">
 
     <h2>Installations</h2>
 
-    <div id="usersLoading" class="loading">
-        Loading installations...
-    </div>
+    <div class="table-wrapper">
 
-    <table id="usersTable" style="display:none;">
+      <table>
 
         <thead>
-            <tr>
-                <th>Installation ID</th>
-                <th>Install Time</th>
-                <th>Last Open</th>
-                <th>Opens</th>
-                <th>Rewarded Ads</th>
-                <th>Minutes Awarded</th>
-                <th>Minutes Used</th>
-                <th>Shares</th>
-                <th>Version</th>
-                <th>Status</th>
-            </tr>
+
+          <tr>
+
+            <th>Installation ID</th>
+            <th>Install Time</th>
+            <th>Last Open</th>
+            <th>Opens</th>
+            <th>Rewarded Ads</th>
+            <th>Minutes Awarded</th>
+            <th>Minutes Used</th>
+            <th>Shares</th>
+            <th>Version</th>
+
+          </tr>
+
         </thead>
 
-        <tbody id="usersTableBody"></tbody>
+        <tbody id="installationsTable">
 
-    </table>
+          <tr>
+            <td colspan="9">
+              Loading installations...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
 
 </div>
-```
 
-</div>
 
 <script>
 
-    /*
-     * Your Cloudflare Worker.
-     *
-     * This is the ONLY backend URL the dashboard needs.
-     */
-    const WORKER_URL =
-        "https://stream-analytics-worker.kelvinthuranira591.workers.dev";
+const WORKER_URL =
+  "https://stream-analytics-worker.kelvinthuranira591.workers.dev";
 
 
-    /*
-     * Main function.
-     *
-     * It loads all analytics from the Worker and puts
-     * the values into the dashboard.
-     */
-    async function loadDashboard() {
+/* ============================================================
+   HELPER
+============================================================ */
 
-        const errorBox = document.getElementById("errorBox");
+async function fetchJSON(endpoint) {
 
-        errorBox.style.display = "none";
-
-        try {
-
-            /*
-             * Ask the Worker for the complete dashboard data.
-             */
-            const response = await fetch(
-                WORKER_URL + "/api/admin/stats"
-            );
-
-            /*
-             * If the Worker returns an HTTP error,
-             * stop and show the problem.
-             */
-            if (!response.ok) {
-                throw new Error(
-                    "Worker returned HTTP " + response.status
-                );
-            }
-
-            const data = await response.json();
-
-            /*
-             * The Worker should return:
-             *
-             * {
-             *   success: true,
-             *   totals: {...},
-             *   daily: [...],
-             *   installations: [...]
-             * }
-             */
-
-            if (!data.success) {
-                throw new Error(
-                    data.message || "Worker returned an error"
-                );
-            }
-
-
-            /*
-             * Worker is responding.
-             */
-            document.getElementById("workerStatus").textContent =
-                "ONLINE";
-
-            document.getElementById("workerStatus").className =
-                "online";
-
-
-            /*
-             * Populate the main analytics cards.
-             */
-            const totals = data.totals || {};
-
-            setValue(
-                "totalInstallations",
-                totals.total_installations
-            );
-
-            setValue(
-                "activeUsers",
-                totals.active_users
-            );
-
-            setValue(
-                "lostUsers",
-                totals.lost_users
-            );
-
-            setValue(
-                "totalOpens",
-                totals.total_opens
-            );
-
-            setValue(
-                "rewardedAds",
-                totals.rewarded_ads_completed
-            );
-
-            setValue(
-                "watchMinutesAwarded",
-                totals.watch_minutes_awarded
-            );
-
-            setValue(
-                "watchMinutesUsed",
-                totals.watch_minutes_used
-            );
-
-            setValue(
-                "totalShares",
-                totals.total_shares
-            );
-
-
-            /*
-             * Calculate averages.
-             */
-            const installations =
-                Number(totals.total_installations || 0);
-
-            if (installations > 0) {
-
-                setValue(
-                    "averageOpens",
-                    formatNumber(
-                        Number(totals.total_opens || 0) /
-                        installations
-                    )
-                );
-
-                setValue(
-                    "averageAds",
-                    formatNumber(
-                        Number(totals.rewarded_ads_completed || 0) /
-                        installations
-                    )
-                );
-
-                setValue(
-                    "averageMinutes",
-                    formatNumber(
-                        Number(totals.watch_minutes_awarded || 0) /
-                        installations
-                    )
-                );
-
-                setValue(
-                    "averageShares",
-                    formatNumber(
-                        Number(totals.total_shares || 0) /
-                        installations
-                    )
-                );
-
-            } else {
-
-                setValue("averageOpens", "0");
-                setValue("averageAds", "0");
-                setValue("averageMinutes", "0");
-                setValue("averageShares", "0");
-
-            }
-
-
-            /*
-             * Build daily activity table.
-             */
-            renderDailyData(data.daily || []);
-
-
-            /*
-             * Build installation table.
-             */
-            renderInstallations(data.installations || []);
-
-
-            /*
-             * Show the time of the successful refresh.
-             */
-            document.getElementById("lastUpdated").textContent =
-                "Updated " + new Date().toLocaleString();
-
+  const response =
+    await fetch(
+      WORKER_URL + endpoint,
+      {
+        method: "GET",
+        headers: {
+          "Accept": "application/json"
         }
+      }
+    );
 
-        catch (error) {
+  if (!response.ok) {
 
-            console.error(error);
+    throw new Error(
+      `HTTP ${response.status}`
+    );
 
-            document.getElementById("workerStatus").textContent =
-                "OFFLINE";
+  }
 
-            document.getElementById("workerStatus").className =
-                "offline";
+  return await response.json();
 
-            errorBox.textContent =
-                "Unable to load analytics: " + error.message;
+}
 
-            errorBox.style.display = "block";
-        }
+
+/* ============================================================
+   HEALTH
+============================================================ */
+
+async function loadHealth() {
+
+  const status =
+    document.getElementById(
+      "workerStatus"
+    );
+
+  try {
+
+    const data =
+      await fetchJSON(
+        "/api/health"
+      );
+
+    if (
+      data.success &&
+      data.status === "online"
+    ) {
+
+      status.textContent =
+        "ONLINE";
+
+      status.className =
+        "online";
+
+    } else {
+
+      throw new Error(
+        "Worker offline"
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Health error:",
+      error
+    );
+
+    status.textContent =
+      "OFFLINE";
+
+    status.className =
+      "offline";
+
+  }
+
+}
+
+
+/* ============================================================
+   ANALYTICS
+============================================================ */
+
+async function loadAnalytics() {
+
+  const data =
+    await fetchJSON(
+      "/api/analytics"
+    );
+
+
+  if (!data.success) {
+
+    throw new Error(
+      "Analytics request failed"
+    );
+
+  }
+
+
+  const totals =
+    data.totals || {};
+
+  const activity =
+    data.activity || {};
+
+  const engagement =
+    data.engagement || {};
+
+
+  document.getElementById(
+    "totalInstallations"
+  ).textContent =
+    formatNumber(
+      totals.total_installations
+    );
+
+
+  document.getElementById(
+    "totalOpens"
+  ).textContent =
+    formatNumber(
+      totals.total_opens
+    );
+
+
+  document.getElementById(
+    "rewardedAds"
+  ).textContent =
+    formatNumber(
+      totals.total_rewarded_ads
+    );
+
+
+  document.getElementById(
+    "minutesAwarded"
+  ).textContent =
+    formatNumber(
+      totals.total_minutes_awarded
+    );
+
+
+  document.getElementById(
+    "minutesUsed"
+  ).textContent =
+    formatNumber(
+      totals.total_minutes_used
+    );
+
+
+  document.getElementById(
+    "totalShares"
+  ).textContent =
+    formatNumber(
+      totals.total_shares
+    );
+
+
+  document.getElementById(
+    "activeToday"
+  ).textContent =
+    formatNumber(
+      activity.active_today
+    );
+
+
+  document.getElementById(
+    "active7Days"
+  ).textContent =
+    formatNumber(
+      activity.active_7_days
+    );
+
+
+  document.getElementById(
+    "newInstallationsToday"
+  ).textContent =
+    formatNumber(
+      activity.new_installations_today
+    );
+
+
+  document.getElementById(
+    "lostUsers"
+  ).textContent =
+    formatNumber(
+      activity.lost_users_7_days
+    );
+
+
+  document.getElementById(
+    "avgOpens"
+  ).textContent =
+    formatDecimal(
+      engagement.average_opens_per_installation
+    );
+
+
+  document.getElementById(
+    "avgAds"
+  ).textContent =
+    formatDecimal(
+      engagement.average_rewarded_ads_per_installation
+    );
+
+
+  document.getElementById(
+    "avgMinutes"
+  ).textContent =
+    formatDecimal(
+      engagement.average_watch_minutes_awarded_per_installation
+    );
+
+
+  document.getElementById(
+    "avgShares"
+  ).textContent =
+    formatDecimal(
+      engagement.average_shares_per_installation
+    );
+
+}
+
+
+/* ============================================================
+   DAILY ANALYTICS
+============================================================ */
+
+async function loadDaily() {
+
+  const container =
+    document.getElementById(
+      "dailyActivity"
+    );
+
+  try {
+
+    const data =
+      await fetchJSON(
+        "/api/daily"
+      );
+
+
+    if (!data.success) {
+
+      throw new Error(
+        "Daily analytics failed"
+      );
+
     }
 
 
+    const installations =
+      data.installations || [];
+
+    const rewardedAds =
+      data.rewarded_ads || [];
+
+    const shares =
+      data.shares || [];
+
+
+    const map =
+      {};
+
+
     /*
-     * Safely put a value into an element.
-     */
-    function setValue(id, value) {
+      Create entries for every day
+      represented in any dataset.
+    */
 
-        document.getElementById(id).textContent =
-            value === null || value === undefined
-                ? "0"
-                : value;
-    }
+    installations.forEach(
+      item => {
 
+        if (!map[item.day]) {
 
-    /*
-     * Format large numbers and decimal averages.
-     */
-    function formatNumber(value) {
+          map[item.day] = {
+            installations: 0,
+            rewarded_ads: 0,
+            minutes_awarded: 0,
+            shares: 0
+          };
 
-        if (!Number.isFinite(value)) {
-            return "0";
         }
 
-        return value.toFixed(2);
-    }
+        map[item.day]
+          .installations =
+          Number(
+            item.installations
+          );
+
+      }
+    );
 
 
-    /*
-     * Render daily analytics.
-     */
-    function renderDailyData(rows) {
+    rewardedAds.forEach(
+      item => {
 
-        const loading =
-            document.getElementById("dailyLoading");
+        if (!map[item.day]) {
 
-        const table =
-            document.getElementById("dailyTable");
+          map[item.day] = {
+            installations: 0,
+            rewarded_ads: 0,
+            minutes_awarded: 0,
+            shares: 0
+          };
 
-        const body =
-            document.getElementById("dailyTableBody");
-
-        loading.style.display = "none";
-        table.style.display = "table";
-
-        body.innerHTML = "";
-
-
-        if (rows.length === 0) {
-
-            body.innerHTML =
-                "<tr><td colspan='6'>No daily data yet.</td></tr>";
-
-            return;
         }
 
+        map[item.day]
+          .rewarded_ads =
+          Number(
+            item.rewarded_ads
+          );
 
-        rows.forEach(row => {
+        map[item.day]
+          .minutes_awarded =
+          Number(
+            item.minutes_awarded
+          );
 
-            const tr = document.createElement("tr");
-
-            tr.innerHTML = `
-                <td>${escapeHtml(row.date)}</td>
-                <td>${escapeHtml(row.installations)}</td>
-                <td>${escapeHtml(row.opens)}</td>
-                <td>${escapeHtml(row.rewarded_ads)}</td>
-                <td>${escapeHtml(row.watch_minutes)}</td>
-                <td>${escapeHtml(row.shares)}</td>
-            `;
-
-            body.appendChild(tr);
-
-        });
-    }
+      }
+    );
 
 
-    /*
-     * Render individual installations.
-     */
-    function renderInstallations(rows) {
+    shares.forEach(
+      item => {
 
-        const loading =
-            document.getElementById("usersLoading");
+        if (!map[item.day]) {
 
-        const table =
-            document.getElementById("usersTable");
+          map[item.day] = {
+            installations: 0,
+            rewarded_ads: 0,
+            minutes_awarded: 0,
+            shares: 0
+          };
 
-        const body =
-            document.getElementById("usersTableBody");
-
-        loading.style.display = "none";
-        table.style.display = "table";
-
-        body.innerHTML = "";
-
-
-        if (rows.length === 0) {
-
-            body.innerHTML =
-                "<tr><td colspan='10'>No installations yet.</td></tr>";
-
-            return;
         }
 
+        map[item.day]
+          .shares =
+          Number(
+            item.shares
+          );
 
-        rows.forEach(row => {
+      }
+    );
 
-            const tr = document.createElement("tr");
 
-            tr.innerHTML = `
-                <td>${escapeHtml(row.installation_id)}</td>
-                <td>${escapeHtml(row.install_time)}</td>
-                <td>${escapeHtml(row.last_open)}</td>
-                <td>${escapeHtml(row.open_count)}</td>
-                <td>${escapeHtml(row.rewarded_ads_completed)}</td>
-                <td>${escapeHtml(row.watch_minutes_awarded)}</td>
-                <td>${escapeHtml(row.watch_minutes_used)}</td>
-                <td>${escapeHtml(row.share_count)}</td>
-                <td>${escapeHtml(row.app_version || "-")}</td>
-                <td>${escapeHtml(row.status)}</td>
-            `;
+    const days =
+      Object.keys(map)
+        .sort()
+        .reverse();
 
-            body.appendChild(tr);
 
-        });
+    if (days.length === 0) {
+
+      container.innerHTML =
+        "<p>No activity recorded yet.</p>";
+
+      return;
+
     }
 
 
-    /*
-     * Basic HTML escaping.
-     *
-     * This prevents database values from being interpreted
-     * as HTML/JavaScript by the dashboard.
-     */
-    function escapeHtml(value) {
+    let html = `
 
-        if (value === null || value === undefined) {
-            return "";
-        }
+      <div class="table-wrapper">
 
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Date</th>
+            <th>Installations</th>
+            <th>Rewarded Ads</th>
+            <th>Minutes Awarded</th>
+            <th>Shares</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+    `;
+
+
+    days.forEach(
+      day => {
+
+        const row =
+          map[day];
+
+
+        html += `
+
+          <tr>
+
+            <td>
+              ${escapeHtml(day)}
+            </td>
+
+            <td>
+              ${formatNumber(
+                row.installations
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                row.rewarded_ads
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                row.minutes_awarded
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                row.shares
+              )}
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    );
+
+
+    html += `
+
+        </tbody>
+
+      </table>
+
+      </div>
+
+    `;
+
+
+    container.innerHTML =
+      html;
+
+  } catch (error) {
+
+    console.error(
+      "Daily analytics error:",
+      error
+    );
+
+    container.innerHTML =
+      `<p class="error">
+        Unable to load daily analytics.
+      </p>`;
+
+  }
+
+}
+
+
+/* ============================================================
+   INSTALLATIONS
+============================================================ */
+
+async function loadInstallations() {
+
+  const table =
+    document.getElementById(
+      "installationsTable"
+    );
+
+
+  try {
+
+    const data =
+      await fetchJSON(
+        "/api/installations"
+      );
+
+
+    if (!data.success) {
+
+      throw new Error(
+        "Installations request failed"
+      );
+
     }
 
 
-    /*
-     * Automatically load the dashboard when the page opens.
-     */
-    loadDashboard();
+    const installations =
+      data.installations || [];
 
 
-    /*
-     * Automatically refresh every 60 seconds.
-     *
-     * This means you can leave the dashboard open
-     * and watch the numbers update.
-     */
-    setInterval(loadDashboard, 60000);
+    if (
+      installations.length === 0
+    ) {
+
+      table.innerHTML = `
+
+        <tr>
+
+          <td colspan="9">
+            No installations yet.
+          </td>
+
+        </tr>
+
+      `;
+
+      return;
+
+    }
+
+
+    table.innerHTML =
+      installations
+        .map(
+          installation => `
+
+          <tr>
+
+            <td>
+              ${escapeHtml(
+                installation.installation_id
+              )}
+            </td>
+
+            <td>
+              ${formatDate(
+                installation.install_time
+              )}
+            </td>
+
+            <td>
+              ${formatDate(
+                installation.last_open
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                installation.open_count
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                installation.rewarded_ads_completed
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                installation.watch_minutes_awarded
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                installation.watch_minutes_used
+              )}
+            </td>
+
+            <td>
+              ${formatNumber(
+                installation.share_count
+              )}
+            </td>
+
+            <td>
+              ${escapeHtml(
+                installation.app_version || "-"
+              )}
+            </td>
+
+          </tr>
+
+        `
+        )
+        .join("");
+
+  } catch (error) {
+
+    console.error(
+      "Installations error:",
+      error
+    );
+
+    table.innerHTML = `
+
+      <tr>
+
+        <td colspan="9"
+            class="error">
+
+          Unable to load installations.
+
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+}
+
+
+/* ============================================================
+   LOAD EVERYTHING
+============================================================ */
+
+async function loadDashboard() {
+
+  const updated =
+    document.getElementById(
+      "lastUpdated"
+    );
+
+  updated.textContent =
+    "Refreshing...";
+
+
+  await loadHealth();
+
+
+  try {
+
+    await loadAnalytics();
+
+  } catch (error) {
+
+    console.error(
+      "Analytics error:",
+      error
+    );
+
+    document.getElementById(
+      "workerStatus"
+    ).textContent =
+      "API ERROR";
+
+  }
+
+
+  await loadDaily();
+
+  await loadInstallations();
+
+
+  updated.textContent =
+    "Last updated: " +
+    new Date().toLocaleString();
+
+}
+
+
+/* ============================================================
+   FORMATTING
+============================================================ */
+
+function formatNumber(value) {
+
+  const number =
+    Number(value || 0);
+
+  return number.toLocaleString();
+
+}
+
+
+function formatDecimal(value) {
+
+  const number =
+    Number(value || 0);
+
+  return number.toFixed(2);
+
+}
+
+
+function formatDate(value) {
+
+  if (!value) {
+
+    return "-";
+
+  }
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return value;
+
+  }
+
+  return date.toLocaleString();
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* ============================================================
+   START
+============================================================ */
+
+loadDashboard();
+
+
+/*
+  Automatically refresh every 60 seconds.
+*/
+
+setInterval(
+  loadDashboard,
+  60000
+);
 
 </script>
 
