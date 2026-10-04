@@ -1,1883 +1,1869 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>Stream Analytics Dashboard</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  background: #0b0f14;
-  color: #f5f7fa;
-}
-
-body {
-  min-height: 100vh;
-}
-
-.container {
-  width: min(1500px, 94%);
-  margin: 0 auto;
-  padding: 30px 0 60px;
-}
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-
-.brand h1 {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.brand p {
-  margin: 7px 0 0;
-  color: #8d98a6;
-  font-size: 14px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.status {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #9ca7b4;
-  font-size: 13px;
-}
-
-.status-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #28d17c;
-  box-shadow: 0 0 12px rgba(40, 209, 124, 0.7);
-}
-
-.status-dot.error {
-  background: #ff5364;
-  box-shadow: 0 0 12px rgba(255, 83, 100, 0.7);
-}
-
-.refresh-btn {
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 16px;
-  background: #ffffff;
-  color: #111;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.15s ease;
-}
-
-.refresh-btn:hover {
-  transform: translateY(-1px);
-}
-
-.refresh-btn:disabled {
-  opacity: 0.5;
-  cursor: wait;
-}
-
-/* =========================================================
-   ERROR
-   ========================================================= */
-
-.error-box {
-  display: none;
-  margin-bottom: 22px;
-  padding: 15px 18px;
-  border: 1px solid rgba(255, 83, 100, 0.35);
-  background: rgba(255, 83, 100, 0.08);
-  border-radius: 12px;
-  color: #ff9da8;
-  font-size: 14px;
-}
-
-.error-box.visible {
-  display: block;
-}
-
-/* =========================================================
-   SECTION
-   ========================================================= */
-
-.section-title {
-  margin: 32px 0 14px;
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.section-subtitle {
-  color: #7f8a97;
-  font-size: 13px;
-  margin-top: -8px;
-  margin-bottom: 15px;
-}
-
-/* =========================================================
-   CARDS
-   ========================================================= */
-
-.metrics {
-  display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.metric {
-  background: #121820;
-  border: 1px solid #202a35;
-  border-radius: 16px;
-  padding: 20px;
-  min-height: 130px;
-}
-
-.metric-label {
-  color: #8995a3;
-  font-size: 13px;
-  margin-bottom: 12px;
-}
-
-.metric-value {
-  font-size: 31px;
-  font-weight: 800;
-  letter-spacing: -0.7px;
-}
-
-.metric-description {
-  margin-top: 8px;
-  color: #687482;
-  font-size: 12px;
-}
-
-/* =========================================================
-   CHART GRID
-   ========================================================= */
-
-.charts {
-  display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.chart-card {
-  background: #121820;
-  border: 1px solid #202a35;
-  border-radius: 16px;
-  padding: 20px;
-  min-height: 340px;
-}
-
-.chart-title {
-  font-size: 15px;
-  font-weight: 750;
-  margin-bottom: 18px;
-}
-
-.chart-wrapper {
-  position: relative;
-  height: 260px;
-}
-
-/* =========================================================
-   DATA GRID
-   ========================================================= */
-
-.data-grid {
-  display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.panel {
-  background: #121820;
-  border: 1px solid #202a35;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.panel-header {
-  padding: 18px 20px;
-  border-bottom: 1px solid #202a35;
-}
-
-.panel-header h3 {
-  margin: 0;
-  font-size: 15px;
-}
-
-.panel-body {
-  padding: 20px;
-}
-
-.empty {
-  color: #687482;
-  font-size: 13px;
-  padding: 8px 0;
-}
-
-.rating-summary {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 18px;
-}
-
-.rating-number {
-  font-size: 40px;
-  font-weight: 800;
-}
-
-.rating-label {
-  color: #8995a3;
-  font-size: 13px;
-}
-
-.rating-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #202a35;
-  font-size: 13px;
-}
-
-.rating-row:last-child {
-  border-bottom: 0;
-}
-
-/* =========================================================
-   STAT ROW
-   ========================================================= */
-
-.stat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 13px 0;
-  border-bottom: 1px solid #202a35;
-}
-
-.stat-row:last-child {
-  border-bottom: 0;
-}
-
-.stat-name {
-  color: #8995a3;
-  font-size: 13px;
-}
-
-.stat-number {
-  font-weight: 750;
-  font-size: 14px;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer {
-  margin-top: 40px;
-  text-align: center;
-  color: #596572;
-  font-size: 12px;
-}
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 1100px) {
-
-  .metrics {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-}
-
-@media (max-width: 800px) {
-
-  .charts,
-  .data-grid {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-@media (max-width: 560px) {
-
-  .container {
-    width: 92%;
-    padding-top: 20px;
-  }
-
-  .brand h1 {
-    font-size: 25px;
-  }
-
-  .metrics {
-    grid-template-columns: 1fr;
-  }
-
-  .metric-value {
-    font-size: 27px;
-  }
-
-  .header {
-    align-items: flex-start;
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Stream Analytics</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #06070b;
+      --panel: #0c0f16;
+      --panel-2: #11151e;
+      --border: #202633;
+      --text: #f2f5f8;
+      --muted: #7f8999;
+      --accent: #00e5ff;
+      --accent-2: #7c4dff;
+      --green: #00e676;
+      --red: #ff4567;
+      --yellow: #ffc107;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(0, 229, 255, 0.08),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(124, 77, 255, 0.08),
+          transparent 30%
+        ),
+        var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,0.015) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,0.015) 1px,
+          transparent 1px
+        );
+      background-size: 40px 40px;
+      mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 90%
+      );
+    }
+
+    .container {
+      width: min(1500px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 50px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(0,229,255,.45);
+      background: rgba(0,229,255,.06);
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      font-size: 23px;
+      box-shadow:
+        0 0 30px rgba(0,229,255,.08),
+        inset 0 0 20px rgba(0,229,255,.04);
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .brand p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .05em;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.025);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--yellow);
+      box-shadow: 0 0 12px var(--yellow);
+    }
+
+    .status.online .status-dot {
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    .status.error .status-dot {
+      background: var(--red);
+      box-shadow: 0 0 12px var(--red);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0,229,255,.06),
+          rgba(124,77,255,.035) 45%,
+          rgba(255,255,255,.015)
+        ),
+        var(--panel);
+      border-radius: 22px;
+      margin-bottom: 18px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -100px;
+      top: -130px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,229,255,.14);
+      box-shadow:
+        0 0 0 25px rgba(0,229,255,.025),
+        0 0 0 50px rgba(0,229,255,.015);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .hero h2 {
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: -.02em;
+    }
+
+    .hero h2 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .periods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: flex-end;
+    }
+
+    .period-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
+      color: var(--muted);
+      padding: 8px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      transition: .18s ease;
+    }
+
+    .period-btn:hover {
+      border-color: rgba(0,229,255,.35);
+      color: var(--text);
+    }
+
+    .period-btn.active {
+      color: #001014;
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 18px rgba(0,229,255,.2);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.025),
+          rgba(255,255,255,.008)
+        ),
+        var(--panel);
+      border-radius: 16px;
+      padding: 18px;
+      min-height: 125px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      opacity: .65;
+    }
+
+    .card:nth-child(2)::before {
+      background: var(--accent-2);
+    }
+
+    .card:nth-child(3)::before {
+      background: var(--green);
+    }
+
+    .card:nth-child(4)::before {
+      background: var(--yellow);
+    }
+
+    .card:nth-child(5)::before {
+      background: #ff7a00;
+    }
+
+    .card:nth-child(6)::before {
+      background: #ff4dca;
+    }
+
+    .card:nth-child(7)::before {
+      background: var(--red);
+    }
+
+    .card:nth-child(8)::before {
+      background: #6dffdb;
+    }
+
+    .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .value {
+      font-size: 31px;
+      font-weight: 800;
+      margin-top: 14px;
+      letter-spacing: -.03em;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: 5px;
+      font-size: 11px;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1.45fr .75fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 800;
+    }
+
+    .panel-meta {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .chart-wrap {
+      height: 300px;
+      padding: 20px;
+      position: relative;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .mini-list {
+      padding: 7px 20px 16px;
+    }
+
+    .mini-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+
+    .mini-row:last-child {
+      border-bottom: none;
+    }
+
+    .mini-name {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mini-value {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .installations-panel {
+      margin-top: 14px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 13px 18px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,.045);
+      font-size: 12px;
+    }
+
+    th {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 9px;
+      background: rgba(255,255,255,.015);
+    }
+
+    td {
+      color: #dce1e8;
+    }
+
+    tr:hover td {
+      background: rgba(0,229,255,.025);
+    }
+
+    .id-cell {
+      color: var(--accent);
+      font-family: monospace;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 4px 7px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      background: rgba(0,229,255,.08);
+      color: var(--accent);
+      border: 1px solid rgba(0,229,255,.14);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px;
+      color: var(--muted);
+    }
+
+    .loading {
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .error-box {
+      display: none;
+      margin-bottom: 14px;
+      padding: 13px 16px;
+      border: 1px solid rgba(255,69,103,.25);
+      background: rgba(255,69,103,.06);
+      color: #ff8ba1;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .error-box.show {
+      display: block;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .periods {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(100% - 20px, 1500px);
+        padding-top: 15px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .card {
+        min-height: 110px;
+        padding: 14px;
+      }
+
+      .value {
+        font-size: 25px;
+      }
+
+      .hero {
+        padding: 20px;
+      }
+
+      .chart-wrap {
+        height: 250px;
+        padding: 12px;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
+  <div class="topbar">
 
-  <header class="header">
+```
+<div class="brand">
 
-    <div class="brand">
+  <div class="logo">▶</div>
 
-      <h1>Stream Analytics</h1>
-
-      <p>
-        Live application analytics and engagement dashboard
-      </p>
-
-    </div>
-
-    <div class="header-actions">
-
-      <div class="status">
-
-        <span
-          id="statusDot"
-          class="status-dot"
-        ></span>
-
-        <span id="statusText">
-          Connecting...
-        </span>
-
-      </div>
-
-      <button
-        id="refreshButton"
-        class="refresh-btn"
-        onclick="loadDashboard()"
-      >
-        Refresh
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <!-- =====================================================
-       ERROR
-       ===================================================== -->
-
-  <div
-    id="errorBox"
-    class="error-box"
-  ></div>
-
-
-  <!-- =====================================================
-       OVERVIEW
-       ===================================================== -->
-
-  <div class="section-title">
-    Overview
+  <div>
+    <h1>Stream Analytics</h1>
+    <p>LIVE APPLICATION TELEMETRY</p>
   </div>
 
-  <div class="metrics">
+</div>
 
-    <div class="metric">
-      <div class="metric-label">
-        Total Installations
-      </div>
+<div class="status" id="connectionStatus">
+  <span class="status-dot"></span>
+  <span id="connectionText">CONNECTING</span>
+</div>
+```
 
-      <div
-        id="totalInstallations"
-        class="metric-value"
-      >
-        —
-      </div>
+  </div>
 
-      <div class="metric-description">
-        All registered installations
-      </div>
+  <div class="error-box" id="errorBox"></div>
+
+  <section class="hero">
+
+```
+<div class="hero-content">
+
+  <div>
+    <h2>
+      Stream <span>Command Center</span>
+    </h2>
+
+    <p id="periodDescription">
+      Application activity for the selected period.
+    </p>
+  </div>
+
+  <div class="periods">
+
+    <button class="period-btn" data-period="30m">30M</button>
+    <button class="period-btn" data-period="1h">1H</button>
+    <button class="period-btn" data-period="3h">3H</button>
+    <button class="period-btn" data-period="6h">6H</button>
+    <button class="period-btn active" data-period="24h">24H</button>
+    <button class="period-btn" data-period="36h">36H</button>
+    <button class="period-btn" data-period="72h">72H</button>
+    <button class="period-btn" data-period="7d">7D</button>
+    <button class="period-btn" data-period="2w">2W</button>
+    <button class="period-btn" data-period="1m">1M</button>
+    <button class="period-btn" data-period="3m">3M</button>
+
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <section class="grid">
+
+```
+<div class="card">
+  <div class="label">Open Events</div>
+  <div class="value" id="opens">—</div>
+  <div class="sub">Selected period</div>
+</div>
+
+<div class="card">
+  <div class="label">Unique Openers</div>
+  <div class="value" id="uniqueOpeners">—</div>
+  <div class="sub">Distinct devices</div>
+</div>
+
+<div class="card">
+  <div class="label">New Installs</div>
+  <div class="value" id="newInstalls">—</div>
+  <div class="sub">Selected period</div>
+</div>
+
+<div class="card">
+  <div class="label">Rewarded Ads</div>
+  <div class="value" id="rewardedAds">—</div>
+  <div class="sub">Completed</div>
+</div>
+
+<div class="card">
+  <div class="label">Watch Minutes</div>
+  <div class="value" id="watchMinutes">—</div>
+  <div class="sub">Awarded</div>
+</div>
+
+<div class="card">
+  <div class="label">Shares</div>
+  <div class="value" id="shares">—</div>
+  <div class="sub">Selected period</div>
+</div>
+
+<div class="card">
+  <div class="label">Errors</div>
+  <div class="value" id="errors">—</div>
+  <div class="sub">Reported</div>
+</div>
+
+<div class="card">
+  <div class="label">Feedback</div>
+  <div class="value" id="feedback">—</div>
+  <div class="sub">Submitted</div>
+</div>
+```
+
+  </section>
+
+  <section class="section-grid">
+
+```
+<div class="panel">
+
+  <div class="panel-header">
+
+    <div class="panel-title">
+      System Activity
     </div>
 
-
-    <div class="metric">
-      <div class="metric-label">
-        Total Opens
-      </div>
-
-      <div
-        id="totalOpens"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Recorded application opens
-      </div>
-    </div>
-
-
-    <div class="metric">
-      <div class="metric-label">
-        Rewarded Ads
-      </div>
-
-      <div
-        id="totalAds"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Completed rewarded ads
-      </div>
-    </div>
-
-
-    <div class="metric">
-      <div class="metric-label">
-        Shares
-      </div>
-
-      <div
-        id="totalShares"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Total recorded shares
-      </div>
-    </div>
-
-
-    <div class="metric">
-      <div class="metric-label">
-        Minutes Awarded
-      </div>
-
-      <div
-        id="minutesAwarded"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Watch time awarded from ads
-      </div>
-    </div>
-
-
-    <div class="metric">
-      <div class="metric-label">
-        Minutes Used
-      </div>
-
-      <div
-        id="minutesUsed"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Watch time consumed
-      </div>
-    </div>
-
-
-    <div class="metric">
-      <div class="metric-label">
-        Minutes Remaining
-      </div>
-
-      <div
-        id="minutesRemaining"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Awarded minus used
-      </div>
-    </div>
-
-
-    <div class="metric">
-      <div class="metric-label">
-        Active Today
-      </div>
-
-      <div
-        id="activeToday"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Users active in the last 24 hours
-      </div>
+    <div class="panel-meta" id="chartPeriod">
+      LAST 30 DAYS
     </div>
 
   </div>
 
-
-  <!-- =====================================================
-       USER ACTIVITY
-       ===================================================== -->
-
-  <div class="section-title">
-    User Activity
-  </div>
-
-  <div class="metrics">
-
-    <div class="metric">
-
-      <div class="metric-label">
-        Active — 7 Days
-      </div>
-
-      <div
-        id="active7Days"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Users active within 7 days
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="metric-label">
-        New Today
-      </div>
-
-      <div
-        id="newToday"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        New installations today
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="metric-label">
-        Lost Users
-      </div>
-
-      <div
-        id="lostUsers"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        No open recorded for 7+ days
-      </div>
-
-    </div>
-
-
-    <div class="metric">
-
-      <div class="metric-label">
-        Errors
-      </div>
-
-      <div
-        id="totalErrors"
-        class="metric-value"
-      >
-        —
-      </div>
-
-      <div class="metric-description">
-        Recorded application errors
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       30 DAY CHARTS
-       ===================================================== -->
-
-  <div class="section-title">
-    30-Day Analytics
-  </div>
-
-  <div class="section-subtitle">
-    Daily activity reported by the Stream analytics Worker
-  </div>
-
-  <div class="charts">
-
-    <div class="chart-card">
-
-      <div class="chart-title">
-        Daily Installations
-      </div>
-
-      <div class="chart-wrapper">
-        <canvas id="installationsChart"></canvas>
-      </div>
-
-    </div>
-
-
-    <div class="chart-card">
-
-      <div class="chart-title">
-        Daily Rewarded Ads
-      </div>
-
-      <div class="chart-wrapper">
-        <canvas id="adsChart"></canvas>
-      </div>
-
-    </div>
-
-
-    <div class="chart-card">
-
-      <div class="chart-title">
-        Daily Watch Minutes Awarded
-      </div>
-
-      <div class="chart-wrapper">
-        <canvas id="watchChart"></canvas>
-      </div>
-
-    </div>
-
-
-    <div class="chart-card">
-
-      <div class="chart-title">
-        Daily Shares
-      </div>
-
-      <div class="chart-wrapper">
-        <canvas id="sharesChart"></canvas>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       ENGAGEMENT
-       ===================================================== -->
-
-  <div class="section-title">
-    Engagement
-  </div>
-
-  <div class="data-grid">
-
-    <div class="panel">
-
-      <div class="panel-header">
-        <h3>Engagement Metrics</h3>
-      </div>
-
-      <div class="panel-body">
-
-        <div class="stat-list">
-
-          <div class="stat-row">
-
-            <span class="stat-name">
-              Average opens / installation
-            </span>
-
-            <span
-              id="averageOpens"
-              class="stat-number"
-            >
-              —
-            </span>
-
-          </div>
-
-
-          <div class="stat-row">
-
-            <span class="stat-name">
-              Average rewarded ads / installation
-            </span>
-
-            <span
-              id="averageAds"
-              class="stat-number"
-            >
-              —
-            </span>
-
-          </div>
-
-
-          <div class="stat-row">
-
-            <span class="stat-name">
-              Average watch minutes / installation
-            </span>
-
-            <span
-              id="averageMinutes"
-              class="stat-number"
-            >
-              —
-            </span>
-
-          </div>
-
-
-          <div class="stat-row">
-
-            <span class="stat-name">
-              Average shares / installation
-            </span>
-
-            <span
-              id="averageShares"
-              class="stat-number"
-            >
-              —
-            </span>
-
-          </div>
-
-
-          <div class="stat-row">
-
-            <span class="stat-name">
-              Rewarded ads / open
-            </span>
-
-            <span
-              id="adsPerOpen"
-              class="stat-number"
-            >
-              —
-            </span>
-
-          </div>
-
-
-          <div class="stat-row">
-
-            <span class="stat-name">
-              Watch usage rate
-            </span>
-
-            <span
-              id="watchUsageRate"
-              class="stat-number"
-            >
-              —
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="panel">
-
-      <div class="panel-header">
-        <h3>Feedback & Ratings</h3>
-      </div>
-
-      <div class="panel-body">
-
-        <div class="rating-summary">
-
-          <div
-            id="averageRating"
-            class="rating-number"
-          >
-            —
-          </div>
-
-          <div>
-
-            <div class="rating-label">
-              Average Rating
-            </div>
-
-            <div
-              id="totalRatings"
-              class="rating-label"
-            >
-              —
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="stat-row">
-
-          <span class="stat-name">
-            Feedback received
-          </span>
-
-          <span
-            id="totalFeedback"
-            class="stat-number"
-          >
-            —
-          </span>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       RATINGS / VOTES
-       ===================================================== -->
-
-  <div class="section-title">
-    Ratings & Link Votes
-  </div>
-
-  <div class="data-grid">
-
-    <div class="panel">
-
-      <div class="panel-header">
-        <h3>Rating Distribution</h3>
-      </div>
-
-      <div
-        id="ratingDistribution"
-        class="panel-body"
-      >
-        <div class="empty">
-          No ratings recorded.
-        </div>
-      </div>
-
-    </div>
-
-
-    <div class="panel">
-
-      <div class="panel-header">
-        <h3>Link Votes</h3>
-      </div>
-
-      <div
-        id="linkVotes"
-        class="panel-body"
-      >
-        <div class="empty">
-          No link votes recorded.
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- =====================================================
-       FOOTER
-       ===================================================== -->
-
-  <div class="footer">
-
-    Stream Analytics Dashboard ·
-    <span id="lastUpdated">
-      Waiting for data
-    </span>
-
+  <div class="chart-wrap">
+    <canvas id="activityChart"></canvas>
   </div>
 
 </div>
 
 
-<script>
+<div class="panel">
 
-/* ============================================================
-   CONFIGURATION
-   ============================================================ */
+  <div class="panel-header">
+
+    <div class="panel-title">
+      Global Metrics
+    </div>
+
+    <div class="panel-meta">
+      ALL TIME
+    </div>
+
+  </div>
+
+  <div class="mini-list">
+
+    <div class="mini-row">
+      <span class="mini-name">Total installations</span>
+      <span class="mini-value" id="totalInstallations">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Total opens</span>
+      <span class="mini-value" id="totalOpens">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Rewarded ads</span>
+      <span class="mini-value" id="totalAds">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Minutes awarded</span>
+      <span class="mini-value" id="totalAwarded">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Minutes used</span>
+      <span class="mini-value" id="totalUsed">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Minutes remaining</span>
+      <span class="mini-value" id="totalRemaining">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Total shares</span>
+      <span class="mini-value" id="totalShares">—</span>
+    </div>
+
+    <div class="mini-row">
+      <span class="mini-name">Active last 7 days</span>
+      <span class="mini-value" id="active7">—</span>
+    </div>
+
+  </div>
+
+</div>
+```
+
+  </section>
+
+  <section class="panel installations-panel">
+
+```
+<div class="panel-header">
+
+  <div>
+    <div class="panel-title">
+      Installations
+    </div>
+    <div class="panel-meta">
+      Latest registered devices
+    </div>
+  </div>
+
+  <div class="panel-meta" id="installationCount">
+    0 DEVICES
+  </div>
+
+</div>
+
+<div class="table-wrap">
+
+  <table>
+
+    <thead>
+
+      <tr>
+        <th>Installation</th>
+        <th>App Version</th>
+        <th>Installed</th>
+        <th>Last Open</th>
+        <th>Opens</th>
+        <th>Ads</th>
+        <th>Minutes</th>
+        <th>Used</th>
+        <th>Shares</th>
+      </tr>
+
+    </thead>
+
+    <tbody id="installationsBody">
+
+      <tr>
+        <td colspan="9" class="empty">
+          Loading installations...
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+```
+
+  </section>
+
+  <div class="footer">
+
+```
+<span>
+  STREAM ANALYTICS • D1 TELEMETRY
+</span>
+
+<span id="lastUpdated">
+  LAST UPDATE: —
+</span>
+```
+
+  </div>
+
+</div>
+
+<script>
 
 const API_BASE =
   "https://stream-analytics-worker.kelvinthuranira591.workers.dev";
 
-const STATS_ENDPOINT =
-  API_BASE + "/api/stats";
+
+let currentPeriod = "24h";
 
 
-/* ============================================================
-   CHART INSTANCES
-   ============================================================ */
+const $ = (id) =>
+  document.getElementById(id);
 
-let installationsChart = null;
-let adsChart = null;
-let watchChart = null;
-let sharesChart = null;
-
-
-/* ============================================================
-   HELPERS
-   ============================================================ */
 
 function number(value) {
 
-  const n = Number(value);
+  return Number(value || 0).toLocaleString();
 
-  if (!Number.isFinite(n)) {
-    return 0;
+}
+
+
+function formatDate(value) {
+
+  if (!value) {
+    return "—";
   }
 
-  return n;
-}
+  const date =
+    new Date(value);
 
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return value;
+  }
 
-function formatNumber(value) {
-
-  return number(value).toLocaleString();
-}
-
-
-function formatDecimal(value) {
-
-  return number(value).toLocaleString(
+  return date.toLocaleString(
     undefined,
     {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
     }
   );
+
 }
 
 
-function formatPercent(value) {
+function shortId(value) {
+
+  if (!value) {
+    return "—";
+  }
+
+  if (value.length <= 22) {
+    return value;
+  }
 
   return (
-    number(value) * 100
-  ).toLocaleString(
-    undefined,
-    {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
-    }
-  ) + "%";
+    value.substring(0, 10) +
+    "..." +
+    value.substring(value.length - 8)
+  );
+
 }
 
-
-function setText(id, value) {
-
-  const element =
-    document.getElementById(id);
-
-  if (element) {
-    element.textContent = value;
-  }
-}
-
-
-/* ============================================================
-   ERROR UI
-   ============================================================ */
 
 function showError(message) {
 
   const box =
-    document.getElementById(
-      "errorBox"
-    );
+    $("errorBox");
 
   box.textContent =
-    "Dashboard error: " + message;
+    message;
 
-  box.classList.add("visible");
+  box.classList.add("show");
 
-  document
-    .getElementById("statusDot")
-    .classList.add("error");
-
-  document
-    .getElementById("statusText")
-    .textContent = "Offline";
 }
 
 
 function clearError() {
 
-  document
-    .getElementById("errorBox")
-    .classList.remove("visible");
+  $("errorBox")
+    .classList
+    .remove("show");
 
-  document
-    .getElementById("statusDot")
-    .classList.remove("error");
-
-  document
-    .getElementById("statusText")
-    .textContent = "Connected";
 }
 
 
-/* ============================================================
-   CHART DESTROY
-   ============================================================ */
+function setConnection(
+  online,
+  message
+) {
 
-function destroyCharts() {
+  const status =
+    $("connectionStatus");
 
-  if (installationsChart) {
-    installationsChart.destroy();
-    installationsChart = null;
+  const text =
+    $("connectionText");
+
+  status.classList.remove(
+    "online",
+    "error"
+  );
+
+  if (online) {
+
+    status.classList.add(
+      "online"
+    );
+
+  } else {
+
+    status.classList.add(
+      "error"
+    );
+
   }
 
-  if (adsChart) {
-    adsChart.destroy();
-    adsChart = null;
+  text.textContent =
+    message;
+
+}
+
+
+async function fetchJson(
+  endpoint
+) {
+
+  const response =
+    await fetch(
+      API_BASE + endpoint,
+      {
+        method: "GET",
+        cache: "no-store"
+      }
+    );
+
+  let data;
+
+  try {
+
+    data =
+      await response.json();
+
+  } catch {
+
+    throw new Error(
+      `Invalid response from ${endpoint}`
+    );
+
   }
 
-  if (watchChart) {
-    watchChart.destroy();
-    watchChart = null;
+  if (!response.ok || data.success === false) {
+
+    throw new Error(
+      data.error ||
+      `HTTP ${response.status}`
+    );
+
   }
 
-  if (sharesChart) {
-    sharesChart.destroy();
-    sharesChart = null;
+  return data;
+
+}
+
+
+async function loadHealth() {
+
+  try {
+
+    await fetchJson(
+      "/api/health"
+    );
+
+    setConnection(
+      true,
+      "ONLINE"
+    );
+
+  } catch (error) {
+
+    setConnection(
+      false,
+      "OFFLINE"
+    );
+
   }
 
 }
 
 
-/* ============================================================
-   CHART DATA
-   ============================================================ */
+async function loadStats() {
 
-function createLabels(data) {
+  try {
 
-  return data.map(
-    item => item.day
+    const data =
+      await fetchJson(
+        `/api/stats?period=${encodeURIComponent(currentPeriod)}`
+      );
+
+    clearError();
+
+    setConnection(
+      true,
+      "ONLINE"
+    );
+
+    renderStats(
+      data
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Stats error:",
+      error
+    );
+
+    showError(
+      "Unable to load analytics: " +
+      error.message
+    );
+
+    setConnection(
+      false,
+      "DATA ERROR"
+    );
+
+  }
+
+}
+
+
+function renderStats(
+  data
+) {
+
+  const period =
+    data.selected_period ||
+    {};
+
+  const totals =
+    data.totals ||
+    {};
+
+  const activity =
+    data.activity ||
+    {};
+
+  $("opens").textContent =
+    number(period.opens);
+
+  $("uniqueOpeners").textContent =
+    number(period.unique_openers);
+
+  $("newInstalls").textContent =
+    number(period.new_installations);
+
+  $("rewardedAds").textContent =
+    number(period.rewarded_ads);
+
+  $("watchMinutes").textContent =
+    number(period.minutes_awarded);
+
+  $("shares").textContent =
+    number(period.shares);
+
+  $("errors").textContent =
+    number(period.errors);
+
+  $("feedback").textContent =
+    number(period.feedback);
+
+
+  $("totalInstallations").textContent =
+    number(
+      totals.total_installations
+    );
+
+  $("totalOpens").textContent =
+    number(
+      totals.total_opens
+    );
+
+  $("totalAds").textContent =
+    number(
+      totals.total_rewarded_ads
+    );
+
+  $("totalAwarded").textContent =
+    number(
+      totals.total_minutes_awarded
+    );
+
+  $("totalUsed").textContent =
+    number(
+      totals.total_minutes_used
+    );
+
+  $("totalRemaining").textContent =
+    number(
+      totals.total_minutes_remaining
+    );
+
+  $("totalShares").textContent =
+    number(
+      totals.total_shares
+    );
+
+  $("active7").textContent =
+    number(
+      activity.active_7_days
+    );
+
+
+  $("periodDescription").textContent =
+    `${period.period_label || currentPeriod} • ` +
+    `${number(period.opens)} open events • ` +
+    `${number(period.unique_openers)} unique openers`;
+
+
+  renderChart(
+    data.daily || {}
   );
 
 }
 
 
-function createInstallationData(data) {
+async function loadInstallations() {
 
-  return data.map(
-    item =>
-      number(item.installations)
-  );
+  const body =
+    $("installationsBody");
+
+  try {
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="9" class="empty">
+          Loading installations...
+        </td>
+      </tr>
+    `;
+
+    const data =
+      await fetchJson(
+        "/api/installations"
+      );
+
+    const installations =
+      Array.isArray(
+        data.installations
+      )
+        ? data.installations
+        : [];
+
+    $("installationCount")
+      .textContent =
+      `${number(installations.length)} DEVICES`;
+
+
+    if (
+      installations.length === 0
+    ) {
+
+      body.innerHTML = `
+        <tr>
+          <td colspan="9" class="empty">
+            No installations found.
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    body.innerHTML =
+      installations
+        .map(
+          installation => {
+
+            return `
+              <tr>
+
+                <td
+                  class="id-cell"
+                  title="${escapeHtml(
+                    installation.installation_id || ""
+                  )}"
+                >
+                  ${escapeHtml(
+                    shortId(
+                      installation.installation_id
+                    )
+                  )}
+                </td>
+
+                <td>
+                  <span class="badge">
+                    ${escapeHtml(
+                      installation.app_version ||
+                      "Unknown"
+                    )}
+                  </span>
+                </td>
+
+                <td>
+                  ${escapeHtml(
+                    formatDate(
+                      installation.install_time
+                    )
+                  )}
+                </td>
+
+                <td>
+                  ${escapeHtml(
+                    formatDate(
+                      installation.last_open
+                    )
+                  )}
+                </td>
+
+                <td>
+                  ${number(
+                    installation.open_count
+                  )}
+                </td>
+
+                <td>
+                  ${number(
+                    installation.rewarded_ads_completed
+                  )}
+                </td>
+
+                <td>
+                  ${number(
+                    installation.watch_minutes_awarded
+                  )}
+                </td>
+
+                <td>
+                  ${number(
+                    installation.watch_minutes_used
+                  )}
+                </td>
+
+                <td>
+                  ${number(
+                    installation.share_count
+                  )}
+                </td>
+
+              </tr>
+            `;
+
+          }
+        )
+        .join("");
+
+  } catch (error) {
+
+    console.error(
+      "Installations error:",
+      error
+    );
+
+    $("installationCount")
+      .textContent =
+      "ERROR";
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="9" class="empty">
+          Unable to load installations.
+        </td>
+      </tr>
+    `;
+
+  }
 
 }
 
 
-function createAdData(data) {
+function escapeHtml(
+  value
+) {
 
-  return data.map(
-    item =>
-      number(item.rewarded_ads)
-  );
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
 
-function createWatchData(data) {
-
-  return data.map(
-    item =>
-      number(item.minutes_awarded)
-  );
-
-}
-
-
-function createShareData(data) {
-
-  return data.map(
-    item =>
-      number(item.shares)
-  );
-
-}
-
-
-/* ============================================================
-   CHART CREATOR
-   ============================================================ */
-
-function makeChart(
-  canvasId,
-  labels,
-  values,
-  label
+function renderChart(
+  daily
 ) {
 
   const canvas =
-    document.getElementById(
-      canvasId
-    );
+    $("activityChart");
 
-  if (!canvas) {
-    return null;
-  }
+  const ctx =
+    canvas.getContext("2d");
 
-  return new Chart(
-    canvas,
-    {
-      type: "line",
+  const rect =
+    canvas.getBoundingClientRect();
 
-      data: {
+  const dpr =
+    window.devicePixelRatio ||
+    1;
 
-        labels,
+  canvas.width =
+    rect.width * dpr;
 
-        datasets: [
-          {
-            label,
-            data: values,
+  canvas.height =
+    rect.height * dpr;
 
-            borderWidth: 2,
-
-            tension: 0.35,
-
-            fill: true,
-
-            pointRadius: 2,
-
-            pointHoverRadius: 5
-          }
-        ]
-
-      },
-
-      options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        interaction: {
-          intersect: false,
-          mode: "index"
-        },
-
-        plugins: {
-
-          legend: {
-            display: false
-          }
-
-        },
-
-        scales: {
-
-          x: {
-            ticks: {
-              color: "#74808d",
-              maxRotation: 0,
-              autoSkip: true,
-              maxTicksLimit: 8
-            },
-
-            grid: {
-              color:
-                "rgba(255,255,255,0.04)"
-            }
-          },
-
-          y: {
-
-            beginAtZero: true,
-
-            ticks: {
-              color: "#74808d"
-            },
-
-            grid: {
-              color:
-                "rgba(255,255,255,0.04)"
-            }
-
-          }
-
-        }
-
-      }
-
-    }
+  ctx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
   );
 
-}
+
+  const width =
+    rect.width;
+
+  const height =
+    rect.height;
 
 
-/* ============================================================
-   RENDER CHARTS
-   ============================================================ */
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
 
-function renderCharts(daily) {
-
-  destroyCharts();
 
   const installations =
     Array.isArray(
-      daily?.installations
+      daily.installations
     )
       ? daily.installations
       : [];
 
   const ads =
     Array.isArray(
-      daily?.rewarded_ads
+      daily.rewarded_ads
     )
       ? daily.rewarded_ads
       : [];
 
   const shares =
     Array.isArray(
-      daily?.shares
+      daily.shares
     )
       ? daily.shares
       : [];
 
 
-  const labels =
-    createLabels(
-      installations
-    );
-
-
-  installationsChart =
-    makeChart(
-      "installationsChart",
-      labels,
-      createInstallationData(
-        installations
-      ),
-      "Installations"
-    );
-
-
-  /*
-   * Ads can have different dates from
-   * installations, so use their own labels.
-   */
-
-  adsChart =
-    makeChart(
-      "adsChart",
-      createLabels(ads),
-      createAdData(ads),
-      "Rewarded Ads"
-    );
-
-
-  adsChart =
-    adsChart;
-
-
-  watchChart =
-    makeChart(
-      "watchChart",
-      createLabels(ads),
-      createWatchData(ads),
-      "Minutes Awarded"
-    );
-
-
-  sharesChart =
-    makeChart(
-      "sharesChart",
-      createLabels(shares),
-      createShareData(shares),
-      "Shares"
-    );
-
-}
-
-
-/* ============================================================
-   RENDER RATINGS
-   ============================================================ */
-
-function renderRatings(ratings) {
-
-  const container =
-    document.getElementById(
-      "ratingDistribution"
-    );
-
-  const distribution =
-    Array.isArray(
-      ratings?.distribution
+  const days = [
+    ...new Set(
+      [
+        ...installations.map(
+          x => x.day
+        ),
+        ...ads.map(
+          x => x.day
+        ),
+        ...shares.map(
+          x => x.day
+        )
+      ]
     )
-      ? ratings.distribution
-      : [];
+  ].sort();
 
-  if (
-    distribution.length === 0
-  ) {
 
-    container.innerHTML =
-      '<div class="empty">No ratings recorded.</div>';
+  if (days.length === 0) {
+
+    ctx.fillStyle =
+      "#7f8999";
+
+    ctx.font =
+      "12px system-ui";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.fillText(
+      "No activity data available",
+      width / 2,
+      height / 2
+    );
 
     return;
+
   }
 
 
-  container.innerHTML =
-    distribution
-      .map(item => {
+  const values =
+    days.map(day => {
 
-        return `
-          <div class="rating-row">
+      const install =
+        installations.find(
+          x => x.day === day
+        );
 
-            <span>
-              ${item.rating} ★
-            </span>
+      const ad =
+        ads.find(
+          x => x.day === day
+        );
 
-            <strong>
-              ${formatNumber(item.total)}
-            </strong>
+      const share =
+        shares.find(
+          x => x.day === day
+        );
 
-          </div>
-        `;
+      return {
+        day,
 
-      })
-      .join("");
+        installations:
+          Number(
+            install?.installations || 0
+          ),
 
-}
+        ads:
+          Number(
+            ad?.rewarded_ads || 0
+          ),
+
+        shares:
+          Number(
+            share?.shares || 0
+          )
+      };
+
+    });
 
 
-/* ============================================================
-   RENDER LINK VOTES
-   ============================================================ */
-
-function renderLinkVotes(votes) {
-
-  const container =
-    document.getElementById(
-      "linkVotes"
+  const maxValue =
+    Math.max(
+      1,
+      ...values.map(
+        x =>
+          Math.max(
+            x.installations,
+            x.ads,
+            x.shares
+          )
+      )
     );
 
-  if (
-    !Array.isArray(votes) ||
-    votes.length === 0
+
+  const padding = {
+    top: 20,
+    right: 20,
+    bottom: 34,
+    left: 42
+  };
+
+
+  const chartWidth =
+    width -
+    padding.left -
+    padding.right;
+
+  const chartHeight =
+    height -
+    padding.top -
+    padding.bottom;
+
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.07)";
+
+  ctx.lineWidth =
+    1;
+
+
+  for (
+    let i = 0;
+    i <= 4;
+    i++
   ) {
 
-    container.innerHTML =
-      '<div class="empty">No link votes recorded.</div>';
-
-    return;
-  }
-
-
-  container.innerHTML =
-    votes
-      .map(item => {
-
-        return `
-          <div class="rating-row">
-
-            <span>
-              ${escapeHtml(
-                String(
-                  item.link_id ?? ""
-                )
-              )}
-            </span>
-
-            <span>
-              ↑ ${formatNumber(item.upvotes)}
-              &nbsp;&nbsp;
-              ↓ ${formatNumber(item.downvotes)}
-            </span>
-
-          </div>
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* ============================================================
-   HTML ESCAPE
-   ============================================================ */
-
-function escapeHtml(value) {
-
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-
-/* ============================================================
-   RENDER DASHBOARD
-   ============================================================ */
-
-function renderDashboard(data) {
-
-  const totals =
-    data.totals || {};
-
-  const activity =
-    data.activity || {};
-
-  const engagement =
-    data.engagement || {};
-
-  const ratings =
-    data.ratings || {};
-
-  const errors =
-    data.errors || {};
-
-  const feedback =
-    data.feedback || {};
-
-  const daily =
-    data.daily || {};
-
-
-  /* ----------------------------------------------------------
-     TOTALS
-     ---------------------------------------------------------- */
-
-  setText(
-    "totalInstallations",
-    formatNumber(
-      totals.total_installations
-    )
-  );
-
-  setText(
-    "totalOpens",
-    formatNumber(
-      totals.total_opens
-    )
-  );
-
-  setText(
-    "totalAds",
-    formatNumber(
-      totals.total_rewarded_ads
-    )
-  );
-
-  setText(
-    "totalShares",
-    formatNumber(
-      totals.total_shares
-    )
-  );
-
-  setText(
-    "minutesAwarded",
-    formatNumber(
-      totals.total_minutes_awarded
-    )
-  );
-
-  setText(
-    "minutesUsed",
-    formatNumber(
-      totals.total_minutes_used
-    )
-  );
-
-  setText(
-    "minutesRemaining",
-    formatNumber(
-      totals.total_minutes_remaining
-    )
-  );
-
-
-  /* ----------------------------------------------------------
-     ACTIVITY
-     ---------------------------------------------------------- */
-
-  setText(
-    "activeToday",
-    formatNumber(
-      activity.active_today
-    )
-  );
-
-  setText(
-    "active7Days",
-    formatNumber(
-      activity.active_7_days
-    )
-  );
-
-  setText(
-    "newToday",
-    formatNumber(
-      activity.new_installations_today
-    )
-  );
-
-  setText(
-    "lostUsers",
-    formatNumber(
-      activity.lost_users_7_days
-    )
-  );
-
-
-  /* ----------------------------------------------------------
-     ERRORS
-     ---------------------------------------------------------- */
-
-  setText(
-    "totalErrors",
-    formatNumber(
-      errors.total
-    )
-  );
-
-
-  /* ----------------------------------------------------------
-     ENGAGEMENT
-     ---------------------------------------------------------- */
-
-  setText(
-    "averageOpens",
-    formatDecimal(
-      engagement
-        .average_opens_per_installation
-    )
-  );
-
-  setText(
-    "averageAds",
-    formatDecimal(
-      engagement
-        .average_rewarded_ads_per_installation
-    )
-  );
-
-  setText(
-    "averageMinutes",
-    formatDecimal(
-      engagement
-        .average_watch_minutes_awarded_per_installation
-    )
-  );
-
-  setText(
-    "averageShares",
-    formatDecimal(
-      engagement
-        .average_shares_per_installation
-    )
-  );
-
-  setText(
-    "adsPerOpen",
-    formatPercent(
-      engagement
-        .rewarded_ads_per_open
-    )
-  );
-
-  setText(
-    "watchUsageRate",
-    formatPercent(
-      engagement
-        .watch_usage_rate
-    )
-  );
-
-
-  /* ----------------------------------------------------------
-     RATINGS
-     ---------------------------------------------------------- */
-
-  setText(
-    "averageRating",
-    formatDecimal(
-      ratings.average
-    )
-  );
-
-  setText(
-    "totalRatings",
-    formatNumber(
-      ratings.total
-    ) + " ratings"
-  );
-
-  setText(
-    "totalFeedback",
-    formatNumber(
-      feedback.total
-    )
-  );
-
-
-  /* ----------------------------------------------------------
-     TABLES
-     ---------------------------------------------------------- */
-
-  renderRatings(
-    ratings
-  );
-
-  renderLinkVotes(
-    data.link_votes
-  );
-
-
-  /* ----------------------------------------------------------
-     CHARTS
-     ---------------------------------------------------------- */
-
-  renderCharts(
-    daily
-  );
-
-
-  /* ----------------------------------------------------------
-     LAST UPDATED
-     ---------------------------------------------------------- */
-
-  if (
-    data.generated_at
-  ) {
-
-    const date =
-      new Date(
-        data.generated_at
+    const y =
+      padding.top +
+      chartHeight -
+      (
+        chartHeight *
+        i /
+        4
       );
 
-    setText(
-      "lastUpdated",
-      "Last updated " +
-      date.toLocaleString()
+    ctx.beginPath();
+
+    ctx.moveTo(
+      padding.left,
+      y
+    );
+
+    ctx.lineTo(
+      width -
+      padding.right,
+      y
+    );
+
+    ctx.stroke();
+
+
+    ctx.fillStyle =
+      "#667080";
+
+    ctx.font =
+      "9px system-ui";
+
+    ctx.textAlign =
+      "right";
+
+    ctx.fillText(
+      Math.round(
+        maxValue *
+        i /
+        4
+      ),
+      padding.left - 8,
+      y + 3
     );
 
   }
 
+
+  function drawLine(
+    key,
+    lineColor
+  ) {
+
+    ctx.strokeStyle =
+      lineColor;
+
+    ctx.lineWidth =
+      2;
+
+    ctx.beginPath();
+
+
+    values.forEach(
+      (item, index) => {
+
+        const x =
+          padding.left +
+          (
+            chartWidth *
+            index /
+            Math.max(
+              1,
+              values.length - 1
+            )
+          );
+
+        const y =
+          padding.top +
+          chartHeight -
+          (
+            chartHeight *
+            item[key] /
+            maxValue
+          );
+
+
+        if (index === 0) {
+
+          ctx.moveTo(
+            x,
+            y
+          );
+
+        } else {
+
+          ctx.lineTo(
+            x,
+            y
+          );
+
+        }
+
+      }
+    );
+
+
+    ctx.stroke();
+
+
+    values.forEach(
+      (item, index) => {
+
+        const x =
+          padding.left +
+          (
+            chartWidth *
+            index /
+            Math.max(
+              1,
+              values.length - 1
+            )
+          );
+
+        const y =
+          padding.top +
+          chartHeight -
+          (
+            chartHeight *
+            item[key] /
+            maxValue
+          );
+
+
+        ctx.fillStyle =
+          lineColor;
+
+        ctx.beginPath();
+
+        ctx.arc(
+          x,
+          y,
+          2.5,
+          0,
+          Math.PI * 2
+        );
+
+        ctx.fill();
+
+      }
+    );
+
+  }
+
+
+  drawLine(
+    "installations",
+    "#00e5ff"
+  );
+
+  drawLine(
+    "ads",
+    "#7c4dff"
+  );
+
+  drawLine(
+    "shares",
+    "#00e676"
+  );
+
+
+  ctx.font =
+    "9px system-ui";
+
+  ctx.fillStyle =
+    "#667080";
+
+  ctx.textAlign =
+    "center";
+
+
+  const labelStep =
+    Math.max(
+      1,
+      Math.ceil(
+        days.length / 7
+      )
+    );
+
+
+  days.forEach(
+    (day, index) => {
+
+      if (
+        index % labelStep !== 0 &&
+        index !== days.length - 1
+      ) {
+        return;
+      }
+
+      const x =
+        padding.left +
+        (
+          chartWidth *
+          index /
+          Math.max(
+            1,
+            days.length - 1
+          )
+        );
+
+      const date =
+        new Date(day);
+
+      const label =
+        Number.isNaN(
+          date.getTime()
+        )
+          ? day
+          : date.toLocaleDateString(
+              undefined,
+              {
+                month: "short",
+                day: "numeric"
+              }
+            );
+
+      ctx.fillText(
+        label,
+        x,
+        height - 10
+      );
+
+    }
+  );
+
 }
 
 
-/* ============================================================
-   LOAD DASHBOARD
-   ============================================================ */
+function setActivePeriod(
+  period
+) {
 
-async function loadDashboard() {
+  currentPeriod =
+    period;
 
-  const button =
-    document.getElementById(
-      "refreshButton"
+  document
+    .querySelectorAll(
+      ".period-btn"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.period === period
+        );
+
+      }
     );
 
-  button.disabled = true;
-
-  button.textContent =
-    "Loading...";
+}
 
 
-  try {
+document
+  .querySelectorAll(
+    ".period-btn"
+  )
+  .forEach(
+    button => {
 
-    clearError();
+      button.addEventListener(
+        "click",
+        async () => {
 
+          setActivePeriod(
+            button.dataset.period
+          );
 
-    const response =
-      await fetch(
-        STATS_ENDPOINT,
-        {
-          method: "GET",
-          cache: "no-store"
+          await loadStats();
+
         }
       );
 
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Worker returned HTTP " +
-        response.status
-      );
-
     }
+  );
 
 
-    const data =
-      await response.json();
+async function refresh() {
 
+  await Promise.all([
+    loadHealth(),
+    loadStats(),
+    loadInstallations()
+  ]);
 
-    if (
-      !data ||
-      data.success !== true
-    ) {
-
-      throw new Error(
-        data?.error ||
-        "Invalid analytics response"
-      );
-
-    }
-
-
-    renderDashboard(
-      data
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Dashboard error:",
-      error
-    );
-
-    showError(
-      error.message ||
-      "Unable to load analytics"
-    );
-
-
-  } finally {
-
-    button.disabled = false;
-
-    button.textContent =
-      "Refresh";
-
-  }
+  $("lastUpdated")
+    .textContent =
+    "LAST UPDATE: " +
+    new Date()
+      .toLocaleTimeString();
 
 }
 
 
-/* ============================================================
-   INITIAL LOAD
-   ============================================================ */
+window.addEventListener(
+  "resize",
+  () => {
 
-loadDashboard();
+    loadStats();
+
+  }
+);
 
 
-/* ============================================================
-   AUTO REFRESH
-   ============================================================ */
+refresh();
 
-/*
- * Refresh every 60 seconds.
- *
- * This only performs GET /api/stats.
- * It does not send anything to the app
- * analytics ingestion endpoints.
- */
 
 setInterval(
-  loadDashboard,
+  refresh,
   60000
 );
 
