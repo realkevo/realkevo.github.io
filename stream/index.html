@@ -1,57 +1,40 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Stream Analytics</title>
+  <title>STREAM // Analytics Command Center</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     :root {
-      --bg: #06070b;
-      --panel: #0c0f16;
-      --panel-2: #11151e;
-      --border: #202633;
-      --text: #f2f5f8;
-      --muted: #7f8999;
+      --bg: #05070d;
+      --panel: #0a0f18;
+      --panel-2: #0d1420;
+      --border: #1b2a3d;
+      --text: #e8f1ff;
+      --muted: #718198;
       --accent: #00e5ff;
       --accent-2: #7c4dff;
-      --green: #00e676;
-      --red: #ff4567;
-      --yellow: #ffc107;
+      --green: #00ff9d;
+      --yellow: #ffd54a;
+      --red: #ff4d6d;
+      --orange: #ff9f43;
+      --shadow: 0 0 30px rgba(0, 229, 255, 0.05);
     }
 
     body {
-      min-height: 100vh;
+      margin: 0;
       background:
-        radial-gradient(
-          circle at 15% 10%,
-          rgba(0, 229, 255, 0.08),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 85% 20%,
-          rgba(124, 77, 255, 0.08),
-          transparent 30%
-        ),
+        radial-gradient(circle at 15% 10%, rgba(0, 229, 255, 0.07), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(124, 77, 255, 0.08), transparent 30%),
         var(--bg);
       color: var(--text);
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-      overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
     }
 
     body::before {
@@ -59,308 +42,268 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
+      opacity: 0.035;
       background-image:
-        linear-gradient(
-          rgba(255,255,255,0.015) 1px,
-          transparent 1px
-        ),
-        linear-gradient(
-          90deg,
-          rgba(255,255,255,0.015) 1px,
-          transparent 1px
-        );
+        linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px);
       background-size: 40px 40px;
-      mask-image: linear-gradient(
-        to bottom,
-        black,
-        transparent 90%
-      );
+      mask-image: linear-gradient(to bottom, black, transparent);
     }
 
-    .container {
-      width: min(1500px, calc(100% - 32px));
+    .app {
+      width: min(1700px, 96%);
       margin: 0 auto;
-      padding: 28px 0 50px;
+      padding: 24px 0 50px;
     }
 
-    .topbar {
+    /* HEADER */
+
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 20px;
-      margin-bottom: 26px;
+      margin-bottom: 25px;
+      padding: 20px 22px;
+      background: rgba(10, 15, 24, 0.85);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 15px;
     }
 
     .logo {
       width: 48px;
       height: 48px;
-      border: 1px solid rgba(0,229,255,.45);
-      background: rgba(0,229,255,.06);
+      border: 1px solid var(--accent);
       display: grid;
       place-items: center;
-      border-radius: 14px;
-      font-size: 23px;
-      box-shadow:
-        0 0 30px rgba(0,229,255,.08),
-        inset 0 0 20px rgba(0,229,255,.04);
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 19px;
+      box-shadow: 0 0 18px rgba(0, 229, 255, .15);
     }
 
     .brand h1 {
-      font-size: 22px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 2px;
     }
 
     .brand p {
-      margin-top: 3px;
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 12px;
-      letter-spacing: .05em;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
     .status {
       display: flex;
       align-items: center;
-      gap: 9px;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,.025);
+      gap: 10px;
       color: var(--muted);
       font-size: 12px;
     }
 
     .status-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: var(--yellow);
-      box-shadow: 0 0 12px var(--yellow);
-    }
-
-    .status.online .status-dot {
       background: var(--green);
       box-shadow: 0 0 12px var(--green);
     }
 
-    .status.error .status-dot {
+    .status-dot.offline {
       background: var(--red);
       box-shadow: 0 0 12px var(--red);
     }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 26px;
-      border: 1px solid var(--border);
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0,229,255,.06),
-          rgba(124,77,255,.035) 45%,
-          rgba(255,255,255,.015)
-        ),
-        var(--panel);
-      border-radius: 22px;
-      margin-bottom: 18px;
-    }
+    /* FILTER BAR */
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      right: -100px;
-      top: -130px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,229,255,.14);
-      box-shadow:
-        0 0 0 25px rgba(0,229,255,.025),
-        0 0 0 50px rgba(0,229,255,.015);
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
+    .control-panel {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 25px;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      background: var(--panel);
+      border: 1px solid var(--border);
     }
 
-    .hero h2 {
-      font-size: clamp(22px, 3vw, 34px);
-      letter-spacing: -.02em;
+    .control-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .hero h2 span {
+    .control-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    select {
+      appearance: none;
+      min-width: 210px;
+      padding: 11px 38px 11px 13px;
+      color: var(--text);
+      background:
+        linear-gradient(45deg, transparent 50%, var(--accent) 50%),
+        linear-gradient(135deg, var(--accent) 50%, transparent 50%),
+        var(--panel-2);
+      background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 13px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      border: 1px solid var(--border);
+      outline: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(0,229,255,.1);
+    }
+
+    .refresh-button {
+      padding: 11px 17px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: .8px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .refresh-button:hover {
+      background: rgba(0,229,255,.1);
+      box-shadow: 0 0 18px rgba(0,229,255,.12);
+    }
+
+    .last-updated {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* PERIOD INFO */
+
+    .period-info {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .period-info strong {
       color: var(--accent);
     }
 
-    .hero p {
-      color: var(--muted);
-      margin-top: 8px;
-      font-size: 14px;
-    }
+    /* KPI */
 
-    .periods {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      justify-content: flex-end;
-    }
-
-    .period-btn {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.025);
-      color: var(--muted);
-      padding: 8px 11px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .06em;
-      transition: .18s ease;
-    }
-
-    .period-btn:hover {
-      border-color: rgba(0,229,255,.35);
-      color: var(--text);
-    }
-
-    .period-btn.active {
-      color: #001014;
-      background: var(--accent);
-      border-color: var(--accent);
-      box-shadow: 0 0 18px rgba(0,229,255,.2);
-    }
-
-    .grid {
+    .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
     }
 
     .card {
+      background: linear-gradient(145deg, rgba(13,20,32,.96), rgba(8,12,20,.96));
       border: 1px solid var(--border);
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.025),
-          rgba(255,255,255,.008)
-        ),
-        var(--panel);
-      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi {
       padding: 18px;
-      min-height: 125px;
+      min-height: 120px;
       position: relative;
       overflow: hidden;
     }
 
-    .card::before {
+    .kpi::after {
       content: "";
       position: absolute;
-      left: 0;
-      top: 0;
-      width: 3px;
-      height: 100%;
-      background: var(--accent);
-      opacity: .65;
+      width: 80px;
+      height: 80px;
+      right: -35px;
+      bottom: -35px;
+      border-radius: 50%;
+      background: rgba(0,229,255,.08);
+      filter: blur(4px);
     }
 
-    .card:nth-child(2)::before {
-      background: var(--accent-2);
-    }
-
-    .card:nth-child(3)::before {
-      background: var(--green);
-    }
-
-    .card:nth-child(4)::before {
-      background: var(--yellow);
-    }
-
-    .card:nth-child(5)::before {
-      background: #ff7a00;
-    }
-
-    .card:nth-child(6)::before {
-      background: #ff4dca;
-    }
-
-    .card:nth-child(7)::before {
-      background: var(--red);
-    }
-
-    .card:nth-child(8)::before {
-      background: #6dffdb;
-    }
-
-    .label {
+    .kpi-label {
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .08em;
       font-size: 10px;
-      font-weight: 700;
-    }
-
-    .value {
-      font-size: 31px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
       font-weight: 800;
-      margin-top: 14px;
-      letter-spacing: -.03em;
     }
 
-    .sub {
-      color: var(--muted);
+    .kpi-value {
+      margin-top: 10px;
+      font-size: 29px;
+      font-weight: 900;
+      letter-spacing: -.5px;
+    }
+
+    .kpi-sub {
       margin-top: 5px;
-      font-size: 11px;
+      color: var(--muted);
+      font-size: 10px;
     }
 
-    .section-grid {
+    /* MAIN GRID */
+
+    .main-grid {
       display: grid;
       grid-template-columns: 1.45fr .75fr;
-      gap: 14px;
-      margin-top: 14px;
+      gap: 18px;
+      margin-bottom: 22px;
     }
 
-    .panel {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 18px;
-      overflow: hidden;
+    .section {
+      padding: 18px;
     }
 
-    .panel-header {
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 15px;
+      margin-bottom: 16px;
     }
 
-    .panel-title {
+    .section-title {
       font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      letter-spacing: .1em;
-      font-weight: 800;
     }
 
-    .panel-meta {
+    .section-meta {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 10px;
     }
+
+    /* CHART */
 
     .chart-wrap {
+      width: 100%;
       height: 300px;
-      padding: 20px;
       position: relative;
     }
 
@@ -370,1316 +313,1466 @@
       display: block;
     }
 
-    .mini-list {
-      padding: 7px 20px 16px;
+    /* SIDE METRICS */
+
+    .metric-list {
+      display: grid;
+      gap: 10px;
     }
 
-    .mini-row {
+    .metric {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      padding: 12px;
+      background: rgba(255,255,255,.018);
+      border: 1px solid rgba(255,255,255,.05);
     }
 
-    .mini-row:last-child {
-      border-bottom: none;
-    }
-
-    .mini-name {
+    .metric span:first-child {
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
     }
 
-    .mini-value {
-      font-weight: 800;
+    .metric strong {
       font-size: 14px;
     }
 
-    .installations-panel {
-      margin-top: 14px;
+    /* INSTALLATIONS */
+
+    .installations-card {
+      margin-bottom: 22px;
+      overflow: hidden;
     }
 
-    .table-wrap {
+    .installations-header {
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .installation-count {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .table-wrapper {
       overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 850px;
-    }
-
-    th,
-    td {
-      padding: 13px 18px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,.045);
-      font-size: 12px;
+      min-width: 1100px;
     }
 
     th {
+      padding: 13px 12px;
+      text-align: left;
       color: var(--muted);
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: .08em;
-      font-size: 9px;
-      background: rgba(255,255,255,.015);
-    }
-
-    td {
-      color: #dce1e8;
-    }
-
-    tr:hover td {
-      background: rgba(0,229,255,.025);
-    }
-
-    .id-cell {
-      color: var(--accent);
-      font-family: monospace;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      letter-spacing: 1px;
+      background: rgba(255,255,255,.018);
+      border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
 
-    .badge {
-      display: inline-flex;
-      padding: 4px 7px;
-      border-radius: 6px;
-      font-size: 9px;
-      font-weight: 800;
-      background: rgba(0,229,255,.08);
-      color: var(--accent);
-      border: 1px solid rgba(0,229,255,.14);
+    td {
+      padding: 12px;
+      font-size: 11px;
+      border-bottom: 1px solid rgba(255,255,255,.045);
+      white-space: nowrap;
     }
 
-    .empty {
-      text-align: center;
-      padding: 35px;
+    tbody tr:hover {
+      background: rgba(0,229,255,.025);
+    }
+
+    .number {
+      color: var(--accent);
+      font-weight: 900;
+      width: 55px;
+    }
+
+    .installation-id {
+      max-width: 190px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #b9c8dc;
+      font-family: monospace;
+    }
+
+    .time {
+      color: var(--green);
+    }
+
+    .muted {
       color: var(--muted);
     }
 
+    .error-text {
+      color: var(--red);
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* PAGINATION */
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      padding: 16px 18px;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.012);
+    }
+
+    .pagination-info {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .pagination-info strong {
+      color: var(--text);
+    }
+
+    .pagination-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .page-button {
+      min-width: 90px;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .page-button:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .page-button:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+    }
+
+    .page-number {
+      padding: 9px 14px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: rgba(0,229,255,.05);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    /* LOWER GRID */
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .lower-card {
+      padding: 18px;
+    }
+
+    .empty {
+      padding: 35px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .loading {
-      opacity: .55;
-      pointer-events: none;
+      padding: 35px;
+      text-align: center;
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 1px;
     }
 
     .error-box {
       display: none;
-      margin-bottom: 14px;
-      padding: 13px 16px;
-      border: 1px solid rgba(255,69,103,.25);
-      background: rgba(255,69,103,.06);
-      color: #ff8ba1;
-      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 18px;
+      color: var(--red);
+      background: rgba(255,77,109,.05);
+      border: 1px solid rgba(255,77,109,.25);
       font-size: 12px;
     }
 
-    .error-box.show {
-      display: block;
+    /* RESPONSIVE */
+
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      margin-top: 20px;
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: .04em;
-    }
-
-    @media (max-width: 1100px) {
-      .grid {
+    @media (max-width: 850px) {
+      .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .section-grid {
+      .lower-grid {
         grid-template-columns: 1fr;
       }
 
-      .hero-content {
-        flex-direction: column;
+      .header {
         align-items: flex-start;
-      }
-
-      .periods {
-        justify-content: flex-start;
+        flex-direction: column;
       }
     }
 
-    @media (max-width: 600px) {
-      .container {
-        width: min(100% - 20px, 1500px);
-        padding-top: 15px;
+    @media (max-width: 550px) {
+      .app {
+        width: 94%;
+        padding-top: 12px;
       }
 
-      .topbar {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .control-panel {
         align-items: flex-start;
-      }
-
-      .status {
-        display: none;
-      }
-
-      .grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-
-      .card {
-        min-height: 110px;
-        padding: 14px;
-      }
-
-      .value {
-        font-size: 25px;
-      }
-
-      .hero {
-        padding: 20px;
-      }
-
-      .chart-wrap {
-        height: 250px;
-        padding: 12px;
-      }
-
-      .footer {
         flex-direction: column;
+      }
+
+      .control-left {
+        width: 100%;
+      }
+
+      select {
+        width: 100%;
+      }
+
+      .refresh-button {
+        width: 100%;
       }
     }
   </style>
-
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-  <div class="topbar">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo">S</div>
+      <div>
+        <h1>STREAM // ANALYTICS</h1>
+        <p>Command Center · Live Telemetry</p>
+      </div>
+    </div>
 
-```
-<div class="brand">
+    <div class="status">
+      <span id="statusDot" class="status-dot"></span>
+      <span id="statusText">CONNECTING...</span>
+    </div>
+  </header>
 
-  <div class="logo">▶</div>
+  <!-- CONTROLS -->
+  <section class="control-panel">
 
-  <div>
-    <h1>Stream Analytics</h1>
-    <p>LIVE APPLICATION TELEMETRY</p>
-  </div>
+    <div class="control-left">
+      <span class="control-label">Time Period</span>
 
-</div>
+      <select id="periodSelect">
+        <option value="30m">30 minutes</option>
+        <option value="1h">1 hour</option>
+        <option value="3h">3 hours</option>
+        <option value="6h">6 hours</option>
+        <option value="24h" selected>24 hours</option>
+        <option value="36h">36 hours</option>
+        <option value="72h">72 hours</option>
+        <option value="7d">7 days</option>
+        <option value="2w">2 weeks</option>
+        <option value="1m">1 month</option>
+        <option value="3m">3 months</option>
+      </select>
 
-<div class="status" id="connectionStatus">
-  <span class="status-dot"></span>
-  <span id="connectionText">CONNECTING</span>
-</div>
-```
+      <button id="refreshButton" class="refresh-button">
+        REFRESH
+      </button>
+    </div>
 
-  </div>
-
-  <div class="error-box" id="errorBox"></div>
-
-  <section class="hero">
-
-```
-<div class="hero-content">
-
-  <div>
-    <h2>
-      Stream <span>Command Center</span>
-    </h2>
-
-    <p id="periodDescription">
-      Application activity for the selected period.
-    </p>
-  </div>
-
-  <div class="periods">
-
-    <button class="period-btn" data-period="30m">30M</button>
-    <button class="period-btn" data-period="1h">1H</button>
-    <button class="period-btn" data-period="3h">3H</button>
-    <button class="period-btn" data-period="6h">6H</button>
-    <button class="period-btn active" data-period="24h">24H</button>
-    <button class="period-btn" data-period="36h">36H</button>
-    <button class="period-btn" data-period="72h">72H</button>
-    <button class="period-btn" data-period="7d">7D</button>
-    <button class="period-btn" data-period="2w">2W</button>
-    <button class="period-btn" data-period="1m">1M</button>
-    <button class="period-btn" data-period="3m">3M</button>
-
-  </div>
-
-</div>
-```
+    <div id="lastUpdated" class="last-updated">
+      Last updated: —
+    </div>
 
   </section>
 
-  <section class="grid">
+  <div id="errorBox" class="error-box"></div>
 
-```
-<div class="card">
-  <div class="label">Open Events</div>
-  <div class="value" id="opens">—</div>
-  <div class="sub">Selected period</div>
-</div>
+  <div id="periodInfo" class="period-info">
+    Selected period: <strong>24 hours</strong>
+  </div>
 
-<div class="card">
-  <div class="label">Unique Openers</div>
-  <div class="value" id="uniqueOpeners">—</div>
-  <div class="sub">Distinct devices</div>
-</div>
+  <!-- KPI CARDS -->
+  <section class="kpi-grid">
 
-<div class="card">
-  <div class="label">New Installs</div>
-  <div class="value" id="newInstalls">—</div>
-  <div class="sub">Selected period</div>
-</div>
+    <div class="card kpi">
+      <div class="kpi-label">Open Events</div>
+      <div id="opens" class="kpi-value">—</div>
+      <div id="uniqueOpeners" class="kpi-sub">Unique openers: —</div>
+    </div>
 
-<div class="card">
-  <div class="label">Rewarded Ads</div>
-  <div class="value" id="rewardedAds">—</div>
-  <div class="sub">Completed</div>
-</div>
+    <div class="card kpi">
+      <div class="kpi-label">Active Users</div>
+      <div id="activeUsers" class="kpi-value">—</div>
+      <div id="active7Days" class="kpi-sub">7 days: —</div>
+    </div>
 
-<div class="card">
-  <div class="label">Watch Minutes</div>
-  <div class="value" id="watchMinutes">—</div>
-  <div class="sub">Awarded</div>
-</div>
+    <div class="card kpi">
+      <div class="kpi-label">New Installations</div>
+      <div id="newInstallations" class="kpi-value">—</div>
+      <div id="newToday" class="kpi-sub">Today: —</div>
+    </div>
 
-<div class="card">
-  <div class="label">Shares</div>
-  <div class="value" id="shares">—</div>
-  <div class="sub">Selected period</div>
-</div>
+    <div class="card kpi">
+      <div class="kpi-label">Rewarded Ads</div>
+      <div id="rewardedAds" class="kpi-value">—</div>
+      <div id="minutesAwarded" class="kpi-sub">Minutes awarded: —</div>
+    </div>
 
-<div class="card">
-  <div class="label">Errors</div>
-  <div class="value" id="errors">—</div>
-  <div class="sub">Reported</div>
-</div>
+    <div class="card kpi">
+      <div class="kpi-label">Watch Minutes</div>
+      <div id="minutesUsed" class="kpi-value">—</div>
+      <div id="remainingMinutes" class="kpi-sub">Remaining: —</div>
+    </div>
 
-<div class="card">
-  <div class="label">Feedback</div>
-  <div class="value" id="feedback">—</div>
-  <div class="sub">Submitted</div>
-</div>
-```
+    <div class="card kpi">
+      <div class="kpi-label">Shares</div>
+      <div id="shares" class="kpi-value">—</div>
+      <div id="averageShares" class="kpi-sub">Avg / installation: —</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Errors</div>
+      <div id="errors" class="kpi-value">—</div>
+      <div class="kpi-sub">Reported application errors</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Feedback</div>
+      <div id="feedback" class="kpi-value">—</div>
+      <div class="kpi-sub">User feedback submissions</div>
+    </div>
 
   </section>
 
-  <section class="section-grid">
+  <!-- CHART + ENGAGEMENT -->
+  <section class="main-grid">
 
-```
-<div class="panel">
+    <div class="card section">
 
-  <div class="panel-header">
+      <div class="section-header">
+        <div class="section-title">30-Day Activity</div>
+        <div id="chartMeta" class="section-meta">Installations / Ads / Shares</div>
+      </div>
 
-    <div class="panel-title">
-      System Activity
+      <div class="chart-wrap">
+        <canvas id="activityChart"></canvas>
+      </div>
+
     </div>
 
-    <div class="panel-meta" id="chartPeriod">
-      LAST 30 DAYS
+    <div class="card section">
+
+      <div class="section-header">
+        <div class="section-title">Engagement</div>
+      </div>
+
+      <div class="metric-list">
+
+        <div class="metric">
+          <span>Avg opens / installation</span>
+          <strong id="avgOpens">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Avg rewarded ads</span>
+          <strong id="avgAds">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Avg watch minutes</span>
+          <strong id="avgWatch">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Avg shares</span>
+          <strong id="avgShares">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Total installations</span>
+          <strong id="totalInstallations">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Total opens</span>
+          <strong id="totalOpens">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Total watch remaining</span>
+          <strong id="totalRemaining">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Lost users / 7 days</span>
+          <strong id="lostUsers">—</strong>
+        </div>
+
+      </div>
+
     </div>
-
-  </div>
-
-  <div class="chart-wrap">
-    <canvas id="activityChart"></canvas>
-  </div>
-
-</div>
-
-
-<div class="panel">
-
-  <div class="panel-header">
-
-    <div class="panel-title">
-      Global Metrics
-    </div>
-
-    <div class="panel-meta">
-      ALL TIME
-    </div>
-
-  </div>
-
-  <div class="mini-list">
-
-    <div class="mini-row">
-      <span class="mini-name">Total installations</span>
-      <span class="mini-value" id="totalInstallations">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Total opens</span>
-      <span class="mini-value" id="totalOpens">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Rewarded ads</span>
-      <span class="mini-value" id="totalAds">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Minutes awarded</span>
-      <span class="mini-value" id="totalAwarded">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Minutes used</span>
-      <span class="mini-value" id="totalUsed">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Minutes remaining</span>
-      <span class="mini-value" id="totalRemaining">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Total shares</span>
-      <span class="mini-value" id="totalShares">—</span>
-    </div>
-
-    <div class="mini-row">
-      <span class="mini-name">Active last 7 days</span>
-      <span class="mini-value" id="active7">—</span>
-    </div>
-
-  </div>
-
-</div>
-```
 
   </section>
 
-  <section class="panel installations-panel">
+  <!-- INSTALLATIONS -->
+  <section class="card installations-card">
 
-```
-<div class="panel-header">
+    <div class="installations-header">
 
-  <div>
-    <div class="panel-title">
-      Installations
+      <div class="section-header" style="margin-bottom:0;">
+
+        <div>
+          <div class="section-title">Installations</div>
+
+          <div class="section-meta" style="margin-top:6px;">
+            Showing
+            <span id="installationCount" class="installation-count">0</span>
+            installation records · 50 per page
+          </div>
+        </div>
+
+        <div id="pageStatus" class="section-meta">
+          Page 1
+        </div>
+
+      </div>
+
     </div>
-    <div class="panel-meta">
-      Latest registered devices
+
+    <div id="installationLoading" class="loading">
+      LOADING INSTALLATIONS...
     </div>
-  </div>
 
-  <div class="panel-meta" id="installationCount">
-    0 DEVICES
-  </div>
+    <div id="installationTableContainer" class="table-wrapper" style="display:none;">
 
-</div>
+      <table>
 
-<div class="table-wrap">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Installation ID</th>
+            <th>Installation Time</th>
+            <th>Last Open</th>
+            <th>App Version</th>
+            <th>Region</th>
+            <th>Country</th>
+            <th>Device</th>
+            <th>Android</th>
+            <th>Opens</th>
+            <th>Rewarded Ads</th>
+            <th>Watch Awarded</th>
+            <th>Watch Used</th>
+            <th>Shares</th>
+            <th>Rating</th>
+            <th>Latest Error</th>
+          </tr>
+        </thead>
 
-  <table>
+        <tbody id="installationBody"></tbody>
 
-    <thead>
+      </table>
 
-      <tr>
-        <th>Installation</th>
-        <th>App Version</th>
-        <th>Installed</th>
-        <th>Last Open</th>
-        <th>Opens</th>
-        <th>Ads</th>
-        <th>Minutes</th>
-        <th>Used</th>
-        <th>Shares</th>
-      </tr>
+    </div>
 
-    </thead>
+    <div id="installationEmpty" class="empty" style="display:none;">
+      No installation records found.
+    </div>
 
-    <tbody id="installationsBody">
+    <!-- PAGINATION -->
+    <div class="pagination">
 
-      <tr>
-        <td colspan="9" class="empty">
-          Loading installations...
-        </td>
-      </tr>
+      <div id="paginationInfo" class="pagination-info">
+        Showing 0–0 of 0
+      </div>
 
-    </tbody>
+      <div class="pagination-buttons">
 
-  </table>
+        <button
+          id="previousButton"
+          class="page-button"
+          disabled>
+          ← PREVIOUS
+        </button>
 
-</div>
-```
+        <div id="pageNumber" class="page-number">
+          PAGE 1
+        </div>
+
+        <button
+          id="nextButton"
+          class="page-button"
+          disabled>
+          NEXT →
+        </button>
+
+      </div>
+
+    </div>
 
   </section>
 
-  <div class="footer">
+  <!-- LOWER DATA -->
+  <section class="lower-grid">
 
-```
-<span>
-  STREAM ANALYTICS • D1 TELEMETRY
-</span>
+    <div class="card lower-card">
 
-<span id="lastUpdated">
-  LAST UPDATE: —
-</span>
-```
+      <div class="section-header">
+        <div class="section-title">Ratings</div>
+      </div>
 
-  </div>
+      <div class="metric-list">
+
+        <div class="metric">
+          <span>Total ratings</span>
+          <strong id="ratingTotal">—</strong>
+        </div>
+
+        <div class="metric">
+          <span>Average rating</span>
+          <strong id="ratingAverage">—</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card lower-card">
+
+      <div class="section-header">
+        <div class="section-title">Link Votes</div>
+      </div>
+
+      <div id="linkVotes" class="metric-list">
+        <div class="empty">No link vote data</div>
+      </div>
+
+    </div>
+
+    <div class="card lower-card">
+
+      <div class="section-header">
+        <div class="section-title">System</div>
+      </div>
+
+      <div class="metric-list">
+
+        <div class="metric">
+          <span>Worker</span>
+          <strong style="color:var(--green);">ONLINE</strong>
+        </div>
+
+        <div class="metric">
+          <span>API</span>
+          <strong>STREAM</strong>
+        </div>
+
+        <div class="metric">
+          <span>Database</span>
+          <strong>D1</strong>
+        </div>
+
+        <div class="metric">
+          <span>Auto refresh</span>
+          <strong>60 SEC</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
 
 </div>
+
 
 <script>
 
-const API_BASE =
-  "https://stream-analytics-worker.kelvinthuranira591.workers.dev";
+  /* ============================================================
+     CONFIGURATION
+     ============================================================ */
+
+  const API_BASE =
+    "https://stream-analytics-worker.kelvinthuranira591.workers.dev";
+
+  const INSTALLATIONS_PER_PAGE = 50;
+
+  let currentPeriod = "24h";
+
+  let installations = [];
+
+  let currentPage = 1;
 
 
-let currentPeriod = "24h";
+  /* ============================================================
+     DOM HELPERS
+     ============================================================ */
+
+  const $ = (id) => document.getElementById(id);
 
 
-const $ = (id) =>
-  document.getElementById(id);
+  function number(value) {
+    const n = Number(value || 0);
 
-
-function number(value) {
-
-  return Number(value || 0).toLocaleString();
-
-}
-
-
-function formatDate(value) {
-
-  if (!value) {
-    return "—";
+    return n.toLocaleString();
   }
 
-  const date =
-    new Date(value);
 
-  if (
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return value;
+  function decimal(value, digits = 2) {
+    const n = Number(value || 0);
+
+    return n.toFixed(digits);
   }
 
-  return date.toLocaleString(
-    undefined,
-    {
+
+  function escapeHtml(value) {
+
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+
+  function formatDate(value) {
+
+    if (!value) {
+      return "—";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return escapeHtml(value);
+    }
+
+    return date.toLocaleString(undefined, {
       year: "numeric",
       month: "short",
-      day: "numeric",
+      day: "2-digit",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+
+  /* ============================================================
+     STATUS
+     ============================================================ */
+
+  function setOnline(online) {
+
+    const dot = $("statusDot");
+    const text = $("statusText");
+
+    if (online) {
+
+      dot.classList.remove("offline");
+
+      text.textContent = "WORKER ONLINE";
+
+    } else {
+
+      dot.classList.add("offline");
+
+      text.textContent = "WORKER OFFLINE";
     }
-  );
-
-}
-
-
-function shortId(value) {
-
-  if (!value) {
-    return "—";
-  }
-
-  if (value.length <= 22) {
-    return value;
-  }
-
-  return (
-    value.substring(0, 10) +
-    "..." +
-    value.substring(value.length - 8)
-  );
-
-}
-
-
-function showError(message) {
-
-  const box =
-    $("errorBox");
-
-  box.textContent =
-    message;
-
-  box.classList.add("show");
-
-}
-
-
-function clearError() {
-
-  $("errorBox")
-    .classList
-    .remove("show");
-
-}
-
-
-function setConnection(
-  online,
-  message
-) {
-
-  const status =
-    $("connectionStatus");
-
-  const text =
-    $("connectionText");
-
-  status.classList.remove(
-    "online",
-    "error"
-  );
-
-  if (online) {
-
-    status.classList.add(
-      "online"
-    );
-
-  } else {
-
-    status.classList.add(
-      "error"
-    );
-
-  }
-
-  text.textContent =
-    message;
-
-}
-
-
-async function fetchJson(
-  endpoint
-) {
-
-  const response =
-    await fetch(
-      API_BASE + endpoint,
-      {
-        method: "GET",
-        cache: "no-store"
-      }
-    );
-
-  let data;
-
-  try {
-
-    data =
-      await response.json();
-
-  } catch {
-
-    throw new Error(
-      `Invalid response from ${endpoint}`
-    );
-
-  }
-
-  if (!response.ok || data.success === false) {
-
-    throw new Error(
-      data.error ||
-      `HTTP ${response.status}`
-    );
-
-  }
-
-  return data;
-
-}
-
-
-async function loadHealth() {
-
-  try {
-
-    await fetchJson(
-      "/api/health"
-    );
-
-    setConnection(
-      true,
-      "ONLINE"
-    );
-
-  } catch (error) {
-
-    setConnection(
-      false,
-      "OFFLINE"
-    );
-
-  }
-
-}
-
-
-async function loadStats() {
-
-  try {
-
-    const data =
-      await fetchJson(
-        `/api/stats?period=${encodeURIComponent(currentPeriod)}`
-      );
-
-    clearError();
-
-    setConnection(
-      true,
-      "ONLINE"
-    );
-
-    renderStats(
-      data
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Stats error:",
-      error
-    );
-
-    showError(
-      "Unable to load analytics: " +
-      error.message
-    );
-
-    setConnection(
-      false,
-      "DATA ERROR"
-    );
-
-  }
-
-}
-
-
-function renderStats(
-  data
-) {
-
-  const period =
-    data.selected_period ||
-    {};
-
-  const totals =
-    data.totals ||
-    {};
-
-  const activity =
-    data.activity ||
-    {};
-
-  $("opens").textContent =
-    number(period.opens);
-
-  $("uniqueOpeners").textContent =
-    number(period.unique_openers);
-
-  $("newInstalls").textContent =
-    number(period.new_installations);
-
-  $("rewardedAds").textContent =
-    number(period.rewarded_ads);
-
-  $("watchMinutes").textContent =
-    number(period.minutes_awarded);
-
-  $("shares").textContent =
-    number(period.shares);
-
-  $("errors").textContent =
-    number(period.errors);
-
-  $("feedback").textContent =
-    number(period.feedback);
-
-
-  $("totalInstallations").textContent =
-    number(
-      totals.total_installations
-    );
-
-  $("totalOpens").textContent =
-    number(
-      totals.total_opens
-    );
-
-  $("totalAds").textContent =
-    number(
-      totals.total_rewarded_ads
-    );
-
-  $("totalAwarded").textContent =
-    number(
-      totals.total_minutes_awarded
-    );
-
-  $("totalUsed").textContent =
-    number(
-      totals.total_minutes_used
-    );
-
-  $("totalRemaining").textContent =
-    number(
-      totals.total_minutes_remaining
-    );
-
-  $("totalShares").textContent =
-    number(
-      totals.total_shares
-    );
-
-  $("active7").textContent =
-    number(
-      activity.active_7_days
-    );
-
-
-  $("periodDescription").textContent =
-    `${period.period_label || currentPeriod} • ` +
-    `${number(period.opens)} open events • ` +
-    `${number(period.unique_openers)} unique openers`;
-
-
-  renderChart(
-    data.daily || {}
-  );
-
-}
-
-
-async function loadInstallations() {
-
-  const body =
-    $("installationsBody");
-
-  try {
-
-    body.innerHTML = `
-      <tr>
-        <td colspan="9" class="empty">
-          Loading installations...
-        </td>
-      </tr>
-    `;
-
-    const data =
-      await fetchJson(
-        "/api/installations"
-      );
-
-    const installations =
-      Array.isArray(
-        data.installations
-      )
-        ? data.installations
-        : [];
-
-    $("installationCount")
-      .textContent =
-      `${number(installations.length)} DEVICES`;
-
-
-    if (
-      installations.length === 0
-    ) {
-
-      body.innerHTML = `
-        <tr>
-          <td colspan="9" class="empty">
-            No installations found.
-          </td>
-        </tr>
-      `;
-
-      return;
-
-    }
-
-
-    body.innerHTML =
-      installations
-        .map(
-          installation => {
-
-            return `
-              <tr>
-
-                <td
-                  class="id-cell"
-                  title="${escapeHtml(
-                    installation.installation_id || ""
-                  )}"
-                >
-                  ${escapeHtml(
-                    shortId(
-                      installation.installation_id
-                    )
-                  )}
-                </td>
-
-                <td>
-                  <span class="badge">
-                    ${escapeHtml(
-                      installation.app_version ||
-                      "Unknown"
-                    )}
-                  </span>
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    formatDate(
-                      installation.install_time
-                    )
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    formatDate(
-                      installation.last_open
-                    )
-                  )}
-                </td>
-
-                <td>
-                  ${number(
-                    installation.open_count
-                  )}
-                </td>
-
-                <td>
-                  ${number(
-                    installation.rewarded_ads_completed
-                  )}
-                </td>
-
-                <td>
-                  ${number(
-                    installation.watch_minutes_awarded
-                  )}
-                </td>
-
-                <td>
-                  ${number(
-                    installation.watch_minutes_used
-                  )}
-                </td>
-
-                <td>
-                  ${number(
-                    installation.share_count
-                  )}
-                </td>
-
-              </tr>
-            `;
-
-          }
-        )
-        .join("");
-
-  } catch (error) {
-
-    console.error(
-      "Installations error:",
-      error
-    );
-
-    $("installationCount")
-      .textContent =
-      "ERROR";
-
-    body.innerHTML = `
-      <tr>
-        <td colspan="9" class="empty">
-          Unable to load installations.
-        </td>
-      </tr>
-    `;
-
-  }
-
-}
-
-
-function escapeHtml(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-function renderChart(
-  daily
-) {
-
-  const canvas =
-    $("activityChart");
-
-  const ctx =
-    canvas.getContext("2d");
-
-  const rect =
-    canvas.getBoundingClientRect();
-
-  const dpr =
-    window.devicePixelRatio ||
-    1;
-
-  canvas.width =
-    rect.width * dpr;
-
-  canvas.height =
-    rect.height * dpr;
-
-  ctx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
-  );
-
-
-  const width =
-    rect.width;
-
-  const height =
-    rect.height;
-
-
-  ctx.clearRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-
-  const installations =
-    Array.isArray(
-      daily.installations
-    )
-      ? daily.installations
-      : [];
-
-  const ads =
-    Array.isArray(
-      daily.rewarded_ads
-    )
-      ? daily.rewarded_ads
-      : [];
-
-  const shares =
-    Array.isArray(
-      daily.shares
-    )
-      ? daily.shares
-      : [];
-
-
-  const days = [
-    ...new Set(
-      [
-        ...installations.map(
-          x => x.day
-        ),
-        ...ads.map(
-          x => x.day
-        ),
-        ...shares.map(
-          x => x.day
-        )
-      ]
-    )
-  ].sort();
-
-
-  if (days.length === 0) {
-
-    ctx.fillStyle =
-      "#7f8999";
-
-    ctx.font =
-      "12px system-ui";
-
-    ctx.textAlign =
-      "center";
-
-    ctx.fillText(
-      "No activity data available",
-      width / 2,
-      height / 2
-    );
-
-    return;
-
   }
 
 
-  const values =
-    days.map(day => {
+  function showError(message) {
 
-      const install =
-        installations.find(
-          x => x.day === day
-        );
+    const box = $("errorBox");
 
-      const ad =
-        ads.find(
-          x => x.day === day
-        );
+    box.textContent = message;
 
-      const share =
-        shares.find(
-          x => x.day === day
-        );
+    box.style.display = "block";
+  }
 
-      return {
-        day,
 
-        installations:
-          Number(
-            install?.installations || 0
-          ),
+  function hideError() {
 
-        ads:
-          Number(
-            ad?.rewarded_ads || 0
-          ),
+    $("errorBox").style.display = "none";
+  }
 
-        shares:
-          Number(
-            share?.shares || 0
-          )
-      };
 
+  /* ============================================================
+     FETCH JSON
+     ============================================================ */
+
+  async function fetchJson(url) {
+
+    const response = await fetch(url, {
+      method: "GET",
+      cache: "no-store"
     });
 
-
-  const maxValue =
-    Math.max(
-      1,
-      ...values.map(
-        x =>
-          Math.max(
-            x.installations,
-            x.ads,
-            x.shares
-          )
-      )
-    );
-
-
-  const padding = {
-    top: 20,
-    right: 20,
-    bottom: 34,
-    left: 42
-  };
-
-
-  const chartWidth =
-    width -
-    padding.left -
-    padding.right;
-
-  const chartHeight =
-    height -
-    padding.top -
-    padding.bottom;
-
-
-  ctx.strokeStyle =
-    "rgba(255,255,255,.07)";
-
-  ctx.lineWidth =
-    1;
-
-
-  for (
-    let i = 0;
-    i <= 4;
-    i++
-  ) {
-
-    const y =
-      padding.top +
-      chartHeight -
-      (
-        chartHeight *
-        i /
-        4
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status} ${response.statusText}`
       );
+    }
 
-    ctx.beginPath();
+    const data = await response.json();
 
-    ctx.moveTo(
-      padding.left,
-      y
-    );
+    if (data && data.success === false) {
+      throw new Error(data.error || "API request failed");
+    }
 
-    ctx.lineTo(
-      width -
-      padding.right,
-      y
-    );
-
-    ctx.stroke();
+    return data;
+  }
 
 
-    ctx.fillStyle =
-      "#667080";
+  /* ============================================================
+     LOAD STATS
+     ============================================================ */
 
-    ctx.font =
-      "9px system-ui";
+  async function loadStats() {
 
-    ctx.textAlign =
-      "right";
+    const url =
+      `${API_BASE}/api/stats?period=${encodeURIComponent(currentPeriod)}`;
 
-    ctx.fillText(
-      Math.round(
-        maxValue *
-        i /
-        4
-      ),
-      padding.left - 8,
-      y + 3
-    );
+    const data = await fetchJson(url);
+
+    renderStats(data);
+
+    setOnline(true);
+
+    return data;
+  }
+
+
+  /* ============================================================
+     LOAD INSTALLATIONS
+     ============================================================ */
+
+  async function loadInstallations() {
+
+    $("installationLoading").style.display = "block";
+
+    $("installationTableContainer").style.display = "none";
+
+    $("installationEmpty").style.display = "none";
+
+    try {
+
+      /*
+       * The Worker currently returns up to 500 installation records.
+       *
+       * Pagination is deliberately handled on the dashboard UI:
+       * 50 records per page.
+       */
+
+      const url =
+        `${API_BASE}/api/installations`;
+
+      const data = await fetchJson(url);
+
+      if (Array.isArray(data)) {
+
+        installations = data;
+
+      } else if (Array.isArray(data.installations)) {
+
+        installations = data.installations;
+
+      } else if (Array.isArray(data.data)) {
+
+        installations = data.data;
+
+      } else {
+
+        installations = [];
+      }
+
+      currentPage = 1;
+
+      renderInstallations();
+
+    } catch (error) {
+
+      console.error("Installation loading failed:", error);
+
+      installations = [];
+
+      $("installationLoading").style.display = "none";
+
+      $("installationEmpty").style.display = "block";
+
+      $("installationEmpty").textContent =
+        "Unable to load installation records.";
+
+    }
+  }
+
+
+  /* ============================================================
+     LOAD EVERYTHING
+     ============================================================ */
+
+  async function loadDashboard() {
+
+    hideError();
+
+    try {
+
+      await Promise.all([
+        loadStats(),
+        loadInstallations()
+      ]);
+
+      $("lastUpdated").textContent =
+        `Last updated: ${new Date().toLocaleString()}`;
+
+    } catch (error) {
+
+      console.error(error);
+
+      setOnline(false);
+
+      showError(
+        `Dashboard request failed: ${error.message}`
+      );
+    }
+  }
+
+
+  /* ============================================================
+     RENDER STATS
+     ============================================================ */
+
+  function renderStats(data) {
+
+    const period = data.selected_period || {};
+
+    const totals = data.totals || {};
+
+    const activity = data.activity || {};
+
+    const engagement = data.engagement || {};
+
+    const ratings = data.ratings || {};
+
+    const errors = data.errors || {};
+
+    const feedback = data.feedback || {};
+
+    /* PERIOD */
+
+    $("periodInfo").innerHTML =
+      `Selected period: <strong>${escapeHtml(
+        period.period_label || currentPeriod
+      )}</strong>`;
+
+    /* PERIOD KPI */
+
+    $("opens").textContent =
+      number(period.opens);
+
+    $("uniqueOpeners").textContent =
+      `Unique openers: ${number(period.unique_openers)}`;
+
+    $("activeUsers").textContent =
+      number(activity.active_today);
+
+    $("active7Days").textContent =
+      `7 days: ${number(activity.active_7_days)}`;
+
+    $("newInstallations").textContent =
+      number(period.new_installations);
+
+    $("newToday").textContent =
+      `Today: ${number(activity.new_installations_today)}`;
+
+    $("rewardedAds").textContent =
+      number(period.rewarded_ads);
+
+    $("minutesAwarded").textContent =
+      `Minutes awarded: ${number(period.minutes_awarded)}`;
+
+    $("minutesUsed").textContent =
+      number(period.minutes_used);
+
+    $("remainingMinutes").textContent =
+      `Remaining: ${number(totals.total_minutes_remaining)}`;
+
+    $("shares").textContent =
+      number(period.shares);
+
+    $("averageShares").textContent =
+      `Avg / installation: ${decimal(
+        engagement.average_shares_per_installation
+      )}`;
+
+    $("errors").textContent =
+      number(period.errors);
+
+    $("feedback").textContent =
+      number(period.feedback);
+
+    /* ENGAGEMENT */
+
+    $("avgOpens").textContent =
+      decimal(engagement.average_opens_per_installation);
+
+    $("avgAds").textContent =
+      decimal(engagement.average_rewarded_ads_per_installation);
+
+    $("avgWatch").textContent =
+      decimal(engagement.average_watch_minutes_awarded_per_installation);
+
+    $("avgShares").textContent =
+      decimal(engagement.average_shares_per_installation);
+
+    $("totalInstallations").textContent =
+      number(totals.total_installations);
+
+    $("totalOpens").textContent =
+      number(totals.total_opens);
+
+    $("totalRemaining").textContent =
+      `${number(totals.total_minutes_remaining)} min`;
+
+    $("lostUsers").textContent =
+      number(activity.lost_users_7_days);
+
+    /* RATINGS */
+
+    $("ratingTotal").textContent =
+      number(ratings.total);
+
+    $("ratingAverage").textContent =
+      decimal(ratings.average);
+
+    /* LINK VOTES */
+
+    renderLinkVotes(data.link_votes || []);
+
+    /* CHART */
+
+    renderChart(data.daily || {});
 
   }
 
 
-  function drawLine(
-    key,
-    lineColor
-  ) {
+  /* ============================================================
+     INSTALLATION PAGINATION
+     ============================================================ */
+
+  function getTotalPages() {
+
+    return Math.max(
+      1,
+      Math.ceil(
+        installations.length / INSTALLATIONS_PER_PAGE
+      )
+    );
+  }
+
+
+  function renderInstallations() {
+
+    $("installationLoading").style.display = "none";
+
+    const total = installations.length;
+
+    $("installationCount").textContent =
+      number(total);
+
+    if (total === 0) {
+
+      $("installationTableContainer").style.display = "none";
+
+      $("installationEmpty").style.display = "block";
+
+      $("paginationInfo").textContent =
+        "Showing 0–0 of 0";
+
+      $("pageStatus").textContent =
+        "Page 1";
+
+      $("pageNumber").textContent =
+        "PAGE 1";
+
+      $("previousButton").disabled = true;
+
+      $("nextButton").disabled = true;
+
+      return;
+    }
+
+    $("installationEmpty").style.display = "none";
+
+    $("installationTableContainer").style.display = "block";
+
+    const totalPages = getTotalPages();
+
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+
+    const start =
+      (currentPage - 1) *
+      INSTALLATIONS_PER_PAGE;
+
+    const end =
+      Math.min(
+        start + INSTALLATIONS_PER_PAGE,
+        total
+      );
+
+    const pageItems =
+      installations.slice(start, end);
+
+    renderInstallationRows(
+      pageItems,
+      start
+    );
+
+    $("paginationInfo").innerHTML =
+      `Showing <strong>${start + 1}</strong>–<strong>${end}</strong> of <strong>${total}</strong>`;
+
+    $("pageStatus").textContent =
+      `Page ${currentPage} / ${totalPages}`;
+
+    $("pageNumber").textContent =
+      `PAGE ${currentPage}`;
+
+    $("previousButton").disabled =
+      currentPage <= 1;
+
+    $("nextButton").disabled =
+      currentPage >= totalPages;
+  }
+
+
+  /* ============================================================
+     INSTALLATION TABLE
+     ============================================================ */
+
+  function renderInstallationRows(items, offset) {
+
+    const body = $("installationBody");
+
+    body.innerHTML = "";
+
+    items.forEach((item, index) => {
+
+      const installationNumber =
+        offset + index + 1;
+
+      const installationId =
+        item.installation_id ||
+        item.installationId ||
+        "—";
+
+      const installationTime =
+        item.install_time ||
+        item.installation_time ||
+        item.installationTime;
+
+      const lastOpen =
+        item.last_open ||
+        item.lastOpen;
+
+      const appVersion =
+        item.app_version ||
+        item.appVersion ||
+        "—";
+
+      const region =
+        item.region || "—";
+
+      const country =
+        item.country_code ||
+        item.country ||
+        "—";
+
+      const phoneModel =
+        item.phone_model ||
+        item.phoneModel ||
+        "—";
+
+      const manufacturer =
+        item.manufacturer ||
+        "—";
+
+      const android =
+        item.android_version ||
+        item.androidVersion ||
+        "—";
+
+      const opens =
+        item.open_count ||
+        item.opens ||
+        0;
+
+      const rewardedAds =
+        item.rewarded_ads_completed ||
+        item.rewarded_ads ||
+        0;
+
+      const watchAwarded =
+        item.watch_minutes_awarded ||
+        0;
+
+      const watchUsed =
+        item.watch_minutes_used ||
+        0;
+
+      const shares =
+        item.share_count ||
+        item.shares ||
+        0;
+
+      const rating =
+        item.rating ||
+        "—";
+
+      const latestError =
+        item.latest_error ||
+        "";
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+        <td class="number">
+          ${installationNumber}
+        </td>
+
+        <td
+          class="installation-id"
+          title="${escapeHtml(installationId)}">
+          ${escapeHtml(installationId)}
+        </td>
+
+        <td class="time">
+          ${formatDate(installationTime)}
+        </td>
+
+        <td>
+          ${formatDate(lastOpen)}
+        </td>
+
+        <td>
+          ${escapeHtml(appVersion)}
+        </td>
+
+        <td>
+          ${escapeHtml(region)}
+        </td>
+
+        <td>
+          ${escapeHtml(country)}
+        </td>
+
+        <td>
+          ${escapeHtml(manufacturer)}
+          ${manufacturer !== "—" && phoneModel !== "—" ? " " : ""}
+          ${escapeHtml(phoneModel)}
+        </td>
+
+        <td>
+          ${escapeHtml(android)}
+        </td>
+
+        <td>
+          ${number(opens)}
+        </td>
+
+        <td>
+          ${number(rewardedAds)}
+        </td>
+
+        <td>
+          ${number(watchAwarded)}
+        </td>
+
+        <td>
+          ${number(watchUsed)}
+        </td>
+
+        <td>
+          ${number(shares)}
+        </td>
+
+        <td>
+          ${escapeHtml(rating)}
+        </td>
+
+        <td
+          class="error-text"
+          title="${escapeHtml(latestError)}">
+          ${escapeHtml(latestError || "—")}
+        </td>
+      `;
+
+      body.appendChild(row);
+    });
+  }
+
+
+  /* ============================================================
+     CHART
+     ============================================================ */
+
+  function renderChart(daily) {
+
+    const canvas =
+      $("activityChart");
+
+    const rect =
+      canvas.getBoundingClientRect();
+
+    const width =
+      Math.max(300, Math.floor(rect.width));
+
+    const height =
+      Math.max(200, Math.floor(rect.height));
+
+    const dpr =
+      window.devicePixelRatio || 1;
+
+    canvas.width =
+      width * dpr;
+
+    canvas.height =
+      height * dpr;
+
+    const ctx =
+      canvas.getContext("2d");
+
+    ctx.scale(dpr, dpr);
+
+    const installationsData =
+      daily.installations || [];
+
+    const rewardedData =
+      daily.rewarded_ads || [];
+
+    const sharesData =
+      daily.shares || [];
+
+    const values = [];
+
+    installationsData.forEach(x =>
+      values.push(Number(x.count || 0))
+    );
+
+    rewardedData.forEach(x =>
+      values.push(Number(x.count || 0))
+    );
+
+    sharesData.forEach(x =>
+      values.push(Number(x.count || 0))
+    );
+
+    const max =
+      Math.max(1, ...values);
+
+    const padding = {
+      top: 20,
+      right: 20,
+      bottom: 40,
+      left: 42
+    };
+
+    const chartWidth =
+      width -
+      padding.left -
+      padding.right;
+
+    const chartHeight =
+      height -
+      padding.top -
+      padding.bottom;
+
+    /* BACKGROUND */
+
+    ctx.clearRect(
+      0,
+      0,
+      width,
+      height
+    );
+
+    /* GRID */
 
     ctx.strokeStyle =
-      lineColor;
+      "rgba(255,255,255,.06)";
 
-    ctx.lineWidth =
-      2;
+    ctx.lineWidth = 1;
 
-    ctx.beginPath();
+    for (let i = 0; i <= 5; i++) {
 
+      const y =
+        padding.top +
+        (chartHeight / 5) * i;
 
-    values.forEach(
-      (item, index) => {
+      ctx.beginPath();
+
+      ctx.moveTo(
+        padding.left,
+        y
+      );
+
+      ctx.lineTo(
+        width - padding.right,
+        y
+      );
+
+      ctx.stroke();
+
+      const value =
+        Math.round(
+          max -
+          (max / 5) * i
+        );
+
+      ctx.fillStyle =
+        "#718198";
+
+      ctx.font =
+        "10px sans-serif";
+
+      ctx.textAlign =
+        "right";
+
+      ctx.fillText(
+        value.toString(),
+        padding.left - 7,
+        y + 3
+      );
+    }
+
+    if (installationsData.length === 0) {
+
+      ctx.fillStyle =
+        "#718198";
+
+      ctx.font =
+        "12px sans-serif";
+
+      ctx.textAlign =
+        "center";
+
+      ctx.fillText(
+        "No activity data",
+        width / 2,
+        height / 2
+      );
+
+      return;
+    }
+
+    const count =
+      installationsData.length;
+
+    const xStep =
+      count > 1
+        ? chartWidth / (count - 1)
+        : chartWidth;
+
+    function drawLine(
+      data,
+      lineColor,
+      offset = 0
+    ) {
+
+      if (!data.length) {
+        return;
+      }
+
+      ctx.beginPath();
+
+      data.forEach((item, i) => {
+
+        const value =
+          Number(item.count || 0);
 
         const x =
           padding.left +
-          (
-            chartWidth *
-            index /
-            Math.max(
-              1,
-              values.length - 1
-            )
-          );
+          i * xStep;
 
         const y =
           padding.top +
           chartHeight -
-          (
-            chartHeight *
-            item[key] /
-            maxValue
-          );
+          (value / max) *
+          chartHeight;
 
+        if (i === 0) {
 
-        if (index === 0) {
-
-          ctx.moveTo(
-            x,
-            y
-          );
+          ctx.moveTo(x, y);
 
         } else {
 
-          ctx.lineTo(
-            x,
-            y
-          );
-
+          ctx.lineTo(x, y);
         }
+      });
 
-      }
-    );
+      ctx.strokeStyle =
+        lineColor;
 
+      ctx.lineWidth =
+        2;
 
-    ctx.stroke();
+      ctx.stroke();
 
+      data.forEach((item, i) => {
 
-    values.forEach(
-      (item, index) => {
+        const value =
+          Number(item.count || 0);
 
         const x =
           padding.left +
-          (
-            chartWidth *
-            index /
-            Math.max(
-              1,
-              values.length - 1
-            )
-          );
+          i * xStep;
 
         const y =
           padding.top +
           chartHeight -
-          (
-            chartHeight *
-            item[key] /
-            maxValue
-          );
-
-
-        ctx.fillStyle =
-          lineColor;
+          (value / max) *
+          chartHeight;
 
         ctx.beginPath();
 
@@ -1691,181 +1784,357 @@ function renderChart(
           Math.PI * 2
         );
 
+        ctx.fillStyle =
+          lineColor;
+
         ctx.fill();
+      });
+    }
 
-      }
+    drawLine(
+      installationsData,
+      "#00e5ff"
     );
 
-  }
-
-
-  drawLine(
-    "installations",
-    "#00e5ff"
-  );
-
-  drawLine(
-    "ads",
-    "#7c4dff"
-  );
-
-  drawLine(
-    "shares",
-    "#00e676"
-  );
-
-
-  ctx.font =
-    "9px system-ui";
-
-  ctx.fillStyle =
-    "#667080";
-
-  ctx.textAlign =
-    "center";
-
-
-  const labelStep =
-    Math.max(
-      1,
-      Math.ceil(
-        days.length / 7
-      )
+    drawLine(
+      rewardedData,
+      "#7c4dff"
     );
 
+    drawLine(
+      sharesData,
+      "#00ff9d"
+    );
 
-  days.forEach(
-    (day, index) => {
+    /* X AXIS LABELS */
+
+    ctx.fillStyle =
+      "#718198";
+
+    ctx.font =
+      "9px sans-serif";
+
+    ctx.textAlign =
+      "center";
+
+    const labelStep =
+      Math.max(
+        1,
+        Math.ceil(count / 7)
+      );
+
+    installationsData.forEach((item, i) => {
 
       if (
-        index % labelStep !== 0 &&
-        index !== days.length - 1
+        i % labelStep !== 0 &&
+        i !== count - 1
       ) {
         return;
       }
 
       const x =
         padding.left +
-        (
-          chartWidth *
-          index /
-          Math.max(
-            1,
-            days.length - 1
-          )
-        );
+        i * xStep;
 
       const date =
-        new Date(day);
+        item.date || "";
 
-      const label =
-        Number.isNaN(
-          date.getTime()
-        )
-          ? day
-          : date.toLocaleDateString(
-              undefined,
-              {
-                month: "short",
-                day: "numeric"
-              }
-            );
+      ctx.fillText(
+        date,
+        x,
+        height - 14
+      );
+    });
+
+    /* LEGEND */
+
+    const legend = [
+      ["Installations", "#00e5ff"],
+      ["Rewarded Ads", "#7c4dff"],
+      ["Shares", "#00ff9d"]
+    ];
+
+    let legendX = padding.left;
+
+    legend.forEach(([label, color]) => {
+
+      ctx.fillStyle = color;
+
+      ctx.fillRect(
+        legendX,
+        5,
+        18,
+        3
+      );
+
+      ctx.fillStyle =
+        "#718198";
+
+      ctx.font =
+        "9px sans-serif";
+
+      ctx.textAlign =
+        "left";
 
       ctx.fillText(
         label,
-        x,
-        height - 10
+        legendX + 23,
+        9
       );
 
+      legendX +=
+        ctx.measureText(label).width + 48;
+    });
+  }
+
+
+  /* ============================================================
+     LINK VOTES
+     ============================================================ */
+
+  function renderLinkVotes(votes) {
+
+    const container =
+      $("linkVotes");
+
+    container.innerHTML = "";
+
+    if (!Array.isArray(votes) || votes.length === 0) {
+
+      container.innerHTML =
+        `<div class="empty">No link vote data</div>`;
+
+      return;
+    }
+
+    votes.forEach(vote => {
+
+      const item =
+        document.createElement("div");
+
+      item.className =
+        "metric";
+
+      const name =
+        vote.link_id ||
+        vote.link_name ||
+        vote.link ||
+        "Unknown";
+
+      const up =
+        vote.up ||
+        vote.upvotes ||
+        vote.positive ||
+        0;
+
+      const down =
+        vote.down ||
+        vote.downvotes ||
+        vote.negative ||
+        0;
+
+      item.innerHTML = `
+        <span>${escapeHtml(name)}</span>
+        <strong>
+          ↑ ${number(up)}
+          &nbsp;
+          ↓ ${number(down)}
+        </strong>
+      `;
+
+      container.appendChild(item);
+    });
+  }
+
+
+  /* ============================================================
+     PAGINATION EVENTS
+     ============================================================ */
+
+  $("previousButton").addEventListener(
+    "click",
+    () => {
+
+      if (currentPage <= 1) {
+        return;
+      }
+
+      currentPage--;
+
+      renderInstallations();
+
+      window.scrollTo({
+        top:
+          $("installationTableContainer")
+            .getBoundingClientRect()
+            .top +
+          window.scrollY -
+          100,
+        behavior: "smooth"
+      });
     }
   );
 
-}
 
+  $("nextButton").addEventListener(
+    "click",
+    () => {
 
-function setActivePeriod(
-  period
-) {
+      const totalPages =
+        getTotalPages();
 
-  currentPeriod =
-    period;
-
-  document
-    .querySelectorAll(
-      ".period-btn"
-    )
-    .forEach(
-      button => {
-
-        button.classList.toggle(
-          "active",
-          button.dataset.period === period
-        );
-
+      if (currentPage >= totalPages) {
+        return;
       }
-    );
 
-}
+      currentPage++;
+
+      renderInstallations();
+
+      window.scrollTo({
+        top:
+          $("installationTableContainer")
+            .getBoundingClientRect()
+            .top +
+          window.scrollY -
+          100,
+        behavior: "smooth"
+      });
+    }
+  );
 
 
-document
-  .querySelectorAll(
-    ".period-btn"
-  )
-  .forEach(
-    button => {
+  /* ============================================================
+     PERIOD CHANGE
+     ============================================================ */
 
-      button.addEventListener(
-        "click",
-        async () => {
+  $("periodSelect").addEventListener(
+    "change",
+    async (event) => {
 
-          setActivePeriod(
-            button.dataset.period
+      currentPeriod =
+        event.target.value;
+
+      currentPage = 1;
+
+      await loadDashboard();
+    }
+  );
+
+
+  /* ============================================================
+     MANUAL REFRESH
+     ============================================================ */
+
+  $("refreshButton").addEventListener(
+    "click",
+    async () => {
+
+      const button =
+        $("refreshButton");
+
+      button.disabled = true;
+
+      button.textContent =
+        "LOADING...";
+
+      try {
+
+        await loadDashboard();
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+          "REFRESH";
+      }
+    }
+  );
+
+
+  /* ============================================================
+     AUTO REFRESH
+     ============================================================ */
+
+  setInterval(
+    async () => {
+
+      /*
+       * Keep the current installation page when
+       * automatically refreshing.
+       */
+
+      const savedPage =
+        currentPage;
+
+      try {
+
+        await loadDashboard();
+
+        const totalPages =
+          getTotalPages();
+
+        currentPage =
+          Math.min(
+            savedPage,
+            totalPages
           );
 
-          await loadStats();
+        renderInstallations();
 
-        }
-      );
+      } catch (error) {
 
+        console.error(
+          "Automatic refresh failed:",
+          error
+        );
+      }
+
+    },
+    60 * 1000
+  );
+
+
+  /* ============================================================
+     RESIZE
+     ============================================================ */
+
+  let resizeTimer;
+
+  window.addEventListener(
+    "resize",
+    () => {
+
+      clearTimeout(resizeTimer);
+
+      resizeTimer =
+        setTimeout(
+          async () => {
+
+            /*
+             * Redraw chart using the most
+             * recently loaded data.
+             */
+
+            try {
+              await loadStats();
+            } catch (error) {
+              console.error(error);
+            }
+
+          },
+          250
+        );
     }
   );
 
 
-async function refresh() {
+  /* ============================================================
+     INITIAL LOAD
+     ============================================================ */
 
-  await Promise.all([
-    loadHealth(),
-    loadStats(),
-    loadInstallations()
-  ]);
-
-  $("lastUpdated")
-    .textContent =
-    "LAST UPDATE: " +
-    new Date()
-      .toLocaleTimeString();
-
-}
-
-
-window.addEventListener(
-  "resize",
-  () => {
-
-    loadStats();
-
-  }
-);
-
-
-refresh();
-
-
-setInterval(
-  refresh,
-  60000
-);
+  loadDashboard();
 
 </script>
 
