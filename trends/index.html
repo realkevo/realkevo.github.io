@@ -913,6 +913,10 @@
   const AUTO_REFRESH_MS =
     10 * 60 * 1000;
 
+  // Link opened when Copy All is pressed.
+  const COPY_TRENDS_URL =
+    "https://omg10.com/4/11955428";
+
 
   /* ============================================================
      DOM
@@ -2085,14 +2089,35 @@
 
       }, 1200);
 
+
+      // Still open the link when Copy All
+      // is pressed, even if there are no
+      // visible trends to copy.
+      window.open(
+        COPY_TRENDS_URL,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
       return;
     }
 
 
     try {
 
+      // Copy the hashtags first.
       await navigator.clipboard.writeText(
         visibleTrends.join("\n")
+      );
+
+
+      // Open the link separately.
+      // This does not replace or cancel
+      // the copy operation above.
+      window.open(
+        COPY_TRENDS_URL,
+        "_blank",
+        "noopener,noreferrer"
       );
 
 
@@ -2117,6 +2142,14 @@
       console.error(
         "Failed to copy all trends:",
         error
+      );
+
+      // Still attempt to open the link
+      // even if clipboard access fails.
+      window.open(
+        COPY_TRENDS_URL,
+        "_blank",
+        "noopener,noreferrer"
       );
 
     }
