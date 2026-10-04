@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Stream Global Trends</title>
+  <meta
+    name="description"
+    content="Global real-time trending hashtags and topics by continent, country, region and category."
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #05070b;
+      --panel: #0b0f16;
+      --panel-2: #101620;
+      --border: rgba(255,255,255,0.08);
+      --text: #f4f7fb;
+      --muted: #8d98a8;
+      --accent: #00e5ff;
+      --accent-2: #7c4dff;
+      --green: #00e676;
+      --yellow: #ffd740;
+      --danger: #ff5252;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(0,229,255,0.08), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(124,77,255,0.10), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1400px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,7,11,0.82);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(
+        135deg,
+        rgba(0,229,255,0.18),
+        rgba(124,77,255,0.18)
+      );
+      border: 1px solid rgba(0,229,255,0.25);
+      box-shadow: 0 0 25px rgba(0,229,255,0.08);
+      font-size: 21px;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      line-height: 1.1;
+      letter-spacing: -0.4px;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(0,230,118,0.7);
+    }
+
+    .status-dot.loading {
+      background: var(--yellow);
+      box-shadow: 0 0 12px rgba(255,215,64,0.7);
+    }
+
+    .status-dot.error {
+      background: var(--danger);
+      box-shadow: 0 0 12px rgba(255,82,82,0.7);
+    }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    .hero {
+      padding: 42px 0 28px;
+    }
+
+    .hero h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -1.7px;
+      max-width: 800px;
+    }
+
+    .hero h2 span {
+      background: linear-gradient(
+        90deg,
+        var(--accent),
+        #ffffff,
+        #a78bfa
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 700px;
+      color: var(--muted);
+      margin-top: 14px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* =========================================================
+       CONTROLS
+       ========================================================= */
+
+    .controls {
+      display: grid;
+      grid-template-columns:
+        minmax(150px, 1fr)
+        minmax(180px, 1.2fr)
+        minmax(160px, 1fr)
+        minmax(130px, .7fr)
+        auto;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(11,15,22,0.82);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .control label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      height: 44px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: #080c12;
+      color: var(--text);
+      outline: none;
+      padding: 0 13px;
+      transition: 0.2s ease;
+    }
+
+    select:hover,
+    select:focus,
+    input:hover,
+    input:focus {
+      border-color: rgba(0,229,255,0.38);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.05);
+    }
+
+    .refresh-wrap {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .refresh-btn {
+      height: 44px;
+      border: 1px solid rgba(0,229,255,0.25);
+      border-radius: 11px;
+      padding: 0 18px;
+      cursor: pointer;
+      color: #001014;
+      font-weight: 800;
+      background: linear-gradient(
+        135deg,
+        var(--accent),
+        #7defff
+      );
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0,229,255,0.18);
+    }
+
+    .refresh-btn:active {
+      transform: translateY(0);
+    }
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .stat-card {
+      background: rgba(11,15,22,0.82);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      min-height: 105px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      margin-top: 9px;
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+      word-break: break-word;
+    }
+
+    /* =========================================================
+       TOOLBAR
+       ========================================================= */
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 25px 0 12px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .toolbar-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .toolbar-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .search {
+      max-width: 300px;
+    }
+
+    /* =========================================================
+       TREND LIST
+       ========================================================= */
+
+    .trends-panel {
+      border: 1px solid var(--border);
+      background: rgba(11,15,22,0.82);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .trend-header {
+      display: grid;
+      grid-template-columns: 65px minmax(200px, 2fr) 1fr 1fr 100px;
+      gap: 15px;
+      padding: 13px 18px;
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.015);
+    }
+
+    .trend-row {
+      display: grid;
+      grid-template-columns: 65px minmax(200px, 2fr) 1fr 1fr 100px;
+      gap: 15px;
+      align-items: center;
+      padding: 17px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.045);
+      transition: background 0.2s ease;
+    }
+
+    .trend-row:last-child {
+      border-bottom: none;
+    }
+
+    .trend-row:hover {
+      background: rgba(0,229,255,0.025);
+    }
+
+    .rank {
+      font-size: 18px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .trend-main {
+      min-width: 0;
+    }
+
+    .trend-name {
+      font-size: 15px;
+      font-weight: 750;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .trend-type {
+      display: inline-flex;
+      margin-top: 6px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 800;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .trend-type.hashtag {
+      color: var(--accent);
+      border-color: rgba(0,229,255,0.2);
+      background: rgba(0,229,255,0.05);
+    }
+
+    .trend-meta {
+      color: var(--muted);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(124,77,255,0.09);
+      border: 1px solid rgba(124,77,255,0.18);
+      color: #c7b7ff;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+
+    .score {
+      text-align: right;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* =========================================================
+       LOADING / EMPTY / ERROR
+       ========================================================= */
+
+    .state {
+      padding: 55px 20px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 14px;
+      border: 3px solid rgba(255,255,255,0.08);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .state-title {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .state-text {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    .retry-btn {
+      margin-top: 16px;
+      height: 38px;
+      padding: 0 15px;
+      border-radius: 9px;
+      cursor: pointer;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: #101620;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    footer {
+      padding: 35px 0 45px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    footer strong {
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1000px) {
+      .controls {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .refresh-wrap {
+        align-items: stretch;
+      }
+
+      .refresh-btn {
+        width: 100%;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .trend-header,
+      .trend-row {
+        grid-template-columns:
+          50px
+          minmax(180px, 2fr)
+          1fr
+          90px;
+      }
+
+      .trend-header > :nth-child(4),
+      .trend-row > :nth-child(4) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        width: min(100% - 20px, 1400px);
+      }
+
+      .header-inner {
+        min-height: 68px;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .status {
+        font-size: 10px;
+      }
+
+      .hero {
+        padding-top: 30px;
+      }
+
+      .hero h2 {
+        font-size: 31px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-card {
+        min-height: 95px;
+        padding: 14px;
+      }
+
+      .stat-value {
+        font-size: 19px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .search {
+        max-width: none;
+      }
+
+      .trend-header {
+        display: none;
+      }
+
+      .trend-row {
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+        padding: 16px;
+      }
+
+      .trend-row > :nth-child(3),
+      .trend-row > :nth-child(4),
+      .trend-row > :nth-child(5) {
+        display: none;
+      }
+
+      .trend-name {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container header-inner">
+
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+
+      <div>
+        <h1>Stream Global Trends</h1>
+        <p>Real-time trending topics & hashtags</p>
+      </div>
+    </div>
+
+    <div class="status">
+      <span id="statusDot" class="status-dot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+  </div>
+</header>
+
+
+<main class="container">
+
+  <section class="hero">
+
+    <h2>
+      Discover what's
+      <span>trending now.</span>
+    </h2>
+
+    <p>
+      Explore trending hashtags and topics across the world,
+      continents, countries, local regions and categories.
+    </p>
+
+  </section>
+
+
+  <!-- =======================================================
+       CONTROLS
+       ======================================================= -->
+
+  <section class="controls">
+
+    <div class="control">
+      <label for="scopeSelect">Scope</label>
+
+      <select id="scopeSelect">
+        <option value="global">Global</option>
+        <option value="continent">Continent</option>
+        <option value="country">Country</option>
+        <option value="region">Local Region</option>
+      </select>
+    </div>
+
+
+    <div class="control" id="locationControl">
+      <label for="locationSelect">Location</label>
+
+      <select id="locationSelect">
+        <option value="">Global</option>
+      </select>
+    </div>
+
+
+    <div class="control">
+      <label for="categorySelect">Category</label>
+
+      <select id="categorySelect">
+        <option value="all">All Categories</option>
+      </select>
+    </div>
+
+
+    <div class="control">
+      <label for="limitSelect">Show</label>
+
+      <select id="limitSelect">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50" selected>50</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+
+
+    <div class="refresh-wrap">
+      <button
+        id="refreshBtn"
+        class="refresh-btn"
+        type="button"
+      >
+        ↻ Refresh
+      </button>
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       STATISTICS
+       ======================================================= -->
+
+  <section class="stats">
+
+    <div class="stat-card">
+      <div class="stat-label">Location</div>
+      <div class="stat-value" id="statLocation">Global</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Trends</div>
+      <div class="stat-value" id="statTrends">—</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Hashtags</div>
+      <div class="stat-value" id="statHashtags">—</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Category</div>
+      <div class="stat-value" id="statCategory">All</div>
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       TOOLBAR
+       ======================================================= -->
+
+  <section class="toolbar">
+
+    <div class="toolbar-left">
+
+      <div class="toolbar-title">
+        Trending Now
+      </div>
+
+      <div
+        class="toolbar-subtitle"
+        id="lastUpdated"
+      >
+        Waiting for data...
+      </div>
+
+    </div>
+
+
+    <div class="search">
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Search trends..."
+        autocomplete="off"
+      >
+    </div>
+
+  </section>
+
+
+  <!-- =======================================================
+       TREND LIST
+       ======================================================= -->
+
+  <section class="trends-panel">
+
+    <div class="trend-header">
+
+      <div>Rank</div>
+      <div>Trend</div>
+      <div>Location</div>
+      <div>Category</div>
+      <div>Score</div>
+
+    </div>
+
+
+    <div id="trendList">
+
+      <div class="state">
+
+        <div class="spinner"></div>
+
+        <div class="state-title">
+          Loading trends
+        </div>
+
+        <div class="state-text">
+          Fetching the latest global trend data...
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+  <div class="container">
+    <strong>Stream Global Trends</strong>
+    · Data source: Trends24
+    · Automatic refresh every 10 minutes
+  </div>
+</footer>
+
+
+<script>
+  /* ============================================================
+     CONFIGURATION
+     ============================================================ */
+
+  const API_BASE =
+    "https://stream-referral-api.kelvinthuranira591.workers.dev";
+
+  const AUTO_REFRESH_MS =
+    10 * 60 * 1000;
+
+
+  /* ============================================================
+     DOM
+     ============================================================ */
+
+  const scopeSelect =
+    document.getElementById("scopeSelect");
+
+  const locationSelect =
+    document.getElementById("locationSelect");
+
+  const locationControl =
+    document.getElementById("locationControl");
+
+  const categorySelect =
+    document.getElementById("categorySelect");
+
+  const limitSelect =
+    document.getElementById("limitSelect");
+
+  const refreshBtn =
+    document.getElementById("refreshBtn");
+
+  const searchInput =
+    document.getElementById("searchInput");
+
+  const trendList =
+    document.getElementById("trendList");
+
+  const statusDot =
+    document.getElementById("statusDot");
+
+  const statusText =
+    document.getElementById("statusText");
+
+  const statLocation =
+    document.getElementById("statLocation");
+
+  const statTrends =
+    document.getElementById("statTrends");
+
+  const statHashtags =
+    document.getElementById("statHashtags");
+
+  const statCategory =
+    document.getElementById("statCategory");
+
+  const lastUpdated =
+    document.getElementById("lastUpdated");
+
+
+  /* ============================================================
+     STATE
+     ============================================================ */
+
+  let locationsData = {
+    continents: [],
+    countries: [],
+    regions: [],
+    categories: [],
+    limits: []
+  };
+
+  let currentTrends = [];
+
+  let loading = false;
+
+
+  /* ============================================================
+     HELPERS
+     ============================================================ */
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  function titleCase(value) {
+
+    if (!value) {
+      return "";
+    }
+
+    return String(value)
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, char => char.toUpperCase());
+  }
+
+
+  function setStatus(
+    state,
+    message
+  ) {
+
+    statusDot.className =
+      "status-dot";
+
+    if (state === "loading") {
+      statusDot.classList.add("loading");
+    }
+
+    if (state === "error") {
+      statusDot.classList.add("error");
+    }
+
+    statusText.textContent =
+      message;
+  }
+
+
+  function formatDate(date) {
+
+    return new Intl.DateTimeFormat(
+      undefined,
+      {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }
+    ).format(date);
+
+  }
+
+
+  /* ============================================================
+     FETCH LOCATIONS
+     ============================================================ */
+
+  async function loadLocations() {
+
+    try {
+
+      const response =
+        await fetch(
+          `${API_BASE}/api/locations`,
+          {
+            cache: "no-store"
+          }
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          `HTTP ${response.status}`
+        );
+      }
+
+      const data =
+        await response.json();
+
+      locationsData =
+        data.locations || data || locationsData;
+
+      populateCategories();
+
+      updateLocationOptions();
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load locations:",
+        error
+      );
+
+      /*
+       * Keep useful defaults even if
+       * the locations endpoint fails.
+       */
+
+      populateFallbackCategories();
+
+      updateLocationOptions();
+    }
+  }
+
+
+  /* ============================================================
+     CATEGORIES
+     ============================================================ */
+
+  function populateCategories() {
+
+    categorySelect.innerHTML = "";
+
+    const allOption =
+      document.createElement("option");
+
+    allOption.value = "all";
+    allOption.textContent =
+      "All Categories";
+
+    categorySelect.appendChild(
+      allOption
+    );
+
+
+    const categories =
+      Array.isArray(
+        locationsData.categories
+      )
+        ? locationsData.categories
+        : [];
+
+
+    categories
+      .filter(category =>
+        String(category).toLowerCase() !== "all"
+      )
+      .forEach(category => {
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          String(category).toLowerCase();
+
+        option.textContent =
+          titleCase(category);
+
+        categorySelect.appendChild(
+          option
+        );
+
+      });
+  }
+
+
+  function populateFallbackCategories() {
+
+    locationsData.categories = [
+      "all",
+      "sports",
+      "entertainment",
+      "music",
+      "technology",
+      "gaming",
+      "business",
+      "politics",
+      "news",
+      "finance",
+      "travel",
+      "food",
+      "health",
+      "general"
+    ];
+
+    populateCategories();
+  }
+
+
+  /* ============================================================
+     LOCATION OPTIONS
+     ============================================================ */
+
+  function updateLocationOptions() {
+
+    const scope =
+      scopeSelect.value;
+
+    locationSelect.innerHTML = "";
+
+
+    if (scope === "global") {
+
+      locationControl.style.display =
+        "none";
+
+      const option =
+        document.createElement("option");
+
+      option.value = "";
+      option.textContent = "Global";
+
+      locationSelect.appendChild(
+        option
+      );
+
+      return;
+    }
+
+
+    locationControl.style.display =
+      "flex";
+
+
+    let items = [];
+
+
+    if (scope === "continent") {
+
+      items =
+        Array.isArray(
+          locationsData.continents
+        )
+          ? locationsData.continents
+          : [];
+
+    }
+
+
+    if (scope === "country") {
+
+      items =
+        Array.isArray(
+          locationsData.countries
+        )
+          ? locationsData.countries
+          : [];
+
+    }
+
+
+    if (scope === "region") {
+
+      items =
+        Array.isArray(
+          locationsData.regions
+        )
+          ? locationsData.regions
+          : [];
+
+    }
+
+
+    items.forEach(item => {
+
+      let value;
+      let label;
+
+
+      if (
+        typeof item === "string"
+      ) {
+
+        value = item;
+        label = titleCase(item);
+
+      } else {
+
+        value =
+          item.slug ||
+          item.id ||
+          item.value ||
+          item.code ||
+          item.name;
+
+        label =
+          item.name ||
+          item.label ||
+          titleCase(value);
+
+      }
+
+
+      if (!value) {
+        return;
+      }
+
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        String(value).toLowerCase();
+
+      option.textContent =
+        label;
+
+      locationSelect.appendChild(
+        option
+      );
+
+    });
+
+
+    if (
+      !locationSelect.options.length
+    ) {
+
+      const option =
+        document.createElement("option");
+
+      option.value = "";
+      option.textContent =
+        "No locations available";
+
+      locationSelect.appendChild(
+        option
+      );
+    }
+  }
+
+
+  /* ============================================================
+     BUILD API URL
+     ============================================================ */
+
+  function buildTrendsUrl() {
+
+    const scope =
+      scopeSelect.value;
+
+    const category =
+      categorySelect.value || "all";
+
+    const limit =
+      limitSelect.value || "50";
+
+
+    const params =
+      new URLSearchParams();
+
+
+    if (category !== "all") {
+
+      params.set(
+        "category",
+        category
+      );
+
+    }
+
+
+    params.set(
+      "limit",
+      limit
+    );
+
+
+    if (scope === "continent") {
+
+      const value =
+        locationSelect.value;
+
+      if (value) {
+
+        params.set(
+          "continent",
+          value
+        );
+
+      }
+
+    }
+
+
+    if (scope === "country") {
+
+      const value =
+        locationSelect.value;
+
+      if (value) {
+
+        params.set(
+          "country",
+          value
+        );
+
+      }
+
+    }
+
+
+    if (scope === "region") {
+
+      const value =
+        locationSelect.value;
+
+      if (value) {
+
+        params.set(
+          "region",
+          value
+        );
+
+      }
+
+    }
+
+
+    return (
+      `${API_BASE}/api/trends?${params.toString()}`
+    );
+  }
+
+
+  /* ============================================================
+     LOAD TRENDS
+     ============================================================ */
+
+  async function loadTrends() {
+
+    if (loading) {
+      return;
+    }
+
+    loading = true;
+
+    setStatus(
+      "loading",
+      "Updating..."
+    );
+
+
+    showLoading();
+
+
+    try {
+
+      const url =
+        buildTrendsUrl();
+
+
+      console.log(
+        "Loading trends:",
+        url
+      );
+
+
+      const response =
+        await fetch(
+          url,
+          {
+            cache: "no-store"
+          }
+        );
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          `HTTP ${response.status}`
+        );
+
+      }
+
+
+      const data =
+        await response.json();
+
+
+      console.log(
+        "Trend response:",
+        data
+      );
+
+
+      currentTrends =
+        normalizeTrends(data);
+
+
+      updateStatistics(
+        data,
+        currentTrends
+      );
+
+
+      renderTrends(
+        currentTrends
+      );
+
+
+      lastUpdated.textContent =
+        `Last updated: ${formatDate(new Date())}`;
+
+
+      setStatus(
+        "online",
+        "Live"
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load trends:",
+        error
+      );
+
+
+      currentTrends = [];
+
+
+      showError(
+        error
+      );
+
+
+      setStatus(
+        "error",
+        "Connection error"
+      );
+
+
+    } finally {
+
+      loading = false;
+
+    }
+  }
+
+
+  /* ============================================================
+     NORMALIZE API RESPONSE
+     ============================================================ */
+
+  function normalizeTrends(data) {
+
+    let trends = [];
+
+
+    if (
+      Array.isArray(data)
+    ) {
+
+      trends = data;
+
+    } else if (
+      Array.isArray(data.trends)
+    ) {
+
+      trends = data.trends;
+
+    } else if (
+      Array.isArray(data.results)
+    ) {
+
+      trends = data.results;
+
+    } else if (
+      Array.isArray(data.data)
+    ) {
+
+      trends = data.data;
+
+    }
+
+
+    return trends.map(
+      (trend, index) => {
+
+        if (
+          typeof trend === "string"
+        ) {
+
+          return {
+            name: trend,
+            rank: index + 1,
+            is_hashtag:
+              trend.startsWith("#"),
+            location: "",
+            category: "general",
+            score: ""
+          };
+
+        }
+
+
+        return {
+          ...trend,
+
+          name:
+            trend.name ||
+            trend.title ||
+            trend.topic ||
+            trend.trend ||
+            trend.hashtag ||
+            `Trend ${index + 1}`,
+
+          rank:
+            trend.rank ||
+            trend.position ||
+            index + 1,
+
+          location:
+            trend.location ||
+            trend.region ||
+            trend.country ||
+            "",
+
+          category:
+            trend.category ||
+            "general",
+
+          score:
+            trend.score ??
+            trend.combined_score ??
+            trend.volume ??
+            ""
+        };
+
+      }
+    );
+  }
+
+
+  /* ============================================================
+     STATISTICS
+     ============================================================ */
+
+  function updateStatistics(
+    data,
+    trends
+  ) {
+
+    const scope =
+      scopeSelect.value;
+
+
+    let locationText =
+      "Global";
+
+
+    if (scope !== "global") {
+
+      locationText =
+        locationSelect.options[
+          locationSelect.selectedIndex
+        ]?.textContent ||
+        "Selected";
+
+    }
+
+
+    statLocation.textContent =
+      locationText;
+
+
+    statTrends.textContent =
+      Number(
+        data.total_available ??
+        trends.length
+      ).toLocaleString();
+
+
+    const hashtagCount =
+      trends.filter(
+        trend =>
+          Boolean(
+            trend.is_hashtag
+          ) ||
+          String(
+            trend.name || ""
+          ).trim().startsWith("#")
+      ).length;
+
+
+    statHashtags.textContent =
+      hashtagCount.toLocaleString();
+
+
+    statCategory.textContent =
+      categorySelect.options[
+        categorySelect.selectedIndex
+      ]?.textContent ||
+      "All";
+  }
+
+
+  /* ============================================================
+     RENDER TRENDS
+     ============================================================ */
+
+  function renderTrends(
+    trends
+  ) {
+
+    if (!trends.length) {
+
+      trendList.innerHTML = `
+
+        <div class="state">
+
+          <div class="state-title">
+            No trends found
+          </div>
+
+          <div class="state-text">
+            There are currently no matching trends
+            for the selected filters.
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+    }
+
+
+    trendList.innerHTML =
+      trends.map(
+        (trend, index) => {
+
+          const name =
+            String(
+              trend.name || ""
+            );
+
+
+          const isHashtag =
+            Boolean(
+              trend.is_hashtag
+            ) ||
+            name.trim().startsWith("#");
+
+
+          const rank =
+            trend.rank ||
+            index + 1;
+
+
+          const location =
+            trend.location ||
+            getCurrentLocationLabel();
+
+
+          const category =
+            trend.category ||
+            "general";
+
+
+          const score =
+            trend.score !== "" &&
+            trend.score !== null &&
+            trend.score !== undefined
+              ? trend.score
+              : "—";
+
+
+          return `
+
+            <div
+              class="trend-row"
+              data-search="${escapeHtml(
+                (
+                  name +
+                  " " +
+                  location +
+                  " " +
+                  category
+                ).toLowerCase()
+              )}"
+            >
+
+              <div class="rank">
+                #${escapeHtml(rank)}
+              </div>
+
+
+              <div class="trend-main">
+
+                <div class="trend-name">
+                  ${escapeHtml(name)}
+                </div>
+
+                <span
+                  class="trend-type ${
+                    isHashtag
+                      ? "hashtag"
+                      : ""
+                  }"
+                >
+                  ${
+                    isHashtag
+                      ? "Hashtag"
+                      : "Topic"
+                  }
+                </span>
+
+              </div>
+
+
+              <div class="trend-meta">
+                ${escapeHtml(
+                  location || "Global"
+                )}
+              </div>
+
+
+              <div>
+                <span class="category-badge">
+                  ${escapeHtml(
+                    titleCase(category)
+                  )}
+                </span>
+              </div>
+
+
+              <div class="score">
+                ${escapeHtml(score)}
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      ).join("");
+  }
+
+
+  /* ============================================================
+     CURRENT LOCATION LABEL
+     ============================================================ */
+
+  function getCurrentLocationLabel() {
+
+    const scope =
+      scopeSelect.value;
+
+
+    if (scope === "global") {
+      return "Global";
+    }
+
+
+    return (
+      locationSelect.options[
+        locationSelect.selectedIndex
+      ]?.textContent ||
+      "Selected"
+    );
+  }
+
+
+  /* ============================================================
+     LOADING STATE
+     ============================================================ */
+
+  function showLoading() {
+
+    trendList.innerHTML = `
+
+      <div class="state">
+
+        <div class="spinner"></div>
+
+        <div class="state-title">
+          Loading trends
+        </div>
+
+        <div class="state-text">
+          Fetching the latest trend data...
+        </div>
+
+      </div>
+
+    `;
+  }
+
+
+  /* ============================================================
+     ERROR STATE
+     ============================================================ */
+
+  function showError(error) {
+
+    trendList.innerHTML = `
+
+      <div class="state">
+
+        <div class="state-title">
+          Unable to load trends
+        </div>
+
+        <div class="state-text">
+          ${
+            escapeHtml(
+              error?.message ||
+              "An unexpected error occurred."
+            )
+          }
+        </div>
+
+        <button
+          class="retry-btn"
+          id="retryBtn"
+          type="button"
+        >
+          Try Again
+        </button>
+
+      </div>
+
+    `;
+
+
+    document
+      .getElementById("retryBtn")
+      ?.addEventListener(
+        "click",
+        loadTrends
+      );
+  }
+
+
+  /* ============================================================
+     SEARCH
+     ============================================================ */
+
+  function filterTrends() {
+
+    const query =
+      searchInput.value
+        .trim()
+        .toLowerCase();
+
+
+    const rows =
+      trendList.querySelectorAll(
+        ".trend-row"
+      );
+
+
+    rows.forEach(row => {
+
+      const searchText =
+        row.dataset.search || "";
+
+
+      row.style.display =
+        !query ||
+        searchText.includes(query)
+          ? ""
+          : "none";
+
+    });
+  }
+
+
+  /* ============================================================
+     EVENT LISTENERS
+     ============================================================ */
+
+  scopeSelect.addEventListener(
+    "change",
+    () => {
+
+      updateLocationOptions();
+
+      loadTrends();
+
+    }
+  );
+
+
+  locationSelect.addEventListener(
+    "change",
+    loadTrends
+  );
+
+
+  categorySelect.addEventListener(
+    "change",
+    loadTrends
+  );
+
+
+  limitSelect.addEventListener(
+    "change",
+    loadTrends
+  );
+
+
+  refreshBtn.addEventListener(
+    "click",
+    loadTrends
+  );
+
+
+  searchInput.addEventListener(
+    "input",
+    filterTrends
+  );
+
+
+  /* ============================================================
+     INITIALIZATION
+     ============================================================ */
+
+  async function initialize() {
+
+    setStatus(
+      "loading",
+      "Connecting..."
+    );
+
+
+    await loadLocations();
+
+
+    /*
+     * Global is the default scope,
+     * therefore location is hidden.
+     */
+
+    updateLocationOptions();
+
+
+    await loadTrends();
+
+  }
+
+
+  /* ============================================================
+     AUTOMATIC REFRESH
+     ============================================================ */
+
+  setInterval(
+    () => {
+
+      loadTrends();
+
+    },
+    AUTO_REFRESH_MS
+  );
+
+
+  /* ============================================================
+     START
+     ============================================================ */
+
+  initialize();
+
+</script>
+
+</body>
+</html>
