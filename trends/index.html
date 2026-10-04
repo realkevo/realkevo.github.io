@@ -328,6 +328,35 @@
     }
 
     /* =========================================================
+       COPY BUTTONS
+       ========================================================= */
+
+    .copy-trend-btn {
+      height: 30px;
+      padding: 0 9px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,229,255,0.18);
+      background: rgba(0,229,255,0.05);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .copy-trend-btn:hover {
+      background: rgba(0,229,255,0.12);
+      border-color: rgba(0,229,255,0.35);
+    }
+
+    .copy-trend-btn.copied {
+      color: var(--green);
+      border-color: rgba(0,230,118,0.3);
+      background: rgba(0,230,118,0.08);
+    }
+
+    /* =========================================================
        TREND LIST
        ========================================================= */
 
@@ -609,6 +638,20 @@
       }
     }
 
+    @media (max-width: 520px) {
+      .toolbar-copy {
+        width: 100% !important;
+      }
+
+      .toolbar-copy .search {
+        max-width: none;
+      }
+
+      #copyAllBtn {
+        flex: 0 0 auto;
+      }
+    }
+
     @media (max-width: 420px) {
       .stats {
         grid-template-columns: 1fr;
@@ -775,13 +818,36 @@
     </div>
 
 
-    <div class="search">
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Search trends..."
-        autocomplete="off"
+    <div
+      class="toolbar-copy"
+      style="
+        display:flex;
+        gap:10px;
+        width:min(100%, 430px);
+      "
+    >
+
+      <div
+        class="search"
+        style="flex:1;"
       >
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search trends..."
+          autocomplete="off"
+        >
+      </div>
+
+      <button
+        id="copyAllBtn"
+        class="refresh-btn"
+        type="button"
+        style="padding:0 14px;"
+      >
+        Copy All
+      </button>
+
     </div>
 
   </section>
@@ -896,6 +962,9 @@
 
   const lastUpdated =
     document.getElementById("lastUpdated");
+
+  const copyAllBtn =
+    document.getElementById("copyAllBtn");
 
 
   /* ============================================================
@@ -1014,11 +1083,6 @@
         "Failed to load locations:",
         error
       );
-
-      /*
-       * Keep useful defaults even if
-       * the locations endpoint fails.
-       */
 
       populateFallbackCategories();
 
@@ -1740,8 +1804,28 @@
               </div>
 
 
-              <div class="score">
-                ${escapeHtml(score)}
+              <div
+                style="
+                  display:flex;
+                  align-items:center;
+                  justify-content:flex-end;
+                  gap:8px;
+                "
+              >
+
+                <div class="score">
+                  ${escapeHtml(score)}
+                </div>
+
+                <button
+                  class="copy-trend-btn"
+                  type="button"
+                  data-copy="${escapeHtml(name)}"
+                  title="Copy trend"
+                >
+                  Copy
+                </button>
+
               </div>
 
             </div>
@@ -1883,6 +1967,206 @@
 
 
   /* ============================================================
+     COPY ONE TREND
+     ============================================================ */
+
+  async function copyTrend(
+    text,
+    button
+  ) {
+
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+
+      const originalText =
+        button.textContent;
+
+
+      button.textContent =
+        "Copied!";
+
+
+      button.classList.add(
+        "copied"
+      );
+
+
+      setTimeout(() => {
+
+        button.textContent =
+          originalText;
+
+        button.classList.remove(
+          "copied"
+        );
+
+      }, 1200);
+
+
+    } catch (error) {
+
+      console.error(
+        "Failed to copy trend:",
+        error
+      );
+
+    }
+  }
+
+
+  /* ============================================================
+     COPY ALL DISPLAYED TRENDS
+     ============================================================ */
+
+  async function copyAllTrends() {
+
+    const rows =
+      trendList.querySelectorAll(
+        ".trend-row"
+      );
+
+
+    const visibleTrends = [];
+
+
+    rows.forEach(row => {
+
+      if (
+        row.style.display === "none"
+      ) {
+        return;
+      }
+
+
+      const copyButton =
+        row.querySelector(
+          ".copy-trend-btn"
+        );
+
+
+      if (!copyButton) {
+        return;
+      }
+
+
+      const text =
+        copyButton.dataset.copy;
+
+
+      if (text) {
+
+        visibleTrends.push(
+          text
+        );
+
+      }
+
+    });
+
+
+    if (!visibleTrends.length) {
+
+      const originalText =
+        copyAllBtn.textContent;
+
+
+      copyAllBtn.textContent =
+        "Nothing to Copy";
+
+
+      setTimeout(() => {
+
+        copyAllBtn.textContent =
+          originalText;
+
+      }, 1200);
+
+      return;
+    }
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        visibleTrends.join("\n")
+      );
+
+
+      const originalText =
+        copyAllBtn.textContent;
+
+
+      copyAllBtn.textContent =
+        `Copied ${visibleTrends.length}!`;
+
+
+      setTimeout(() => {
+
+        copyAllBtn.textContent =
+          originalText;
+
+      }, 1500);
+
+
+    } catch (error) {
+
+      console.error(
+        "Failed to copy all trends:",
+        error
+      );
+
+    }
+  }
+
+
+  /* ============================================================
+     COPY BUTTON EVENTS
+     ============================================================ */
+
+  trendList.addEventListener(
+    "click",
+    event => {
+
+      const button =
+        event.target.closest(
+          ".copy-trend-btn"
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      const text =
+        button.dataset.copy;
+
+
+      if (!text) {
+        return;
+      }
+
+
+      copyTrend(
+        text,
+        button
+      );
+
+    }
+  );
+
+
+  copyAllBtn.addEventListener(
+    "click",
+    copyAllTrends
+  );
+
+
+  /* ============================================================
      EVENT LISTENERS
      ============================================================ */
 
@@ -1942,11 +2226,6 @@
 
     await loadLocations();
 
-
-    /*
-     * Global is the default scope,
-     * therefore location is hidden.
-     */
 
     updateLocationOptions();
 
