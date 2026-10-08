@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Toptech Develops</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Streamlinks — Toptech Develops</title>
 
   <meta
     name="description"
-    content="Explore movies, anime, manga, sports, live TV, games, music, eBooks, comics, Asian dramas, VPNs and adblockers."
+    content="Explore movies, anime, manga, live sports, live TV, games, music, eBooks, comics, Asian drama, VPN and adblocker directories."
   >
 
   <link rel="stylesheet" href="styles.css">
@@ -23,9 +28,17 @@
   </a>
 
   <nav class="main-nav">
+
     <a href="./">Home</a>
-    <a href="https://realkevo.github.io/stream/">Stream</a>
-    <a href="https://realkevo.github.io/trends/">Top Trends</a>
+
+    <a href="https://realkevo.github.io/stream/">
+      Stream
+    </a>
+
+    <a href="https://realkevo.github.io/trends/">
+      Top Trends
+    </a>
+
   </nav>
 
 </header>
@@ -37,13 +50,17 @@
 
     <div class="hero-content">
 
-      <span class="eyebrow">DIRECTORY</span>
+      <span class="eyebrow">
+        STREAMLINKS
+      </span>
 
-      <h1>Explore The Web</h1>
+      <h1>
+        Explore The Web
+      </h1>
 
       <p>
-        Discover useful platforms and services across entertainment,
-        technology, privacy, gaming, books and more.
+        Browse directories for entertainment, gaming,
+        music, books, privacy tools and more.
       </p>
 
     </div>
@@ -56,14 +73,24 @@
     <div class="section-heading">
 
       <div>
-        <span class="section-label">CATEGORIES</span>
-        <h2>Browse directories</h2>
+
+        <span class="section-label">
+          CATEGORIES
+        </span>
+
+        <h2>
+          Browse directories
+        </h2>
+
       </div>
 
     </div>
 
 
-    <div id="categoryGrid" class="category-grid"></div>
+    <div
+      id="categoryGrid"
+      class="category-grid"
+    ></div>
 
   </section>
 
@@ -91,14 +118,20 @@
 
 <script>
 
-const categoryGrid = document.getElementById("categoryGrid");
+const categoryGrid =
+  document.getElementById("categoryGrid");
+
 
 categories.forEach(category => {
 
-  const card = document.createElement("a");
+  const card =
+    document.createElement("a");
 
-  card.className = "category-card";
-  card.href = category.path;
+  card.className =
+    "category-card";
+
+  card.href =
+    category.path;
 
   card.innerHTML = `
 
@@ -108,9 +141,13 @@ categories.forEach(category => {
 
     <div class="category-content">
 
-      <h3>${category.name}</h3>
+      <h3>
+        ${category.name}
+      </h3>
 
-      <p>${category.description}</p>
+      <p>
+        ${category.description}
+      </p>
 
     </div>
 
