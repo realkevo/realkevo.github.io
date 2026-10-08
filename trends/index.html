@@ -139,6 +139,92 @@
       box-shadow: 0 0 12px rgba(255,82,82,0.7);
     }
 
+
+
+    /* =========================================================
+       TOPTECH DEVELOPS SITE NAVIGATION
+       ========================================================= */
+
+    .site-nav {
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,7,11,0.92);
+    }
+
+    .site-nav-inner {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .site-nav-brand {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+
+    .site-nav-brand:hover {
+      color: var(--accent);
+    }
+
+    .site-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .site-nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .site-nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 7px 9px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition:
+        color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .site-nav-links a:hover,
+    .site-nav-links a.active {
+      color: var(--accent);
+      background: rgba(0,229,255,0.06);
+    }
+
+    @media (max-width: 700px) {
+      .site-nav-inner {
+        width: min(100% - 20px, 1400px);
+        min-height: 50px;
+        gap: 10px;
+      }
+
+      .site-nav-brand {
+        font-size: 12px;
+      }
+
+      .site-nav-links {
+        flex: 1;
+      }
+
+      .site-nav-links a {
+        padding: 7px 8px;
+        font-size: 10px;
+      }
+    }
+
     /* =========================================================
        HERO
        ========================================================= */
@@ -665,6 +751,35 @@
 </head>
 
 <body>
+
+<nav class="site-nav" aria-label="Toptechdevelops navigation">
+  <div class="container site-nav-inner">
+
+    <a
+      class="site-nav-brand"
+      href="https://realkevo.github.io/"
+    >
+      TOPTECH DEVELOPS
+    </a>
+
+    <div class="site-nav-links">
+      <a href="https://realkevo.github.io/#app">Eye</a>
+      <a href="https://realkevo.github.io/#stream">Stream</a>
+      <a
+        class="active"
+        href="https://realkevo.github.io/trends/"
+        aria-current="page"
+      >
+        TOP TRENDS
+      </a>
+      <a href="https://realkevo.github.io/streamlinks">Streamlinks</a>
+      <a href="https://realkevo.github.io/#community">Community</a>
+      <a href="https://realkevo.github.io/#contact">Contact</a>
+    </div>
+
+  </div>
+</nav>
+
 
 <header>
   <div class="container header-inner">
