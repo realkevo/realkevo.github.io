@@ -1,576 +1,770 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
+    <!-- =========================================================
+         BASIC DOCUMENT INFORMATION
+    ========================================================== -->
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Toptechdevelops — Apps, AI Tools & Stream</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="description"
-        content="Toptechdevelops builds practical mobile applications, offline AI-powered tools and Stream solutions."
-    >
+    <title>Toptechdevelops — Independent Software Developer</title>
 
-    <meta name="theme-color" content="#0b0f14">
+    <meta name="description"
+          content="Toptechdevelops builds practical mobile applications, AI-powered tools, streaming applications and technology projects.">
+
+
+    <!-- =========================================================
+         PAGE STYLES
+    ========================================================== -->
 
     <style>
+
+        /* =======================================================
+           GLOBAL RESET
+        ======================================================= */
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+
+        /* =======================================================
+           BODY
+        ======================================================= */
 
         body {
             font-family: Arial, Helvetica, sans-serif;
+
             background: #0b0f14;
+
             color: #f5f7fa;
+
             line-height: 1.6;
         }
 
-        a {
-            text-decoration: none;
-        }
 
-        /* =========================
-           HEADER
-        ========================= */
+        /* =======================================================
+           HEADER / NAVIGATION BAR
+        ======================================================= */
 
         header {
-            padding: 20px 8%;
-            border-bottom: 1px solid #1d2630;
             position: sticky;
+
             top: 0;
+
             z-index: 1000;
-            background: rgba(11, 15, 20, 0.94);
+
+            padding: 20px 6%;
+
+            background: rgba(11, 15, 20, 0.95);
+
+            border-bottom: 1px solid #1d2630;
+
             backdrop-filter: blur(12px);
         }
 
+
+        /* Main navigation container */
+
         .nav {
-            max-width: 1100px;
+            max-width: 1200px;
+
             margin: auto;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
-            gap: 20px;
+
+            gap: 25px;
         }
+
+
+        /* =======================================================
+           LOGO
+        ======================================================= */
 
         .logo {
             font-size: 21px;
+
             font-weight: 700;
+
             white-space: nowrap;
         }
+
 
         .logo span {
             color: #4f9cff;
         }
 
+
+        /* =======================================================
+           NAVIGATION LINKS
+        ======================================================= */
+
         nav {
             display: flex;
+
             align-items: center;
-            flex-wrap: wrap;
+
             justify-content: flex-end;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
         }
+
 
         nav a {
             color: #aeb8c4;
-            margin-left: 22px;
+
+            text-decoration: none;
+
+            padding: 8px 10px;
+
             font-size: 14px;
-            transition: color 0.2s ease;
+
+            border-radius: 7px;
+
+            transition:
+                color 0.2s ease,
+                background 0.2s ease;
         }
+
 
         nav a:hover {
             color: white;
+
+            background: #151e28;
         }
 
-        .nav-home {
-            color: #4f9cff !important;
-            font-weight: 700;
+
+        /* Highlighted navigation links */
+
+        .nav-highlight {
+            color: #7eb5ff;
         }
 
-        /* =========================
-           HERO
-        ========================= */
+
+        /* =======================================================
+           HERO SECTION
+        ======================================================= */
 
         .hero {
             max-width: 1100px;
+
             margin: auto;
-            padding: 110px 8% 100px;
+
+            padding: 110px 8% 90px;
+
             text-align: center;
         }
 
+
+        /* Small badge above heading */
+
         .badge {
             display: inline-block;
+
             padding: 7px 14px;
+
             border: 1px solid #26384d;
+
             border-radius: 30px;
+
             color: #7eb5ff;
+
             font-size: 13px;
+
             margin-bottom: 24px;
         }
+
+
+        /* Main hero heading */
 
         h1 {
             font-size: clamp(42px, 7vw, 72px);
+
             line-height: 1.05;
+
             margin-bottom: 24px;
-            letter-spacing: -2px;
         }
 
-        .hero h1 span {
-            color: #4f9cff;
-        }
+
+        /* Hero description */
 
         .hero p {
             max-width: 700px;
+
             margin: auto;
+
             color: #aeb8c4;
+
             font-size: 18px;
         }
 
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 32px;
-        }
 
-        /* =========================
-           BUTTONS
-        ========================= */
+        /* =======================================================
+           STANDARD BUTTON
+        ======================================================= */
 
         .button {
             display: inline-block;
+
+            margin-top: 32px;
+
             padding: 13px 22px;
+
             background: #4f9cff;
+
             color: white;
+
+            text-decoration: none;
+
             border-radius: 8px;
+
             font-weight: 600;
-            transition: all 0.2s ease;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
+
 
         .button:hover {
             background: #3789ef;
+
             transform: translateY(-2px);
         }
 
-        .button.secondary {
-            background: #151d26;
-            border: 1px solid #2a3948;
-        }
 
-        .button.secondary:hover {
-            background: #1d2935;
-        }
-
-        .button.green {
-            background: #20c997;
-            color: #06120f;
-        }
-
-        .button.green:hover {
-            background: #19b588;
-        }
-
-        /* =========================
-           GENERAL SECTIONS
-        ========================= */
+        /* =======================================================
+           GENERAL SECTION
+        ======================================================= */
 
         section {
             max-width: 1100px;
+
             margin: auto;
+
             padding: 75px 8%;
         }
 
+
+        /* =======================================================
+           SECTION TITLES
+        ======================================================= */
+
         .section-title {
             font-size: 30px;
+
             margin-bottom: 35px;
         }
 
-        .section-intro {
-            color: #aeb8c4;
-            max-width: 700px;
-            margin-top: -20px;
-            margin-bottom: 30px;
-        }
 
-        /* =========================
-           EYE APP
-        ========================= */
+        /* =======================================================
+           APP CARD
+        ======================================================= */
 
         .app-card {
             border: 1px solid #202b36;
+
             background: #111820;
+
             border-radius: 16px;
+
             padding: 35px;
         }
 
+
         .app-card h3 {
             font-size: 26px;
+
             margin-bottom: 12px;
         }
+
 
         .app-card p {
             color: #aeb8c4;
+
             max-width: 700px;
         }
 
-        .app-label {
-            display: inline-block;
-            color: #7eb5ff;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
+
+        /* =======================================================
+           FEATURE GRID
+        ======================================================= */
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
             gap: 18px;
+
             margin-top: 30px;
         }
 
+
+        /* Individual feature */
+
         .feature {
             padding: 22px;
+
             background: #0c1219;
+
             border: 1px solid #202b36;
+
             border-radius: 12px;
         }
+
 
         .feature h4 {
             margin-bottom: 8px;
         }
 
+
         .feature p {
             font-size: 14px;
         }
 
-        /* =========================
-           STREAM SECTION
-        ========================= */
 
-        .stream-section {
-            position: relative;
-        }
+        /* =======================================================
+           STREAM SECTION
+        ======================================================= */
 
         .stream-card {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #1f394b;
+            border: 1px solid #20313f;
+
             background:
-                radial-gradient(
-                    circle at 85% 15%,
-                    rgba(32, 201, 151, 0.15),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 15% 85%,
-                    rgba(79, 156, 255, 0.12),
-                    transparent 30%
-                ),
-                #101922;
-            border-radius: 20px;
-            padding: 45px;
-        }
+                linear-gradient(
+                    135deg,
+                    #111820,
+                    #0d151d
+                );
 
-        .stream-badge {
-            display: inline-block;
-            padding: 7px 13px;
-            border-radius: 30px;
-            border: 1px solid rgba(32, 201, 151, 0.35);
-            color: #20c997;
-            background: rgba(32, 201, 151, 0.08);
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.7px;
-            margin-bottom: 18px;
-        }
+            border-radius: 16px;
 
-        .stream-card h3 {
-            font-size: clamp(32px, 5vw, 52px);
-            line-height: 1.05;
-            margin-bottom: 18px;
-        }
+            padding: 40px;
 
-        .stream-card h3 span {
-            color: #20c997;
-        }
-
-        .stream-card > p {
-            color: #aeb8c4;
-            max-width: 720px;
-            font-size: 17px;
-        }
-
-        .stream-features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .stream-feature {
-            padding: 20px;
-            background: rgba(255,255,255,0.025);
-            border: 1px solid #24313d;
-            border-radius: 12px;
-        }
-
-        .stream-feature-icon {
-            font-size: 22px;
-            margin-bottom: 8px;
-        }
-
-        .stream-feature h4 {
-            margin-bottom: 5px;
-        }
-
-        .stream-feature p {
-            color: #8997a5;
-            font-size: 13px;
-        }
-
-        .stream-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        /* =========================
-           COMMUNITY
-        ========================= */
-
-        .community-section {
             text-align: center;
         }
 
-        .community-section .section-title {
-            margin-bottom: 10px;
+
+        .stream-card h3 {
+            font-size: 30px;
+
+            margin-bottom: 15px;
         }
 
-        .community-description {
+
+        .stream-card p {
+            max-width: 700px;
+
+            margin: auto;
+
             color: #aeb8c4;
-            margin-bottom: 35px;
+
+            font-size: 16px;
         }
 
-        .community-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
+
+        /* =======================================================
+           STREAM DIRECTORY SECTION
+        ======================================================= */
+
+        .directory-section {
+            text-align: center;
+
+            padding-top: 40px;
+
+            padding-bottom: 80px;
         }
 
-        .community-card {
-            padding: 30px;
-            border: 1px solid #202b36;
-            background: #111820;
-            border-radius: 16px;
-        }
 
-        .community-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
+        .directory-section p {
+            max-width: 700px;
 
-        .community-card h3 {
-            font-size: 21px;
-            margin-bottom: 8px;
-        }
+            margin: 0 auto;
 
-        .community-card p {
             color: #aeb8c4;
-            font-size: 14px;
-            margin-bottom: 20px;
         }
 
-        /* =========================
-           OTHER APPS
-        ========================= */
+
+        /* =======================================================
+           LARGE STREAMING DIRECTORY BUTTON
+        ======================================================= */
+
+        .directory-button {
+            display: block;
+
+            width: min(760px, 100%);
+
+            margin: 35px auto 0;
+
+            padding: 22px 30px;
+
+            background: #4f9cff;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 14px;
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            text-align: center;
+
+            border: 1px solid #70b0ff;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.25);
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .directory-button:hover {
+            background: #3789ef;
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 14px 40px rgba(0, 0, 0, 0.35);
+        }
+
+
+        /* =======================================================
+           COMMUNITY SECTION
+        ======================================================= */
+
+        .community {
+            text-align: center;
+        }
+
+
+        .community p {
+            max-width: 700px;
+
+            margin: auto;
+
+            color: #aeb8c4;
+        }
+
+
+        /* Community buttons */
+
+        .community-buttons {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+
+            margin-top: 30px;
+        }
+
+
+        .community-buttons .button {
+            margin-top: 0;
+        }
+
+
+        /* WhatsApp button */
+
+        .whatsapp {
+            background: #168f4d;
+        }
+
+
+        .whatsapp:hover {
+            background: #11763f;
+        }
+
+
+        /* Telegram button */
+
+        .telegram {
+            background: #1688c7;
+        }
+
+
+        .telegram:hover {
+            background: #1172a8;
+        }
+
+
+        /* =======================================================
+           OTHER APPS SECTION
+        ======================================================= */
 
         .other-apps {
             text-align: center;
         }
 
-        .other-apps .section-title {
-            margin-bottom: 10px;
-        }
 
-        .other-apps-description {
-            color: #aeb8c4;
-            max-width: 650px;
-            margin: 0 auto 35px;
-        }
+        .other-apps p {
+            max-width: 700px;
 
-        .other-app-card {
-            border: 1px solid #202b36;
-            background: #111820;
-            border-radius: 16px;
-            padding: 35px;
-            max-width: 800px;
             margin: auto;
-        }
 
-        .other-app-card h3 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-
-        .other-app-card p {
             color: #aeb8c4;
-            margin-bottom: 25px;
         }
+
 
         .other-app-buttons {
             display: flex;
+
             justify-content: center;
-            gap: 12px;
+
+            align-items: center;
+
             flex-wrap: wrap;
+
+            gap: 15px;
+
+            margin-top: 30px;
         }
 
-        /* =========================
-           CONTACT
-        ========================= */
+
+        .other-app-buttons .button {
+            margin-top: 0;
+        }
+
+
+        /* =======================================================
+           CONTACT SECTION
+        ======================================================= */
 
         .contact {
             text-align: center;
         }
 
+
         .contact p {
             color: #aeb8c4;
-            max-width: 650px;
-            margin: auto;
         }
 
-        /* =========================
+
+        /* =======================================================
            FOOTER
-        ========================= */
+        ======================================================= */
 
         footer {
             border-top: 1px solid #1d2630;
+
             text-align: center;
-            padding: 35px 8%;
+
+            padding: 30px 8%;
+
             color: #7f8b98;
+
             font-size: 13px;
         }
 
-        .footer-links {
-            margin-bottom: 12px;
-        }
 
-        .footer-links a {
-            color: #8e9baa;
-            margin: 0 8px;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
+        /* =======================================================
+           MOBILE RESPONSIVE DESIGN
+        ======================================================= */
 
         @media (max-width: 800px) {
 
-            .stream-features {
-                grid-template-columns: 1fr;
+            header {
+                padding: 16px 5%;
             }
 
-            .community-grid {
-                grid-template-columns: 1fr;
+
+            .nav {
+                flex-direction: column;
+
+                justify-content: center;
+
+                gap: 12px;
             }
 
-            .stream-card {
-                padding: 30px;
+
+            nav {
+                justify-content: center;
+
+                gap: 3px;
             }
+
+
+            nav a {
+                font-size: 13px;
+
+                padding: 7px 8px;
+            }
+
+
+            .hero {
+                padding-top: 80px;
+            }
+
         }
+
+
+        /* =======================================================
+           SMALL MOBILE DEVICES
+        ======================================================= */
 
         @media (max-width: 600px) {
 
-            header {
-                padding: 17px 5%;
-            }
-
-            .nav {
-                align-items: flex-start;
-            }
-
-            nav {
-                gap: 5px;
-            }
-
-            nav a {
-                margin-left: 10px;
-                font-size: 12px;
-            }
-
             .hero {
-                padding-top: 70px;
-                padding-bottom: 70px;
+                padding-top: 65px;
+
+                padding-bottom: 65px;
             }
+
+
+            .hero p {
+                font-size: 16px;
+            }
+
 
             section {
                 padding: 60px 6%;
             }
 
-            .app-card,
-            .stream-card,
-            .community-card,
-            .other-app-card {
+
+            .app-card {
                 padding: 25px;
             }
 
-            .hero-buttons,
-            .stream-buttons,
+
+            .stream-card {
+                padding: 28px 22px;
+            }
+
+
+            .stream-card h3 {
+                font-size: 25px;
+            }
+
+
+            .directory-button {
+                font-size: 17px;
+
+                padding: 20px 18px;
+            }
+
+
+            .community-buttons,
             .other-app-buttons {
                 flex-direction: column;
             }
 
-            .hero-buttons .button,
-            .stream-buttons .button,
+
+            .community-buttons .button,
             .other-app-buttons .button {
                 width: 100%;
+
+                max-width: 350px;
+
                 text-align: center;
             }
 
-            .logo {
-                font-size: 17px;
-            }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
+
+<!-- =============================================================
+     HEADER / TOP NAVIGATION
+============================================================== -->
 
 <header>
 
     <div class="nav">
 
+
+        <!-- Website logo -->
+
         <div class="logo">
             Toptech<span>develops</span>
         </div>
 
-        <nav>
-            <a href="#app">Eye</a>
-            <a href="#stream">Stream</a>
-            <a href="#community">Community</a>
-            <a href="#contact">Contact</a>
 
-            <a
-                class="nav-home"
-                href="https://realkevo.github.io/"
-            >
-                TOPTECH HOMEPAGE
+        <!-- Navigation links -->
+
+        <nav>
+
+            <!-- Eye section -->
+
+            <a href="#app">
+                Eye
             </a>
+
+
+            <!-- Stream section -->
+
+            <a href="#stream">
+                Stream
+            </a>
+
+
+            <!-- TOP TRENDS -->
+            <!-- Opens the Toptechdevelops Trends page -->
+
+            <a class="nav-highlight"
+               href="https://realkevo.github.io/trends/"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                TOP TRENDS
+
+            </a>
+
+
+            <!-- Community -->
+
+            <a href="#community">
+                Community
+            </a>
+
+
+            <!-- Contact -->
+
+            <a href="#contact">
+                Contact
+            </a>
+
+
+            <!-- Main Toptechdevelops homepage -->
+
+            <a href="https://realkevo.github.io/"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                TOPTECH HOMEPAGE
+
+            </a>
+
         </nav>
 
     </div>
@@ -578,448 +772,413 @@
 </header>
 
 
+
+<!-- =============================================================
+     MAIN PAGE CONTENT
+============================================================== -->
+
 <main>
 
-<!-- =========================================================
-     HERO
-========================================================= -->
 
-<section class="hero">
+    <!-- =========================================================
+         HERO SECTION
+    ========================================================== -->
 
-    <div class="badge">
-        INDEPENDENT SOFTWARE DEVELOPER
-    </div>
-
-    <h1>
-        Building useful
-        <span>technology.</span>
-    </h1>
-
-    <p>
-        Toptechdevelops creates practical mobile applications,
-        offline AI-powered tools and software designed to solve
-        real-world problems.
-    </p>
-
-    <div class="hero-buttons">
-
-        <a
-            class="button"
-            href="#app"
-        >
-            Explore Our Apps
-        </a>
-
-        <a
-            class="button secondary"
-            href="#stream"
-        >
-            Explore Stream
-        </a>
-
-    </div>
-
-</section>
+    <section class="hero">
 
 
-<!-- =========================================================
-     EYE
-========================================================= -->
+        <!-- Developer badge -->
 
-<section id="app">
-
-    <h2 class="section-title">
-        Featured App
-    </h2>
-
-    <div class="app-card">
-
-        <div class="app-label">
-            Offline AI Application
+        <div class="badge">
+            Independent Software Developer
         </div>
 
-        <h3>
-            Eye Offline AI Image Scanner
-        </h3>
+
+        <!-- Main heading -->
+
+        <h1>
+            Building useful technology.
+        </h1>
+
+
+        <!-- Main description -->
 
         <p>
-            Eye is an offline AI-powered image scanning application
-            designed to help users search, match and extract
-            information from images directly on their Android devices.
+            Toptechdevelops creates practical mobile applications,
+            AI-powered tools, streaming applications and technology
+            projects designed to solve real-world problems.
         </p>
 
 
-        <div class="features">
+        <!-- Hero action -->
 
-            <div class="feature">
+        <a class="button"
+           href="#app">
 
-                <h4>
-                    Offline AI
-                </h4>
+            Explore our apps
 
-                <p>
-                    AI-powered image analysis designed to work
-                    without requiring a constant internet connection.
-                </p>
-
-            </div>
-
-
-            <div class="feature">
-
-                <h4>
-                    Image Matching
-                </h4>
-
-                <p>
-                    Search large image collections and identify
-                    visually similar images.
-                </p>
-
-            </div>
-
-
-            <div class="feature">
-
-                <h4>
-                    OCR
-                </h4>
-
-                <p>
-                    Extract text from images using on-device
-                    optical character recognition.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <a
-            class="button"
-            href="https://play.google.com/store/apps/details?id=com.toptech.eye"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            View Eye on Google Play
         </a>
 
-    </div>
-
-</section>
+    </section>
 
 
-<!-- =========================================================
-     STREAM
-========================================================= -->
 
-<section
-    id="stream"
-    class="stream-section"
->
+    <!-- =========================================================
+         EYE APP SECTION
+    ========================================================== -->
 
-    <div class="stream-card">
+    <section id="app">
 
-        <div class="stream-badge">
-            FREE SPORTS STREAMING
+
+        <h2 class="section-title">
+            Featured App
+        </h2>
+
+
+        <div class="app-card">
+
+
+            <!-- Eye title -->
+
+            <h3>
+                Eye Offline AI Image Scanner
+            </h3>
+
+
+            <!-- Eye description -->
+
+            <p>
+                Eye is an offline AI-powered image scanning application
+                designed to help users search, match and extract information
+                from images directly on their Android devices.
+            </p>
+
+
+            <!-- Eye features -->
+
+            <div class="features">
+
+
+                <!-- Feature 1 -->
+
+                <div class="feature">
+
+                    <h4>
+                        Offline AI
+                    </h4>
+
+                    <p>
+                        AI-powered image analysis designed to work
+                        without requiring a constant internet connection.
+                    </p>
+
+                </div>
+
+
+                <!-- Feature 2 -->
+
+                <div class="feature">
+
+                    <h4>
+                        Image Matching
+                    </h4>
+
+                    <p>
+                        Search large image collections and identify
+                        visually similar images.
+                    </p>
+
+                </div>
+
+
+                <!-- Feature 3 -->
+
+                <div class="feature">
+
+                    <h4>
+                        OCR
+                    </h4>
+
+                    <p>
+                        Extract text from images using on-device
+                        optical character recognition.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- Google Play button -->
+
+            <a class="button"
+               href="https://play.google.com/store/apps/details?id=com.toptech.eye"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                View Eye on Google Play
+
+            </a>
+
         </div>
 
-        <h3>
-            Your Sports.<br>
-            <span>Your Stream.</span>
-        </h3>
+    </section>
+
+
+
+    <!-- =========================================================
+         STREAM APP SECTION
+    ========================================================== -->
+
+    <section id="stream">
+
+
+        <h2 class="section-title">
+            Stream
+        </h2>
+
+
+        <div class="stream-card">
+
+
+            <!-- Stream title -->
+
+            <h3>
+                Stream App
+            </h3>
+
+
+            <!-- Stream description -->
+
+            <p>
+                Access sports and entertainment streaming resources
+                through the Stream application. Get the latest version
+                and stay connected to your favorite streaming content.
+            </p>
+
+
+            <!-- Stream download button -->
+
+            <a class="button"
+               href="https://shortlink.win/STRM"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                Download Stream App
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         STREAMING DIRECTORY SECTION
+    ========================================================== -->
+
+    <section class="directory-section">
+
+
+        <h2 class="section-title">
+            Streaming Directory
+        </h2>
+
 
         <p>
-            Stream makes it easier to access sports streaming
-            resources from your Android device. Discover available
-            streaming links, stay connected with the community and
-            keep your sports resources close at hand.
+            Browse our collection of movie and sports streaming resources
+            from one place.
         </p>
 
 
-        <div class="stream-features">
+        <!-- =====================================================
+             LARGE CENTERED DIRECTORY BUTTON
 
-            <div class="stream-feature">
+             Current destination:
+             https://realkevo.github.io/streamlinks
 
-                <div class="stream-feature-icon">
-                    ⚡
-                </div>
+             This can be changed later without modifying
+             the rest of the homepage.
+        ====================================================== -->
 
-                <h4>
-                    Fast Access
-                </h4>
+        <a class="directory-button"
+           href="https://realkevo.github.io/streamlinks"
+           target="_blank"
+           rel="noopener noreferrer">
 
-                <p>
-                    Quickly access available sports streaming
-                    resources.
-                </p>
+            All movies and sports streaming sites
 
-            </div>
+        </a>
 
-
-            <div class="stream-feature">
-
-                <div class="stream-feature-icon">
-                    📱
-                </div>
-
-                <h4>
-                    Android App
-                </h4>
-
-                <p>
-                    Get the Stream app and access your streaming
-                    resources from your phone.
-                </p>
-
-            </div>
+    </section>
 
 
-            <div class="stream-feature">
 
-                <div class="stream-feature-icon">
-                    🌍
-                </div>
+    <!-- =========================================================
+         COMMUNITY SECTION
+    ========================================================== -->
 
-                <h4>
-                    Stay Connected
-                </h4>
-
-                <p>
-                    Follow community channels for Stream updates
-                    and announcements.
-                </p>
-
-            </div>
-
-        </div>
+    <section id="community"
+             class="community">
 
 
-        <div class="stream-buttons">
+        <h2 class="section-title">
+            Join Our Community
+        </h2>
 
-            <a
-                class="button green"
-                href="https://shortlink.win/STRM"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                DOWNLOAD STREAM APP
-            </a>
-
-            <a
-                class="button secondary"
-                href="#community"
-            >
-                JOIN OUR COMMUNITY
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-     COMMUNITY
-========================================================= -->
-
-<section
-    id="community"
-    class="community-section"
->
-
-    <h2 class="section-title">
-        Join The Community
-    </h2>
-
-    <p class="community-description">
-        Stay connected with Stream updates, announcements
-        and community news.
-    </p>
-
-
-    <div class="community-grid">
-
-        <!-- WHATSAPP -->
-
-        <div class="community-card">
-
-            <div class="community-icon">
-                💬
-            </div>
-
-            <h3>
-                WhatsApp Group
-            </h3>
-
-            <p>
-                Join the WhatsApp group for Stream updates,
-                announcements and community discussions.
-            </p>
-
-            <a
-                class="button"
-                href="YOUR_WHATSAPP_GROUP_LINK"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                OPEN WHATSAPP
-            </a>
-
-        </div>
-
-
-        <!-- TELEGRAM -->
-
-        <div class="community-card">
-
-            <div class="community-icon">
-                ✈️
-            </div>
-
-            <h3>
-                Telegram Channel
-            </h3>
-
-            <p>
-                Follow the Telegram channel for Stream
-                announcements and updates.
-            </p>
-
-            <a
-                class="button secondary"
-                href="YOUR_TELEGRAM_CHANNEL_LINK"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                OPEN TELEGRAM
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-     OTHER APPS
-========================================================= -->
-
-<section class="other-apps">
-
-    <h2 class="section-title">
-        Check Our Other Apps
-    </h2>
-
-    <p class="other-apps-description">
-        Explore more applications from Toptechdevelops on
-        Google Play.
-    </p>
-
-
-    <div class="other-app-card">
-
-        <h3>
-            More From Toptechdevelops
-        </h3>
 
         <p>
-            Discover our Android applications and other
-            software projects available through Google Play.
+            Stay updated with new releases, announcements,
+            streaming updates and other Toptechdevelops projects.
+        </p>
+
+
+        <!-- Community buttons -->
+
+        <div class="community-buttons">
+
+
+            <!-- =================================================
+                 WHATSAPP GROUP
+
+                 Replace YOUR_WHATSAPP_GROUP_LINK with the
+                 actual WhatsApp group URL.
+            ================================================== -->
+
+            <a class="button whatsapp"
+               href="YOUR_WHATSAPP_GROUP_LINK"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                Join WhatsApp Group
+
+            </a>
+
+
+            <!-- =================================================
+                 TELEGRAM CHANNEL
+
+                 Replace YOUR_TELEGRAM_CHANNEL_LINK with the
+                 actual Telegram channel URL.
+            ================================================== -->
+
+            <a class="button telegram"
+               href="YOUR_TELEGRAM_CHANNEL_LINK"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                Join Telegram Channel
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         OTHER APPS SECTION
+    ========================================================== -->
+
+    <section class="other-apps">
+
+
+        <h2 class="section-title">
+            Check Our Other Apps From Play Store
+        </h2>
+
+
+        <p>
+            Explore more applications and projects developed
+            by Toptechdevelops.
         </p>
 
 
         <div class="other-app-buttons">
 
-            <a
-                class="button"
-                href="https://play.google.com/store/apps/details?id=com.toptech.eye"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                👁️ EYE ON GOOGLE PLAY
+
+            <!-- Eye Google Play listing -->
+
+            <a class="button"
+               href="https://play.google.com/store/apps/details?id=com.toptech.eye"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                Eye on Google Play
+
             </a>
 
 
-            <a
-                class="button secondary"
-                href="https://play.google.com/store/apps/developer?id=Toptechdevelops"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                VIEW ALL OUR APPS
+            <!-- Toptechdevelops Google Play developer page -->
+
+            <a class="button"
+               href="https://play.google.com/store/apps/developer?id=Toptechdevelops"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                View All Apps
+
             </a>
+
 
         </div>
 
-    </div>
-
-</section>
+    </section>
 
 
-<!-- =========================================================
-     CONTACT
-========================================================= -->
 
-<section
-    id="contact"
-    class="contact"
->
+    <!-- =========================================================
+         CONTACT SECTION
+    ========================================================== -->
 
-    <h2 class="section-title">
-        Contact
-    </h2>
+    <section id="contact"
+             class="contact">
 
-    <p>
-        For questions, feedback or business inquiries,
-        contact Toptechdevelops.
-    </p>
 
-    <a
-        class="button"
-        href="mailto:toptechdevelops@gmail.com"
-    >
-        Contact Us
-    </a>
+        <h2 class="section-title">
+            Contact
+        </h2>
 
-</section>
+
+        <p>
+            For questions, feedback or business inquiries,
+            contact Toptechdevelops.
+        </p>
+
+
+        <!-- Email button -->
+
+        <a class="button"
+           href="mailto:toptechdevelops@gmail.com">
+
+            Contact Us
+
+        </a>
+
+    </section>
+
 
 </main>
 
 
-<!-- =========================================================
+
+<!-- =============================================================
      FOOTER
-========================================================= -->
+============================================================== -->
 
 <footer>
 
-    <div class="footer-links">
-
-        <a href="#app">
-            Eye
-        </a>
-
-        <a href="#stream">
-            Stream
-        </a>
-
-        <a href="#community">
-            Community
-        </a>
-
-        <a href="https://realkevo.github.io/">
-            TOPTECH HOMEPAGE
-        </a>
-
-    </div>
-
-    © 2026 Toptechdevelops.
-    All rights reserved.
+    © 2026 Toptechdevelops. All rights reserved.
 
 </footer>
 
+
+
 </body>
+
 </html>
 ```
