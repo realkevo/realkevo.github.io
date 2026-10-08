@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Stream Free Sports</title>
+  <meta
+    name="description"
+    content="Watch free sports streams and get the Stream app from TopTech Develops."
+  >
+  <meta name="theme-color" content="#07111f">
+
+  <style>
+    :root {
+      --bg: #050b14;
+      --bg2: #0a1424;
+      --card: rgba(16, 29, 48, 0.82);
+      --text: #f5f8ff;
+      --muted: #9eacc0;
+      --accent: #20e0a4;
+      --accent2: #42a5ff;
+      --border: rgba(255,255,255,.09);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(66,165,255,.18),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(32,224,164,.12),
+          transparent 28%
+        ),
+        linear-gradient(145deg, var(--bg), var(--bg2));
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 36px));
+      margin: auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      padding: 22px 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .home-btn {
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      font-size: .88rem;
+      font-weight: 700;
+      transition: .25s ease;
+    }
+
+    .home-btn:hover {
+      background: rgba(255,255,255,.09);
+      transform: translateY(-2px);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 650px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      padding: 70px 0 100px;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid rgba(32,224,164,.25);
+      background: rgba(32,224,164,.08);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: .82rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+
+    .badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: .94;
+      letter-spacing: -.065em;
+      margin-bottom: 26px;
+    }
+
+    h1 span {
+      background: linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent2)
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: auto;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+    }
+
+    .hero-buttons {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: .95rem;
+      border: 1px solid var(--border);
+      transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+
+    .btn-primary {
+      color: #03110d;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.055);
+    }
+
+    /* =========================
+       SECTIONS
+    ========================= */
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 40px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: -.04em;
+      margin-bottom: 12px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+    }
+
+    /* =========================
+       FEATURE CARDS
+    ========================= */
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(255,255,255,.07);
+      font-size: 1.4rem;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    /* =========================
+       COMMUNITY
+    ========================= */
+
+    .community {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .community-card {
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.025)
+        );
+      text-align: center;
+    }
+
+    .community-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .community-card p {
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: .92rem;
+    }
+
+    /* =========================
+       OTHER APPS
+    ========================= */
+
+    .app-card {
+      max-width: 850px;
+      margin: auto;
+      padding: 40px;
+      border: 1px solid rgba(66,165,255,.18);
+      border-radius: 28px;
+      background:
+        radial-gradient(
+          circle at 80% 20%,
+          rgba(66,165,255,.12),
+          transparent 35%
+        ),
+        rgba(255,255,255,.035);
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .app-card h2 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    .app-card p {
+      max-width: 650px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+    }
+
+    .app-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding: 35px 0 45px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    footer strong {
+      color: var(--text);
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 800px) {
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .community {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 70px;
+      }
+    }
+
+    @media (max-width: 500px) {
+
+      .container {
+        width: min(100% - 24px, 1100px);
+      }
+
+      header {
+        padding-top: 15px;
+      }
+
+      .home-btn {
+        font-size: .78rem;
+        padding: 9px 12px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .hero-buttons,
+      .app-buttons {
+        flex-direction: column;
+      }
+
+      .app-card {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+    <div class="container">
+
+      <nav>
+
+        <div class="brand">
+          TOPTECH<span>DEVELOPS</span>
+        </div>
+
+        <a
+          class="home-btn"
+          href="https://realkevo.github.io/"
+        >
+          TOPTECH HOMEPAGE
+        </a>
+
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- =========================
+         HERO
+    ========================= -->
+
+    <section class="hero">
+
+      <div class="container">
+
+        <div class="hero-content">
+
+          <div class="badge">
+            FREE SPORTS STREAMING
+          </div>
+
+          <h1>
+            Your Sports.<br>
+            <span>Your Stream.</span>
+          </h1>
+
+          <p>
+            Discover free sports streaming links and stay connected
+            with the Stream community. Get the Stream app and keep
+            your sports links close at hand.
+          </p>
+
+          <div class="hero-buttons">
+
+            <a
+              class="btn btn-primary"
+              href="https://shortlink.win/STRM"
+              target="_blank"
+              rel="noopener"
+            >
+              DOWNLOAD STREAM APP
+            </a>
+
+            <a
+              class="btn btn-secondary"
+              href="#community"
+            >
+              JOIN OUR COMMUNITY
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         FEATURES
+    ========================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <h2>
+            Stream Your Way
+          </h2>
+
+          <p>
+            Simple access to sports streaming resources and the
+            Stream app.
+          </p>
+
+        </div>
+
+
+        <div class="cards">
+
+          <div class="card">
+
+            <div class="card-icon">
+              ⚡
+            </div>
+
+            <h3>
+              Fast Access
+            </h3>
+
+            <p>
+              Quickly find streaming resources and get where you
+              need to go without unnecessary steps.
+            </p>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="card-icon">
+              📱
+            </div>
+
+            <h3>
+              Stream App
+            </h3>
+
+            <p>
+              Download the Stream Android app for convenient access
+              to your streaming links on mobile.
+            </p>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="card-icon">
+              🌍
+            </div>
+
+            <h3>
+              Stay Connected
+            </h3>
+
+            <p>
+              Join our communities for updates, announcements and
+              new streaming information.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         COMMUNITY
+    ========================= -->
+
+    <section id="community">
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <h2>
+            Join The Community
+          </h2>
+
+          <p>
+            Follow Stream updates and stay connected with other users.
+          </p>
+
+        </div>
+
+
+        <div class="community">
+
+          <!-- WHATSAPP -->
+
+          <div class="community-card">
+
+            <div
+              class="card-icon"
+              style="margin: 0 auto 18px;"
+            >
+              💬
+            </div>
+
+            <h3>
+              WhatsApp Group
+            </h3>
+
+            <p>
+              Join the WhatsApp group for Stream updates and
+              community news.
+            </p>
+
+            <a
+              class="btn btn-primary"
+              href="YOUR_WHATSAPP_GROUP_LINK"
+              target="_blank"
+              rel="noopener"
+            >
+              OPEN WHATSAPP
+            </a>
+
+          </div>
+
+
+          <!-- TELEGRAM -->
+
+          <div class="community-card">
+
+            <div
+              class="card-icon"
+              style="margin: 0 auto 18px;"
+            >
+              ✈️
+            </div>
+
+            <h3>
+              Telegram Channel
+            </h3>
+
+            <p>
+              Follow the Telegram channel for announcements
+              and updates.
+            </p>
+
+            <a
+              class="btn btn-secondary"
+              href="YOUR_TELEGRAM_CHANNEL_LINK"
+              target="_blank"
+              rel="noopener"
+            >
+              OPEN TELEGRAM
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         OTHER TOPTECH APPS
+    ========================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="app-card">
+
+          <div class="badge">
+            MORE FROM TOPTECH
+          </div>
+
+          <h2>
+            Check Our Other Apps
+          </h2>
+
+          <p>
+            Explore more apps from TopTech Develops on Google Play,
+            including Eye — Offline AI Image Scanner.
+          </p>
+
+
+          <div class="app-buttons">
+
+            <!-- EYE -->
+
+            <a
+              class="btn btn-primary"
+              href="https://play.google.com/store/apps/details?id=com.toptech.eye"
+              target="_blank"
+              rel="noopener"
+            >
+              👁️ EYE ON GOOGLE PLAY
+            </a>
+
+
+            <!-- ALL TOPTECH APPS -->
+
+            <a
+              class="btn btn-secondary"
+              href="https://play.google.com/store/apps/developer?id=Toptechdevelops"
+              target="_blank"
+              rel="noopener"
+            >
+              VIEW ALL OUR APPS
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <strong>
+        TOPTECH DEVELOPS
+      </strong>
+
+      <br>
+
+      Free sports streaming resources &amp; mobile apps.
+
+      <br><br>
+
+      © 2026 TopTech Develops. All rights reserved.
+
+    </div>
+
+  </footer>
+
+</body>
+</html>
