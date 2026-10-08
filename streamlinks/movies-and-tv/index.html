@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Movies & TV — Toptech Develops</title>
+
+  <link
+    rel="stylesheet"
+    href="../styles.css"
+  >
+
+  <style>
+
+    .directory-page {
+      padding: 70px 6% 100px;
+    }
+
+    .directory-header {
+      max-width: 800px;
+      margin-bottom: 35px;
+    }
+
+    .directory-header h1 {
+      font-size: clamp(40px, 6vw, 68px);
+      letter-spacing: -3px;
+      margin-bottom: 18px;
+    }
+
+    .directory-header p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .directory-tools {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+
+      padding: 15px 18px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: 12px;
+
+      outline: none;
+
+      color: var(--text);
+
+      font-size: 15px;
+    }
+
+    .search-box:focus {
+      border-color: rgba(255,255,255,.25);
+    }
+
+    .site-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 14px;
+    }
+
+    .site-card {
+      padding: 22px;
+
+      background: var(--surface);
+
+      border: 1px solid var(--border);
+
+      border-radius: 15px;
+
+      text-decoration: none;
+
+      color: var(--text);
+
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+    }
+
+    .site-card:hover {
+      transform: translateY(-3px);
+
+      background: var(--surface-hover);
+
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .site-card h3 {
+      margin-bottom: 8px;
+
+      font-size: 17px;
+    }
+
+    .site-card p {
+      color: var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.5;
+    }
+
+    .empty-state {
+      padding: 60px 20px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      border: 1px dashed var(--border);
+
+      border-radius: 15px;
+    }
+
+    @media (max-width: 900px) {
+
+      .site-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .directory-page {
+        padding-left: 5%;
+        padding-right: 5%;
+      }
+
+      .site-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+  <a
+    href="../"
+    class="brand"
+  >
+    <span>Toptech</span> Develops
+  </a>
+
+
+  <nav class="main-nav">
+
+    <a href="../">
+      Home
+    </a>
+
+    <a href="https://realkevo.github.io/stream/">
+      Stream
+    </a>
+
+    <a href="https://realkevo.github.io/trends/">
+      Top Trends
+    </a>
+
+  </nav>
+
+</header>
+
+
+
+<main class="directory-page">
+
+
+  <section class="directory-header">
+
+    <span class="section-label">
+      DIRECTORY
+    </span>
+
+    <h1>
+      Movies & TV
+    </h1>
+
+    <p>
+      Explore movie and television streaming services,
+      platforms and related resources.
+    </p>
+
+  </section>
+
+
+
+  <div class="directory-tools">
+
+    <input
+      id="search"
+      class="search-box"
+      type="search"
+      placeholder="Search Movies & TV..."
+      autocomplete="off"
+    >
+
+  </div>
+
+
+
+  <section>
+
+    <div
+      id="siteGrid"
+      class="site-grid"
+    ></div>
+
+  </section>
+
+
+</main>
+
+
+
+<footer>
+
+  <div class="footer-inner">
+
+    <a
+      href="../"
+      class="footer-brand"
+    >
+      Toptech Develops
+    </a>
+
+    <p>
+      © 2026 Toptech Develops
+    </p>
+
+  </div>
+
+</footer>
+
+
+
+<script>
+
+const sites = [
+
+  /*
+    Add authorized/legitimate directory entries here.
+
+    Example:
+
+    {
+      name: "Example Service",
+      description: "Description of the service",
+      url: "https://example.com"
+    }
+  */
+
+];
+
+
+const grid = document.getElementById("siteGrid");
+
+const search = document.getElementById("search");
+
+
+function renderSites(filter = "") {
+
+  grid.innerHTML = "";
+
+  const filtered = sites.filter(site => {
+
+    const text = (
+      site.name +
+      " " +
+      site.description
+    ).toLowerCase();
+
+    return text.includes(filter.toLowerCase());
+
+  });
+
+
+  if (!filtered.length) {
+
+    grid.innerHTML = `
+
+      <div class="empty-state">
+
+        No directory entries found.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  filtered.forEach(site => {
+
+    const card = document.createElement("a");
+
+    card.className = "site-card";
+
+    card.href = site.url;
+
+    card.target = "_blank";
+
+    card.rel = "noopener noreferrer";
+
+
+    card.innerHTML = `
+
+      <h3>
+        ${site.name}
+      </h3>
+
+      <p>
+        ${site.description}
+      </p>
+
+    `;
+
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+
+search.addEventListener(
+  "input",
+  () => renderSites(search.value)
+);
+
+
+renderSites();
+
+</script>
+
+
+</body>
+
+</html>
