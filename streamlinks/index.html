@@ -367,7 +367,7 @@
      *
      * streamlinks/
      *
-     * Each link points directly to that folder's index.html.
+     * Each local link points directly to that folder's index.html.
      */
 
     const categories = [
@@ -436,6 +436,12 @@
         name: "Torrents",
         description: "Torrent trackers and indexers.",
         url: "./torrents/"
+      },
+
+      {
+        name: "Adult",
+        description: "Adult Sites",
+        url: "./adult"
       }
 
     ];
@@ -520,20 +526,7 @@
 
 
         /*
-         * IMPORTANT:
-         *
          * The entire card is an actual link.
-         *
-         * Example:
-         *
-         * ./anime/
-         *
-         * resolves to:
-         *
-         * https://realkevo.github.io/streamlinks/anime/
-         *
-         * GitHub Pages automatically serves
-         * the index.html inside that folder.
          */
 
         card.className =
@@ -541,6 +534,22 @@
 
         card.href =
           category.url;
+
+
+        /*
+         * External categories open in a new tab.
+         * Local category folders remain in the same tab.
+         */
+
+        if (
+          category.url.startsWith("http://") ||
+          category.url.startsWith("https://")
+        ) {
+
+          card.target = "_blank";
+          card.rel = "noopener noreferrer";
+
+        }
 
 
         card.innerHTML = `
