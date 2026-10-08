@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Manga — Streamlinks</title>
+
+  <meta
+    name="description"
+    content="Manga directory."
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #08090d;
+      --surface: #101218;
+      --surface-hover: #171a22;
+      --border: rgba(255,255,255,.09);
+      --text: #f5f7fb;
+      --muted: #9298a7;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    .topbar {
+      height: 72px;
+      padding: 0 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(8,9,13,.94);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -.7px;
+    }
+
+    .brand span {
+      font-weight: 500;
+    }
+
+    .main-nav {
+      display: flex;
+      gap: 28px;
+    }
+
+    .main-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .main-nav a:hover {
+      color: var(--text);
+    }
+
+    main {
+      padding: 75px 6% 100px;
+    }
+
+    .header {
+      max-width: 850px;
+      margin-bottom: 35px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 6vw, 68px);
+      line-height: .98;
+      letter-spacing: -3px;
+      margin-bottom: 18px;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .tools {
+      margin: 30px 0;
+    }
+
+    #search {
+      width: 100%;
+      max-width: 520px;
+      padding: 15px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    #search:focus {
+      border-color: rgba(255,255,255,.25);
+    }
+
+    #search::placeholder {
+      color: var(--muted);
+    }
+
+    .site-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .site-card {
+      min-height: 82px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      text-decoration: none;
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease;
+    }
+
+    .site-card:hover {
+      transform: translateY(-3px);
+      background: var(--surface-hover);
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .site-number {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      min-width: 24px;
+    }
+
+    .site-name {
+      font-size: 16px;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .site-arrow {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 19px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 55px 20px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+    }
+
+    footer {
+      padding: 30px 6%;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .site-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
+      .topbar {
+        padding: 0 5%;
+      }
+
+      .main-nav {
+        gap: 14px;
+      }
+
+      .main-nav a {
+        font-size: 13px;
+      }
+
+      main {
+        padding: 60px 5% 80px;
+      }
+
+      h1 {
+        letter-spacing: -2.5px;
+      }
+
+      .site-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <a href="../" class="brand">
+    <span>Toptech</span> Develops
+  </a>
+
+  <nav class="main-nav">
+    <a href="../">Home</a>
+    <a href="https://realkevo.github.io/stream/">Stream</a>
+    <a href="https://realkevo.github.io/trends/">Top Trends</a>
+  </nav>
+
+</header>
+
+<main>
+
+  <section class="header">
+
+    <span class="eyebrow">
+      DIRECTORY
+    </span>
+
+    <h1>
+      Manga
+    </h1>
+
+    <p class="description">
+      Browse the Manga directory.
+    </p>
+
+  </section>
+
+  <div class="tools">
+
+    <input
+      id="search"
+      type="search"
+      placeholder="Search Manga..."
+      autocomplete="off"
+      aria-label="Search Manga sites"
+    >
+
+  </div>
+
+  <section
+    id="siteGrid"
+    class="site-grid"
+  ></section>
+
+</main>
+
+<footer>
+  © 2026 Toptech Develops
+</footer>
+
+<script>
+
+const sites = [
+
+  {
+    name: "comix.to",
+    url: "https://comix.to/"
+  },
+
+  {
+    name: "mangafire.to",
+    url: "https://mangafire.to/home"
+  },
+
+  {
+    name: "mangahaven.net",
+    url: "https://mangahaven.net/"
+  },
+
+  {
+    name: "mangataro.org",
+    url: "https://mangataro.org/"
+  },
+
+  {
+    name: "mangadex.org",
+    url: "https://mangadex.org/"
+  },
+
+  {
+    name: "allmanga.to",
+    url: "https://allmanga.to/manga"
+  },
+
+  {
+    name: "mangago.me",
+    url: "https://mangago.me/"
+  },
+
+  {
+    name: "weebcentral.com",
+    url: "https://weebcentral.com/"
+  },
+
+  {
+    name: "manganato.gg",
+    url: "https://www.manganato.gg/"
+  },
+
+  {
+    name: "kagane.org",
+    url: "https://kagane.org/"
+  }
+
+];
+
+const grid =
+  document.getElementById("siteGrid");
+
+const search =
+  document.getElementById("search");
+
+function render(filter = "") {
+
+  const query =
+    filter.trim().toLowerCase();
+
+  const filtered =
+    sites.filter(site =>
+      site.name.toLowerCase().includes(query)
+    );
+
+  grid.innerHTML = "";
+
+  if (!filtered.length) {
+
+    grid.innerHTML =
+      '<div class="empty">No matching sites found.</div>';
+
+    return;
+  }
+
+  filtered.forEach(site => {
+
+    const card =
+      document.createElement("a");
+
+    card.className =
+      "site-card";
+
+    card.href =
+      site.url;
+
+    card.target =
+      "_blank";
+
+    card.rel =
+      "noopener noreferrer";
+
+    card.innerHTML = `
+
+      <span class="site-number">
+        ${String(
+          sites.indexOf(site) + 1
+        ).padStart(2, "0")}
+      </span>
+
+      <span class="site-name"></span>
+
+      <span class="site-arrow">
+        →
+      </span>
+
+    `;
+
+    card.querySelector(
+      ".site-name"
+    ).textContent = site.name;
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+search.addEventListener(
+  "input",
+  () => render(search.value)
+);
+
+render();
+
+</script>
+
+</body>
+</html>
