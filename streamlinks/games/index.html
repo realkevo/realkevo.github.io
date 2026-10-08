@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Games - Toptech Develops</title>
+  <meta
+    name="description"
+    content="A directory of game websites for PC and console games."
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      width: 100%;
+      border-bottom: 1px solid #242424;
+      background: #0d0d0d;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-inner {
+      max-width: 1250px;
+      margin: auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: #ffffff;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .nav a {
+      color: #bdbdbd;
+      transition: color 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: #ffffff;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 55px 24px 70px;
+    }
+
+    .hero {
+      margin-bottom: 35px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      color: #999999;
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 700px;
+    }
+
+    .search-wrap {
+      margin: 30px 0 35px;
+    }
+
+    #search {
+      width: 100%;
+      background: #111111;
+      border: 1px solid #292929;
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 17px 18px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #search:focus {
+      border-color: #555555;
+    }
+
+    #search::placeholder {
+      color: #777777;
+    }
+
+    .site-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .site-card {
+      display: block;
+      background: #111111;
+      border: 1px solid #252525;
+      border-radius: 14px;
+      padding: 22px;
+      min-height: 120px;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .site-card:hover {
+      transform: translateY(-3px);
+      border-color: #4a4a4a;
+      background: #151515;
+    }
+
+    .site-number {
+      color: #666666;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .site-name {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      font-size: 21px;
+      font-weight: 750;
+    }
+
+    .arrow {
+      color: #777777;
+      font-size: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .site-card:hover .arrow {
+      transform: translateX(4px);
+      color: #ffffff;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 50px 20px;
+      text-align: center;
+      color: #777777;
+      border: 1px solid #252525;
+      border-radius: 14px;
+    }
+
+    footer {
+      border-top: 1px solid #202020;
+      color: #666666;
+      text-align: center;
+      padding: 25px 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .site-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav {
+        gap: 18px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .topbar-inner {
+        padding: 16px 18px;
+      }
+
+      .brand {
+        font-size: 21px;
+      }
+
+      .nav {
+        gap: 13px;
+        font-size: 14px;
+      }
+
+      .container {
+        padding: 42px 18px 60px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .site-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+
+      <a class="brand" href="../">
+        <span>Toptech</span> Develops
+      </a>
+
+      <nav class="nav">
+        <a href="../">Home</a>
+        <a href="https://realkevo.github.io/stream/">Stream</a>
+        <a href="https://realkevo.github.io/trends/">Top Trends</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="hero">
+      <h1>Games</h1>
+      <p>
+        PC and console game websites, downloads, releases and gaming resources.
+      </p>
+    </section>
+
+    <div class="search-wrap">
+      <input
+        type="search"
+        id="search"
+        placeholder="Search games websites..."
+        autocomplete="off"
+      >
+    </div>
+
+    <section class="site-grid" id="siteGrid"></section>
+
+  </main>
+
+  <footer>
+    © 2026 Toptech Develops
+  </footer>
+
+  <script>
+    const sites = [
+      {
+        name: "fitgirl-repacks.site",
+        url: "https://fitgirl-repacks.site/"
+      },
+      {
+        name: "dodi-repacks.site",
+        url: "https://dodi-repacks.site/"
+      },
+      {
+        name: "ankergames.net",
+        url: "https://ankergames.net/"
+      },
+      {
+        name: "g4u.to",
+        url: "https://g4u.to/"
+      },
+      {
+        name: "steamrip.com",
+        url: "https://steamrip.com/"
+      },
+      {
+        name: "steamgg.net",
+        url: "https://steamgg.net/"
+      },
+      {
+        name: "m4ckd0ge-repacks.site",
+        url: "https://m4ckd0ge-repacks.site/"
+      },
+      {
+        name: "gload.to",
+        url: "https://gload.to/"
+      }
+    ];
+
+    const grid = document.getElementById("siteGrid");
+    const search = document.getElementById("search");
+
+    function escapeHtml(value) {
+      const div = document.createElement("div");
+      div.textContent = value;
+      return div.innerHTML;
+    }
+
+    function renderSites(filter = "") {
+      grid.innerHTML = "";
+
+      const normalizedFilter = filter.trim().toLowerCase();
+
+      const filtered = sites.filter(site =>
+        site.name.toLowerCase().includes(normalizedFilter)
+      );
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            No Games websites found.
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach((site, index) => {
+        const card = document.createElement("a");
+
+        card.className = "site-card";
+        card.href = site.url;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
+
+        card.innerHTML = `
+          <div class="site-number">
+            ${String(index + 1).padStart(2, "0")}
+          </div>
+
+          <div class="site-name">
+            <span>${escapeHtml(site.name)}</span>
+            <span class="arrow">→</span>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    search.addEventListener("input", () => {
+      renderSites(search.value);
+    });
+
+    renderSites();
+  </script>
+
+</body>
+</html>
