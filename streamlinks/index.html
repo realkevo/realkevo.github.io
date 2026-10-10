@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>All Streaming Links - Toptech Develops</title>
+  <title>Stream Links - Toptech Develops</title>
 
   <meta
     name="description"
-    content="All streaming links in one place. Explore movies, anime, Live sports, live TV, Asian drama, manga, games, music, eBooks and more."
+    content="All streaming links in one place. Download the Stream Android app for all Live sports and movies, and explore anime, live TV, Asian drama, manga, games, music, eBooks and more."
   >
 
   <meta name="theme-color" content="#0a0a0a">
@@ -120,6 +120,101 @@
       font-size: 17px;
       line-height: 1.7;
       max-width: 760px;
+    }
+
+    /* ANDROID APP DOWNLOAD SECTION */
+
+    .download-section {
+      position: relative;
+      overflow: hidden;
+      margin: 32px 0 38px;
+      padding: 30px;
+      background: linear-gradient(135deg, #171717, #101010);
+      border: 1px solid #353535;
+      border-radius: 16px;
+    }
+
+    .download-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: #ffffff;
+    }
+
+    .download-content {
+      position: relative;
+      max-width: 800px;
+    }
+
+    .download-label {
+      display: inline-block;
+      margin-bottom: 13px;
+      color: #bdbdbd;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .download-section h2 {
+      max-width: 720px;
+      font-size: clamp(25px, 4vw, 38px);
+      line-height: 1.2;
+      letter-spacing: -1px;
+      margin-bottom: 13px;
+    }
+
+    .download-section p {
+      color: #a0a0a0;
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 650px;
+      margin-bottom: 22px;
+    }
+
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 23px;
+      background: #ffffff;
+      color: #0a0a0a;
+      border: 1px solid #ffffff;
+      border-radius: 9px;
+      font-size: 15px;
+      font-weight: 800;
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .download-button:hover {
+      background: #dcdcdc;
+      border-color: #dcdcdc;
+      transform: translateY(-2px);
+    }
+
+    .download-button:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: 4px;
+    }
+
+    .download-button svg {
+      width: 19px;
+      height: 19px;
+      flex-shrink: 0;
+    }
+
+    .download-note {
+      margin-top: 13px;
+      color: #777777;
+      font-size: 12px;
+      line-height: 1.6;
     }
 
     /* CATEGORY SEARCH */
@@ -327,6 +422,25 @@
         font-size: 15px;
       }
 
+      .download-section {
+        margin: 25px 0 30px;
+        padding: 23px 19px;
+        border-radius: 13px;
+      }
+
+      .download-section h2 {
+        letter-spacing: -0.6px;
+      }
+
+      .download-section p {
+        font-size: 14px;
+      }
+
+      .download-button {
+        width: 100%;
+        padding: 15px 16px;
+      }
+
       .search-wrap {
         margin: 23px 0;
       }
@@ -382,6 +496,10 @@
 
       .category-description {
         font-size: 11px;
+      }
+
+      .download-section {
+        padding: 20px 15px;
       }
     }
 
@@ -445,9 +563,69 @@
 
     </section>
 
-    <!-- SEARCH -->
+    <!-- ANDROID APP DOWNLOAD SECTION -->
+
+    <section
+      class="download-section"
+      aria-labelledby="downloadHeading"
+    >
+
+      <div class="download-content">
+
+        <span class="download-label">
+          Stream Android App
+        </span>
+
+        <h2 id="downloadHeading">
+          Download all sports and movies streaming Android
+        </h2>
+
+        <p>
+          Get the Stream Android app and explore sports and movie
+          streaming links in one convenient place. Download the APK
+          to your Android device to get started.
+        </p>
+
+        <a
+          class="download-button"
+          href="https://www.mediafire.com/file/50y96shwct7vfur/Streamuniversal.apk/file"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Download the Stream Android app from MediaFire"
+        >
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <path d="m7 10 5 5 5-5"/>
+            <path d="M12 15V3"/>
+          </svg>
+
+          Download for Android
+
+        </a>
+
+        <div class="download-note">
+          APK download hosted on MediaFire. Android may ask you to
+          authorize installation from your browser or file manager.
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CATEGORY SEARCH -->
 
     <div class="search-wrap">
+
       <input
         type="search"
         id="search"
@@ -455,6 +633,7 @@
         aria-label="Search streaming categories"
         autocomplete="off"
       >
+
     </div>
 
     <!-- CATEGORY SECTION -->
@@ -462,13 +641,17 @@
     <section aria-labelledby="categoriesHeading">
 
       <div class="section-heading">
-        <h2 id="categoriesHeading">Explore Categories</h2>
+
+        <h2 id="categoriesHeading">
+          Explore Categories
+        </h2>
 
         <span
           class="category-count"
           id="categoryCount"
           aria-live="polite"
         ></span>
+
       </div>
 
       <div
@@ -483,7 +666,9 @@
   <!-- FOOTER -->
 
   <footer>
+
     <p>© 2026 Toptech Develops. All rights reserved.</p>
+
     <p>
       <a href="../">Home</a>
       &nbsp;·&nbsp;
@@ -491,6 +676,7 @@
       &nbsp;·&nbsp;
       <a href="https://realkevo.github.io/trends/">Top Trends</a>
     </p>
+
   </footer>
 
   <!-- CATEGORY DATA AND RENDERING -->
@@ -564,9 +750,14 @@
       }
     ];
 
-    const categoryGrid = document.getElementById("categoryGrid");
-    const search = document.getElementById("search");
-    const categoryCount = document.getElementById("categoryCount");
+    const categoryGrid =
+      document.getElementById("categoryGrid");
+
+    const search =
+      document.getElementById("search");
+
+    const categoryCount =
+      document.getElementById("categoryCount");
 
     /*
      * Escape dynamic text before inserting it into HTML.
@@ -591,7 +782,8 @@
      */
 
     function renderCategories(filter = "") {
-      const normalizedFilter = filter.trim().toLowerCase();
+      const normalizedFilter =
+        filter.trim().toLowerCase();
 
       const filtered = categories.filter(category => {
         const searchableText =
@@ -603,16 +795,20 @@
       categoryGrid.replaceChildren();
 
       categoryCount.textContent =
-        `${filtered.length} ${filtered.length === 1 ? "category" : "categories"}`;
+        `${filtered.length} ${
+          filtered.length === 1 ? "category" : "categories"
+        }`;
 
       if (filtered.length === 0) {
         const emptyState = document.createElement("div");
 
         emptyState.className = "empty-state";
+
         emptyState.textContent =
           "No categories found. Try a different search.";
 
         categoryGrid.appendChild(emptyState);
+
         return;
       }
 
@@ -623,7 +819,8 @@
         card.href = category.url;
 
         /*
-         * Only open URLs in a new tab if they are external.
+         * Open external category URLs in a new tab.
+         * Local category folders stay in the same tab.
          */
 
         if (/^https?:\/\//i.test(category.url)) {
@@ -631,12 +828,18 @@
           card.rel = "noopener noreferrer";
         }
 
-        const number = String(index + 1).padStart(2, "0");
+        const number =
+          String(index + 1).padStart(2, "0");
 
         card.innerHTML = `
           <div class="category-top">
-            <span class="category-number">${number}</span>
-            <span class="arrow" aria-hidden="true">→</span>
+            <span class="category-number">
+              ${number}
+            </span>
+
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
           </div>
 
           <div>
