@@ -1,0 +1,355 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1018">
+  <meta name="description" content="Stream sports, movies and series from your selected streaming sources.">
+  <title>Stream — Sports, Movies &amp; Series</title>
+
+  <!-- Monetag MultiTag -->
+  <script src="https://quge5.com/88/tag.min.js" data-zone="293776" async data-cfasync="false"></script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1018;
+      --surface: #121b27;
+      --surface-hover: #192637;
+      --border: #263548;
+      --text: #f4f7fb;
+      --muted: #a9b6c7;
+      --accent: #55a1ff;
+      --accent-strong: #287ee6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top, rgba(41, 104, 174, .18), transparent 48%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: min(100% - 32px, 920px);
+      margin: 0 auto;
+      padding: 30px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0 26px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 25px;
+      font-weight: 850;
+      letter-spacing: -.8px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #fff;
+      font-size: 20px;
+      box-shadow: 0 8px 24px rgba(40, 126, 230, .25);
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .intro {
+      padding: 30px 0 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 7vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+    }
+
+    .intro p {
+      max-width: 620px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .category {
+      margin-top: 28px;
+    }
+
+    .category-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -.4px;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .source-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      gap: 12px;
+      padding: 16px 17px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(18, 27, 39, .92);
+      color: var(--text);
+      text-decoration: none;
+      transition: background .18s ease, border-color .18s ease,
+        transform .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .source-link:hover,
+    .source-link:focus-visible {
+      background: var(--surface-hover);
+      border-color: #477db8;
+      outline: none;
+    }
+
+    .source-link:active {
+      transform: scale(.985);
+    }
+
+    .source-info {
+      min-width: 0;
+    }
+
+    .source-name {
+      display: block;
+      font-size: 16px;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+
+    .source-url {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .arrow {
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #1b2b3e;
+      color: #8fc2ff;
+      font-size: 18px;
+    }
+
+    footer {
+      margin-top: 38px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        width: min(100% - 24px, 920px);
+        padding-top: 18px;
+      }
+
+      .brand {
+        font-size: 22px;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+      }
+
+      .status {
+        font-size: 11px;
+      }
+
+      .links {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .source-link {
+        min-height: 64px;
+        padding: 14px;
+      }
+
+      .intro {
+        padding-top: 26px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Stream home">
+        <span class="brand-mark" aria-hidden="true">▶</span>
+        <span>Stream</span>
+      </a>
+      <span class="status">SPORTS · MOVIES · SERIES</span>
+    </header>
+
+    <main>
+
+      <section class="intro">
+        <p class="eyebrow">Your streaming directory</p>
+        <h1>Choose what to watch.</h1>
+        <p>Select a source below to open it. Available sources are listed by category.</p>
+      </section>
+
+      <!-- SPORTS -->
+      <section class="category" aria-labelledby="sports-heading">
+        <div class="category-heading">
+          <h2 id="sports-heading">⚽ Sports</h2>
+          <span class="count">5 sources</span>
+        </div>
+
+        <div class="links">
+
+          <a class="source-link" href="https://soccerstreams.cx/">
+            <span class="source-info">
+              <span class="source-name">SoccerStream</span>
+              <span class="source-url">soccerstreams.cx</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+          <a class="source-link" href="https://tvapp1.pk/">
+            <span class="source-info">
+              <span class="source-name">AST</span>
+              <span class="source-url">tvapp1.pk</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+          <a class="source-link" href="https://rushstreams.org/">
+            <span class="source-info">
+              <span class="source-name">Rush</span>
+              <span class="source-url">rushstreams.org</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+          <a class="source-link" href="https://www.footybite.com.co/v6">
+            <span class="source-info">
+              <span class="source-name">Falcon</span>
+              <span class="source-url">footybite.com.co</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+          <a class="source-link" href="https://roxiestreams.su/">
+            <span class="source-info">
+              <span class="source-name">Roxie</span>
+              <span class="source-url">roxiestreams.su</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- MOVIES AND SERIES -->
+      <section class="category" aria-labelledby="movies-heading">
+        <div class="category-heading">
+          <h2 id="movies-heading">🎬 Movies &amp; Series</h2>
+          <span class="count">2 sources</span>
+        </div>
+
+        <div class="links">
+
+          <a class="source-link" href="https://streamgoblin.cc/">
+            <span class="source-info">
+              <span class="source-name">Goblin</span>
+              <span class="source-url">streamgoblin.cc</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+          <a class="source-link" href="https://uflix.cc/">
+            <span class="source-info">
+              <span class="source-name">UFlix</span>
+              <span class="source-url">uflix.cc</span>
+            </span>
+            <span class="arrow" aria-hidden="true">›</span>
+          </a>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      Stream · Choose a category and select a source
+    </footer>
+
+  </div>
+</body>
+</html>
