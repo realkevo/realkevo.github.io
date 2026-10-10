@@ -4,18 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Stream Links - Toptech Develops</title>
+  <title>All Streaming Links - Toptech Develops</title>
 
   <meta
     name="description"
-    content="Toptech Develops directory of streaming, entertainment, games, music, books, comics and other online resources."
+    content="All streaming links in one place. Explore movies, anime, Live sports, live TV, Asian drama, manga, games, music, eBooks and more."
   >
+
+  <meta name="theme-color" content="#0a0a0a">
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -30,6 +36,8 @@
       text-decoration: none;
     }
 
+    /* TOP NAVIGATION */
+
     .topbar {
       width: 100%;
       border-bottom: 1px solid #242424;
@@ -43,7 +51,6 @@
       max-width: 1250px;
       margin: auto;
       padding: 18px 24px;
-
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -65,8 +72,7 @@
       display: flex;
       align-items: center;
       gap: 28px;
-
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 600;
     }
 
@@ -79,74 +85,108 @@
       color: #ffffff;
     }
 
+    /* MAIN CONTENT */
+
     .container {
       max-width: 1250px;
       margin: auto;
-      padding: 55px 24px 70px;
+      padding: 45px 24px 70px;
     }
 
+    /* HERO */
+
     .hero {
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
 
     .hero h1 {
-      font-size: clamp(42px, 7vw, 76px);
-      line-height: 0.95;
-      letter-spacing: -3px;
-      margin-bottom: 18px;
+      font-size: clamp(34px, 5.5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -2.5px;
+      margin-bottom: 16px;
+      max-width: 850px;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: #a0a0a0;
+      font-size: clamp(23px, 3.5vw, 40px);
+      letter-spacing: -1.2px;
+      margin-bottom: 12px;
     }
 
     .hero p {
       color: #999999;
-      font-size: 18px;
-      line-height: 1.6;
-      max-width: 750px;
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 760px;
     }
 
+    /* CATEGORY SEARCH */
+
     .search-wrap {
-      margin: 30px 0 35px;
+      margin: 28px 0 24px;
     }
 
     #search {
       width: 100%;
-
       background: #111111;
       border: 1px solid #292929;
       border-radius: 12px;
-
       color: #ffffff;
-
-      padding: 17px 18px;
-
+      padding: 16px 18px;
       font-size: 16px;
       outline: none;
+      transition: border-color 0.2s ease;
     }
 
     #search:focus {
-      border-color: #555555;
+      border-color: #777777;
     }
 
     #search::placeholder {
       color: #777777;
     }
 
+    /* CATEGORY HEADER */
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      font-size: 21px;
+      letter-spacing: -0.4px;
+    }
+
+    .category-count {
+      color: #858585;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* RESPONSIVE CATEGORY GRID */
+
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
     }
 
     .category-card {
-      display: block;
-
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+      min-height: 150px;
+      padding: 20px;
       background: #111111;
       border: 1px solid #252525;
-      border-radius: 14px;
-
-      padding: 24px;
-
-      min-height: 145px;
-
+      border-radius: 13px;
       transition:
         transform 0.2s ease,
         border-color 0.2s ease,
@@ -154,115 +194,205 @@
     }
 
     .category-card:hover {
-      transform: translateY(-4px);
-      border-color: #4a4a4a;
-      background: #151515;
+      transform: translateY(-3px);
+      border-color: #555555;
+      background: #161616;
+    }
+
+    .category-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
     .category-number {
-      color: #666666;
-      font-size: 13px;
-      font-weight: 700;
-
-      margin-bottom: 16px;
-    }
-
-    .category-name {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-
-      font-size: 23px;
-      font-weight: 750;
-    }
-
-    .category-description {
       color: #777777;
-      font-size: 14px;
-      line-height: 1.5;
-
-      margin-top: 10px;
-      padding-right: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
     .arrow {
       color: #777777;
-      font-size: 22px;
-
+      font-size: 20px;
       transition:
         transform 0.2s ease,
         color 0.2s ease;
     }
 
     .category-card:hover .arrow {
-      transform: translateX(5px);
+      transform: translateX(4px);
       color: #ffffff;
     }
 
+    .category-name {
+      font-size: 20px;
+      line-height: 1.3;
+      font-weight: 750;
+      letter-spacing: -0.4px;
+      overflow-wrap: anywhere;
+    }
+
+    .category-description {
+      color: #888888;
+      font-size: 13px;
+      line-height: 1.55;
+      margin-top: 9px;
+    }
+
+    /* EMPTY SEARCH RESULTS */
+
     .empty-state {
       grid-column: 1 / -1;
-
-      padding: 50px 20px;
-
+      padding: 45px 20px;
       text-align: center;
-
-      color: #777777;
-
+      color: #888888;
+      background: #111111;
       border: 1px solid #252525;
-      border-radius: 14px;
+      border-radius: 13px;
     }
+
+    /* FOOTER */
 
     footer {
       border-top: 1px solid #202020;
-
-      color: #666666;
-
+      color: #777777;
       text-align: center;
-
       padding: 25px 20px;
-
-      font-size: 14px;
+      font-size: 13px;
+      line-height: 1.7;
     }
+
+    footer a {
+      color: #bdbdbd;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+    }
+
+    /* TABLETS */
 
     @media (max-width: 900px) {
       .category-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .topbar-inner {
+        padding: 16px 20px;
       }
 
       .nav {
         gap: 18px;
       }
+
+      .category-card {
+        min-height: 145px;
+      }
     }
 
-    @media (max-width: 650px) {
+    /* MOBILE PHONES */
+
+    @media (max-width: 600px) {
       .topbar-inner {
-        padding: 16px 18px;
+        padding: 14px 16px;
+        gap: 12px;
       }
 
       .brand {
-        font-size: 21px;
+        font-size: 19px;
       }
 
       .nav {
-        gap: 13px;
-        font-size: 14px;
+        gap: 12px;
+        font-size: 12px;
       }
 
       .container {
-        padding: 42px 18px 60px;
+        padding: 35px 16px 50px;
+      }
+
+      .hero {
+        margin-bottom: 24px;
       }
 
       .hero h1 {
-        letter-spacing: -2px;
+        letter-spacing: -1.5px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .search-wrap {
+        margin: 23px 0;
       }
 
       .category-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .category-card {
+        min-height: 140px;
+        padding: 15px;
+        border-radius: 11px;
+      }
+
+      .category-top {
+        margin-bottom: 14px;
       }
 
       .category-name {
-        font-size: 21px;
+        font-size: 17px;
+      }
+
+      .category-description {
+        font-size: 12px;
+      }
+
+      .section-heading h2 {
+        font-size: 19px;
+      }
+    }
+
+    /* EXTRA SMALL PHONES */
+
+    @media (max-width: 360px) {
+      .topbar-inner {
+        flex-wrap: wrap;
+      }
+
+      .nav {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .category-card {
+        padding: 12px;
+        min-height: 135px;
+      }
+
+      .category-name {
+        font-size: 15px;
+      }
+
+      .category-description {
+        font-size: 11px;
+      }
+    }
+
+    /* REDUCED MOTION ACCESSIBILITY */
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -270,23 +400,17 @@
 
 <body>
 
-  <!-- =========================================================
-       TOP NAVIGATION
-       ========================================================= -->
+  <!-- TOP NAVIGATION -->
 
   <header class="topbar">
-
     <div class="topbar-inner">
 
       <a class="brand" href="../">
         <span>Toptech</span> Develops
       </a>
 
-      <nav class="nav">
-
-        <a href="../">
-          Home
-        </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../">Home</a>
 
         <a href="https://realkevo.github.io/stream/">
           Stream
@@ -295,317 +419,254 @@
         <a href="https://realkevo.github.io/trends/">
           Top Trends
         </a>
-
       </nav>
 
     </div>
-
   </header>
 
-
-  <!-- =========================================================
-       MAIN CONTENT
-       ========================================================= -->
+  <!-- MAIN CONTENT -->
 
   <main class="container">
+
+    <!-- PAGE INTRODUCTION -->
 
     <section class="hero">
 
       <h1>
+        <span>All streaming links in one place</span>
         Stream Links
       </h1>
 
       <p>
-        Browse organized directories for movies, anime, sports, TV,
-        manga, games, music, eBooks, comics and more.
+        Explore organized directories for movies, anime, live sports,
+        TV, Asian drama, manga, games, music, eBooks, comics and more.
+        Find the category you need in one convenient place.
       </p>
 
     </section>
 
-
     <!-- SEARCH -->
 
     <div class="search-wrap">
-
       <input
         type="search"
         id="search"
         placeholder="Search categories..."
+        aria-label="Search streaming categories"
         autocomplete="off"
       >
-
     </div>
 
+    <!-- CATEGORY SECTION -->
 
-    <!-- CATEGORY GRID -->
+    <section aria-labelledby="categoriesHeading">
 
-    <section
-      class="category-grid"
-      id="categoryGrid"
-    ></section>
+      <div class="section-heading">
+        <h2 id="categoriesHeading">Explore Categories</h2>
+
+        <span
+          class="category-count"
+          id="categoryCount"
+          aria-live="polite"
+        ></span>
+      </div>
+
+      <div
+        class="category-grid"
+        id="categoryGrid"
+      ></div>
+
+    </section>
 
   </main>
 
-
-  <!-- =========================================================
-       FOOTER
-       ========================================================= -->
+  <!-- FOOTER -->
 
   <footer>
-    © 2026 Toptech Develops
+    <p>© 2026 Toptech Develops. All rights reserved.</p>
+    <p>
+      <a href="../">Home</a>
+      &nbsp;·&nbsp;
+      <a href="https://realkevo.github.io/stream/">Stream</a>
+      &nbsp;·&nbsp;
+      <a href="https://realkevo.github.io/trends/">Top Trends</a>
+    </p>
   </footer>
 
-
-  <!-- =========================================================
-       CATEGORY DATA + RENDERING
-       ========================================================= -->
+  <!-- CATEGORY DATA AND RENDERING -->
 
   <script>
-
     /*
-     * These paths match the folders currently inside:
-     *
-     * streamlinks/
-     *
-     * Each local link points directly to that folder's index.html.
+     * Category paths correspond to folders inside streamlinks/.
+     * Keep these URLs synchronized with your actual folder names.
      */
 
     const categories = [
-
       {
-        name: "Anime",
-        description: "Anime streaming and related resources.",
-        url: "./anime/"
+        name: "Movies & TV",
+        description: "Movies, TV shows and series resources.",
+        url: "./movies/"
       },
-
-      {
-        name: "Asian Drama",
-        description: "Asian drama and series resources.",
-        url: "./asian-drama/"
-      },
-
-      {
-        name: "Comics",
-        description: "Comics and graphic novel resources.",
-        url: "./comics/"
-      },
-
-      {
-        name: "eBooks",
-        description: "eBooks, audiobooks and reading resources.",
-        url: "./ebooks/"
-      },
-
-      {
-        name: "Games",
-        description: "PC and console gaming resources.",
-        url: "./games/"
-      },
-
       {
         name: "Live Sports",
-        description: "Live sports websites and resources.",
+        description: "Live sports websites and streaming resources.",
         url: "./live-sports/"
       },
-
       {
         name: "Live TV",
         description: "Live television channels and resources.",
         url: "./livetv/"
       },
-
+      {
+        name: "Anime",
+        description: "Anime streaming and related resources.",
+        url: "./anime/"
+      },
+      {
+        name: "Asian Drama",
+        description: "Asian dramas, shows and series resources.",
+        url: "./asian-drama/"
+      },
       {
         name: "Manga",
-        description: "Manga reading resources.",
+        description: "Manga reading websites and resources.",
         url: "./manga/"
       },
-
       {
-        name: "Movies & TV",
-        description: "Movies and television resources.",
-        url: "./movies/"
+        name: "Comics",
+        description: "Comics and graphic novel resources.",
+        url: "./comics/"
       },
-
+      {
+        name: "Games",
+        description: "PC, console and gaming resources.",
+        url: "./games/"
+      },
       {
         name: "Music",
         description: "Music websites and related tools.",
         url: "./music/"
       },
-
+      {
+        name: "eBooks",
+        description: "eBooks, audiobooks and reading resources.",
+        url: "./ebooks/"
+      },
       {
         name: "Torrents",
-        description: "Torrent trackers and indexers.",
+        description: "Torrent indexers and related resources.",
         url: "./torrents/"
       },
-
       {
         name: "Adult",
-        description: "Adult Sites",
-        url: "./adult"
+        description: "Adult-oriented websites and resources.",
+        url: "./adult/"
       }
-
     ];
 
-
-    const categoryGrid =
-      document.getElementById("categoryGrid");
-
-    const search =
-      document.getElementById("search");
-
+    const categoryGrid = document.getElementById("categoryGrid");
+    const search = document.getElementById("search");
+    const categoryCount = document.getElementById("categoryCount");
 
     /*
-     * Escape text before inserting it into HTML.
+     * Escape dynamic text before inserting it into HTML.
      */
 
     function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => {
+        const entities = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        };
 
-      const div =
-        document.createElement("div");
-
-      div.textContent = value;
-
-      return div.innerHTML;
-
+        return entities[character];
+      });
     }
 
-
     /*
-     * Render all categories.
+     * Render the category grid and update the result count.
      */
 
     function renderCategories(filter = "") {
+      const normalizedFilter = filter.trim().toLowerCase();
 
-      categoryGrid.innerHTML = "";
+      const filtered = categories.filter(category => {
+        const searchableText =
+          `${category.name} ${category.description}`.toLowerCase();
 
-      const normalizedFilter =
-        filter.trim().toLowerCase();
-
-
-      const filtered =
-        categories.filter(category => {
-
-          const searchableText = (
-            category.name +
-            " " +
-            category.description
-          ).toLowerCase();
-
-          return searchableText.includes(
-            normalizedFilter
-          );
-
-        });
-
-
-      /*
-       * No results.
-       */
-
-      if (filtered.length === 0) {
-
-        categoryGrid.innerHTML = `
-          <div class="empty-state">
-            No categories found.
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      /*
-       * Create category cards.
-       */
-
-      filtered.forEach((category, index) => {
-
-        const card =
-          document.createElement("a");
-
-
-        /*
-         * The entire card is an actual link.
-         */
-
-        card.className =
-          "category-card";
-
-        card.href =
-          category.url;
-
-
-        /*
-         * External categories open in a new tab.
-         * Local category folders remain in the same tab.
-         */
-
-        if (
-          category.url.startsWith("http://") ||
-          category.url.startsWith("https://")
-        ) {
-
-          card.target = "_blank";
-          card.rel = "noopener noreferrer";
-
-        }
-
-
-        card.innerHTML = `
-
-          <div class="category-number">
-            ${String(index + 1).padStart(2, "0")}
-          </div>
-
-          <div class="category-name">
-
-            <span>
-              ${escapeHtml(category.name)}
-            </span>
-
-            <span class="arrow">
-              →
-            </span>
-
-          </div>
-
-          <div class="category-description">
-            ${escapeHtml(category.description)}
-          </div>
-
-        `;
-
-
-        categoryGrid.appendChild(card);
-
+        return searchableText.includes(normalizedFilter);
       });
 
+      categoryGrid.replaceChildren();
+
+      categoryCount.textContent =
+        `${filtered.length} ${filtered.length === 1 ? "category" : "categories"}`;
+
+      if (filtered.length === 0) {
+        const emptyState = document.createElement("div");
+
+        emptyState.className = "empty-state";
+        emptyState.textContent =
+          "No categories found. Try a different search.";
+
+        categoryGrid.appendChild(emptyState);
+        return;
+      }
+
+      filtered.forEach((category, index) => {
+        const card = document.createElement("a");
+
+        card.className = "category-card";
+        card.href = category.url;
+
+        /*
+         * Only open URLs in a new tab if they are external.
+         */
+
+        if (/^https?:\/\//i.test(category.url)) {
+          card.target = "_blank";
+          card.rel = "noopener noreferrer";
+        }
+
+        const number = String(index + 1).padStart(2, "0");
+
+        card.innerHTML = `
+          <div class="category-top">
+            <span class="category-number">${number}</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </div>
+
+          <div>
+            <div class="category-name">
+              ${escapeHtml(category.name)}
+            </div>
+
+            <p class="category-description">
+              ${escapeHtml(category.description)}
+            </p>
+          </div>
+        `;
+
+        categoryGrid.appendChild(card);
+      });
     }
 
-
     /*
-     * Search categories as the user types.
+     * Filter categories instantly as the user types.
      */
 
-    search.addEventListener(
-      "input",
-      () => {
-
-        renderCategories(
-          search.value
-        );
-
-      }
-    );
-
+    search.addEventListener("input", () => {
+      renderCategories(search.value);
+    });
 
     /*
-     * Initial render.
+     * Display all categories when the page loads.
      */
 
     renderCategories();
-
   </script>
 
 </body>
